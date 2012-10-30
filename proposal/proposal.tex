@@ -7,6 +7,8 @@
 \usepackage{amssymb}
 \usepackage{fancyhdr,lastpage}
 \usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{wrapfig}
 \usepackage{amsmath}
 \usepackage{geometry}
 \usepackage[ngerman]{babel}
@@ -49,7 +51,21 @@ Rasterzelle werden zusammengefasst.
 \section{Vereinfachung}
 \subsection{Algorithmus 1: Ramer-Douglas-Peucker Algorithmus}
 Durch die Anwendung des Ramer-Douglas-Pleucker Algorithmus
+(Abbildung 1) 
 wird durch Reduzierung der Stützpunkte eine Vereinfachung
-der Streckenführung erreicht.
+der Streckenführung erreicht.\\
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+  \begin{center}
+    \includegraphics[scale=0.20]{rdp.png}
+  \end{center}
+  \caption{R-D-P Visualisierung}
+\end{wrapfigure}
+
+Abbildung 1 zeigt die Visualisierung des Ramder-Douglas-Peucker
+Algorithmus.\\
+Als Start- und Endpunkte werden Bahnhöfe gewählt. Auf die daraus
+resultierenden Streckenabschnitte wird der R-D-P Algorithmus
+angewendet.
 
 \end{document}
