@@ -22,8 +22,8 @@
 \fancyhead[R]{\today}
 \fancyfoot[C]{Page \thepage\ of \pageref{LastPage}}
 \begin{document}
-\section{Definition: Qualität}
-Die Qualität eines Algorithmus zur Streckengeneralisierung
+\section{Definition}
+Die \texttt{Qualität} eines Algorithmus zur Streckengeneralisierung
 wird durch den Abstand von der ursprünglichen Streckenführung
 beschrieben.\\\\
 Mit zunehmender Reduzierung der Stützpunkte einer Streckenführung
@@ -32,8 +32,8 @@ gewöhnlich ab.
 \section{Vorauswahl}
 Bahnhöfe werden in einen Status versetzt, in dem sie von keinen
 Algorithmus aus der Streckenführung entfernt werden können.
-\section{Algorithmen}
-\subsection{Algorithmus 1: Combination}
+\section{Kombination}
+\subsection{Algorithmus 1}
 Die Stützpunkte zweier Streckenführungen
 $s_1, s_2 \in \{(x_0, y_0), (x_1, y_1), \ldots, (x_n, y_n)\}$
 werden angeglichen indem die Stützpunkte
@@ -43,13 +43,13 @@ $|a - b| < \varepsilon$ gilt.\\
 Dies dient hauptsächlich dazu, dass nahe beieinander liegende
 Streckenverläufe nach Anwendungen weiterer Algorithmen auch
 wieder beieinander liegen.
-\subsection{Algorithmus 2: Ramer-Douglas-Peucker Algorithmus}
+\subsection{Algorithmus 2}
+Die Karte wird in ein Raster eingeteilt. Alle Stützpunkte innerhalb
+Rasterzelle werden zusammengefasst.
+\section{Vereinfachung}
+\subsection{Algorithmus 1: Ramer-Douglas-Peucker Algorithmus}
 Durch die Anwendung des Ramer-Douglas-Pleucker Algorithmus
 wird durch Reduzierung der Stützpunkte eine Vereinfachung
 der Streckenführung erreicht.
-
-\subsection{Algorithmus 3}
-Dieser Algorithmus besteht aus der sequentiellen Anwendung aller
-vorhergehenden Algorithmen.
 
 \end{document}
