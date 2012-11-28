@@ -1,0 +1,24 @@
+#!/usr/bin/env python
+
+from pymongo import Connection
+
+
+class Database(object):
+    def __init__(self, host="localhost", port=27017):
+        self.connection = Connection(host, port)
+        self.db = self.connection["osm-data"]
+        self.original_route = self.route_for_zoom(16)
+
+    def route_for_zoom(self, level):
+        return self.db["shortest_routes_zoom_level_" + str(level)]
+
+
+if __name__ == "__main__":
+    db = Database()
+
+    # TODO: This is not a reference to the object!
+    routes = list(db.original_route.find())
+
+    for i in reversed(xrange(8, 16)):
+        # Do stuff
+        pass
