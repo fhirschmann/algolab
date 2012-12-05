@@ -15,6 +15,9 @@ def pdist(p, p1, p2):
 
         d = |kx₁ - y₁ + m| / sqrt(k² + 1)
     """
+    if p1 == p2:
+        return sqrt((p[0] - p1[0])**2 + (p[1] - p1[1]))
+
     k = (p2[1] - p1[1]) / (p2[0] - p1[0])
     m = p1[1] - k * p1[0]
 
@@ -22,6 +25,9 @@ def pdist(p, p1, p2):
 
 
 def rdp(points, epsilon=1):
+    if epsilon == 0:
+        return points
+
     dmax = 0.0
     index = 0.0
     for i in xrange(2, len(points)):

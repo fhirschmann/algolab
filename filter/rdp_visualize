@@ -22,7 +22,7 @@ line2, = plot(zip(*points2)[0], zip(*points2)[1], 'go--')
 grid(True)
 
 axslider = axes([0.15, 0.1, 0.65, 0.03])
-slider = Slider(axslider, 'Epsilon', 1, 5, valinit=init)
+slider = Slider(axslider, 'Epsilon', 0, 5, valinit=init)
 
 
 def update(val):
