@@ -59,4 +59,4 @@ def extract_segments(db):
             if successor["id"] not in seg:
                 seg[successor["id"]] = db.find({"_id" : successor["id"]})[0]["loc"]
 
-    return segments
+    return [s.values() for s in segments]
