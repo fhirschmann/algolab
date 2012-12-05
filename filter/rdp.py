@@ -25,9 +25,6 @@ def pdist(p, p1, p2):
 
 
 def rdp(points, epsilon=1):
-    if epsilon == 0:
-        return points
-
     dmax = 0.0
     index = 0.0
     for i in xrange(2, len(points)):
