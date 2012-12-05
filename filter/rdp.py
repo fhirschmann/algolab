@@ -24,6 +24,6 @@ def rdp(points, epsilon=1):
 def epsilon_linear(zoom, k=1.5):
     """
     A linear function which increments ε by a factor of `k` at each
-    zoom increment.
+    zoom decrement.
     """
-    return k * zoom
+    return k * (-zoom + 16)
