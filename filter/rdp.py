@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 def pdist(p, p1, p2):
     """
-    Calculate the perpendicular distance of `p1` to the 
+    Calculate the perpendicular distance of `p` to the 
     line given by `p1` and `p2`.
 
     The perpendicular distance from the point (x₁,y₁) to
