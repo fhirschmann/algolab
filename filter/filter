@@ -4,21 +4,24 @@ from pymongo import Connection
 
 
 class Database(object):
-    def __init__(self, host="localhost", port=27017):
+    def __init__(self, db="osm-data", host="localhost", port=27017):
         self.connection = Connection(host, port)
-        self.db = self.connection["osm-data"]
-        self.original_route = self.route_for_zoom(16)
+        self.db = self.connection[db]
 
-    def route_for_zoom(self, level):
-        return self.db["shortest_routes_zoom_level_" + str(level)]
+
+class Collection(Database):
+    def __init__(self, collection, *args, **kwargs):
+        super(Collection, self).__init__(*args, **kwargs)
+        self.col = self.db[collection]
+
+
+class RailwayGraph(Collection):
+    def __init__(self, *args, **kwargs):
+        super(RailwayGraph, self).__init__("railway_graph", *args, **kwargs)
 
 
 if __name__ == "__main__":
-    db = Database()
+    rg = RailwayGraph()
 
-    # TODO: This is not a reference to the object!
-    routes = list(db.original_route.find())
-
-    for i in reversed(xrange(8, 16)):
-        # Do stuff
-        pass
+    # doubly linked-list?
+    print rg.col.find()[0]
