@@ -25,9 +25,12 @@ def pdist(p, p1, p2):
 
 
 def rdp(points, epsilon=1):
+    if epsilon <= 0:
+        return points
+
     dmax = 0.0
-    index = 0.0
-    for i in xrange(2, len(points)):
+    index = 0
+    for i in xrange(1, len(points) - 1):
         d = pdist(points[i], points[0], points[-1])
         if d > dmax:
             index = i
