@@ -2,44 +2,7 @@
 
 from pymongo import Connection
 
-
-def segment(lst, nodeid):
-    """
-    Returns the segment the node is in. If the node is not currently
-    associated with a segment, `None` is returned.
-
-    :returns: The segment of the node
-    """
-    for seg in lst:
-        if nodeid in seg:
-            return seg
-    return None
-
-
-def extract_segments(db):
-    """
-    Extracts segments from a railway graph.
-
-    A segment is a sequence of points where the start and end points
-    have either no or more than one successor in the railway graph.
-
-    :param rg: railway graph
-    :type rg: dict
-    """
-    segments = []
-
-    for node in db.find():
-        seg = segment(segments, node["_id"])
-        if not seg:
-            seg = {node["_id"]: node["loc"]}
-            segments.append(seg)
-
-        for successor in node["successors"]:
-            if successor["id"] not in seg:
-                seg[successor["id"]] = db.find({"_id" : successor["id"]})[0]["loc"]
-
-    return segments
-
+from util import extract_segments
 
 if __name__ == "__main__":
     db = Connection("127.0.0.1", 27017)["osm-data"]["railway_graph"]
