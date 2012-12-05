@@ -16,7 +16,9 @@ def rdp(points, epsilon=1):
             index = i
             dmax = d
     if dmax >= epsilon:
-        return rdp(points[:index+1], epsilon) + rdp(points[index:], epsilon)
+        r1 = rdp(points[:index], epsilon)
+        r2 = rdp(points[index:], epsilon)
+        return r1[:-1] + r2
     else:
         return [points[0], points[-1]]
 
