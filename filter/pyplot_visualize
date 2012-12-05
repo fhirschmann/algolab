@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+
+from pylab import *
+
+from rdp import rdp
+
+init = 0.8
+points = [(1,1), (2,2), (3,3), (4,3), (5,3), (6,5), (6,6), (7,9), (8,8)]
+points2 = rdp(points, init)
+
+ax = subplot(111)
+subplots_adjust(left=0.15, bottom=0.25)
+
+line, = plot(zip(*points)[0], zip(*points)[1], 'ro-')
+line2, = plot(zip(*points2)[0], zip(*points2)[1], 'go--')
+
+grid(True)
+
+axslider = axes([0.15, 0.1, 0.65, 0.03])
+slider = Slider(axslider, 'Epsilon', 0, 2, valinit=init)
+
+
+def update(val):
+    points2 = rdp(points, slider.val)
+    line2.set_xdata(zip(*points2)[0])
+    line2.set_ydata(zip(*points2)[1])
+    draw()
+
+slider.on_changed(update)
+
+
+show()

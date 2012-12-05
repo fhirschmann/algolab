@@ -4,8 +4,6 @@
 from __future__ import division
 from math import sqrt
 
-import matplotlib.pyplot as plt
-
 
 def pdist(p, p1, p2):
     """
@@ -35,14 +33,3 @@ def rdp(points, epsilon=1):
         return rdp(points[:index+1], epsilon) + rdp(points[index:], epsilon)
     else:
         return [points[0], points[-1]]
-
-
-
-points = [(1,1), (2,2), (3,3), (4,3), (5,3), (6,5), (6,6), (7,9), (8,8)]
-
-points2 = rdp(points, 0.8)
-
-plt.plot(zip(*points)[0], zip(*points)[1], 'ro-')
-plt.plot(zip(*points2)[0], zip(*points2)[1], 'go-')
-plt.axis([0,10,0,10])
-plt.show()
