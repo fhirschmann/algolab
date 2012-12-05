@@ -13,11 +13,12 @@ points = [(544.0000000000111, 295.0400000000002), (526.6699999999958, 291.688999
 
 points2 = rdp(points, init)
 
+
 ax = subplot(111)
 subplots_adjust(left=0.15, bottom=0.25)
 
 line, = plot(zip(*points)[0], zip(*points)[1], 'ro-')
-line2, = plot(zip(*points2)[0], zip(*points2)[1], 'go--')
+line2, = plot(None, None, 'go--')
 
 grid(True)
 
@@ -25,13 +26,19 @@ axslider = axes([0.15, 0.1, 0.65, 0.03])
 slider = Slider(axslider, 'Epsilon', 0, 5, valinit=init)
 
 
+title("RDP Visualization")
+
 def update(val):
     points2 = rdp(points, slider.val)
     line2.set_xdata(zip(*points2)[0])
     line2.set_ydata(zip(*points2)[1])
+
+    legend([line, line2], ["Original Route (# %s)" % len(points), "Generalized Route (# %s)" % len(points2)], bbox_to_anchor=(1.05,4))
+
     draw()
 
 slider.on_changed(update)
+update(init)
 
 
 show()
