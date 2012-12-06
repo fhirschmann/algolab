@@ -41,6 +41,13 @@ def pdist(p, a, b):
     return abs(k * px - py + m) / sqrt(k**2 + 1)
 
 
+def triarea(a, b, c):
+    """
+    Calculates the area of a triangle.
+    """
+    return 0.5 * edist(a, b) * pdist(c, a, b)
+
+
 def segment(lst, nodeid):
     """
     Returns the segment the node is in. If the node is not currently
