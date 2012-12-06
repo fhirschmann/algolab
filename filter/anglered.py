@@ -1,14 +1,19 @@
 # -*- coding: utf-8 -*-
-"""
-This is an implementation of a very simple algorithm which
-removes a point in a sequence of points if the angle between
-a point and its two neighbors is greater than a certain threshold.
-"""
 
 import numpy as np
 
 
 def anglereduce(points, epsilon):
+    """
+    This is a very simple algorithm that removes a point in a curve that is
+    approximated by series of `points`, if the angle between a point
+    and its two adjacent neighbors is smaller than a threshold `epsilon`.
+
+    :param points: a curve that is approximated by a series of points
+    :type points: list of lists
+    :param epsilon: a threshold value with 0 <  ε < 180.
+    :type epsilon: integer
+    """
     if len(points) < 3:
         return points
 
