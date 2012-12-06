@@ -5,23 +5,36 @@ from __future__ import division
 from math import sqrt
 
 
-def pdist(p, p1, p2):
+def edist(a, b):
+    """
+    Calculates the euclidean distance between two points `a` and `b`.
+    """
+    ax, ay = a
+    bx, by = b
+    return sqrt((ax - bx)**2 + (ay - by)**2)
+
+
+def pdist(p, a, b):
     """
     Calculate the perpendicular distance of `p` to the 
-    line given by `p1` and `p2`.
+    line given by the points `a` and `b`.
 
     The perpendicular distance from the point (x₁,y₁) to
     the line y = kx + m is given by
 
         d = |kx₁ - y₁ + m| / sqrt(k² + 1)
     """
-    if p1 == p2:
-        return sqrt((p[0] - p1[0])**2 + (p[1] - p1[1])**2)
+    if a == b:
+        return edist(p, a)
 
-    k = (p2[1] - p1[1]) / (p2[0] - p1[0])
-    m = p1[1] - k * p1[0]
+    ax, ay = a
+    bx, by = b
+    px, py = p
 
-    return abs(k * p[0] - p[1] + m) / sqrt(k**2 + 1)
+    k = (by - ay) / (bx - ax)
+    m = ay - k * ax
+
+    return abs(k * px - py + m) / sqrt(k**2 + 1)
 
 
 def segment(lst, nodeid):
@@ -57,6 +70,7 @@ def extract_segments(db):
 
         for successor in node["successors"]:
             if successor["id"] not in seg:
-                seg[successor["id"]] = db.find({"_id" : successor["id"]})[0]["loc"]
+                seg[successor["id"]] = db.find_one({"_id" : successor["id"]})["loc"]
 
+    return segments
     return [s.values() for s in segments]
