@@ -9,7 +9,7 @@ import numpy as np
 
 
 def anglereduce(points, epsilon):
-    if len(points) < 4:
+    if len(points) < 3:
         return points
 
     keep = [points[0]]
