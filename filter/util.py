@@ -31,6 +31,10 @@ def pdist(p, a, b):
     bx, by = b
     px, py = p
 
+    if (ax == bx):
+        return abs(ay - by)
+
+
     k = (by - ay) / (bx - ax)
     m = ay - k * ax
 
