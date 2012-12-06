@@ -10,7 +10,7 @@ def rdp(points, epsilon=1):
 
     dmax = 0.0
     index = 0
-    for i in xrange(1, len(points) - 1):
+    for i in xrange(2, len(points) - 1):
         d = pdist(points[i], points[0], points[-1])
         if d > dmax:
             index = i
