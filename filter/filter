@@ -3,10 +3,23 @@
 from pymongo import Connection
 
 from util import extract_segments
+from rdp import rdp, epsilon_linear
+from segment import segment
+
 
 if __name__ == "__main__":
     db = Connection("127.0.0.1", 27017)["osm-data"]["railway_graph"]
-    for segment in extract_segments(db):
-        print segment
-        print "---"
-    # Idea: apply algorithm to each segment return by the above function call
+    segs = segment(db)
+
+    x = {}
+
+
+    for seg in segs:
+        l = len(seg)
+
+        if l in x:
+            x[l] += 1
+        else:
+            x[l] = 1
+
+    print x
