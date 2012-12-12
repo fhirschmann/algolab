@@ -18,7 +18,7 @@ def walk_from(node_id, segment, col):
     if len(unvisited) != 1:
         return segment
 
-    segment.add(node_id)
+    segment.append(node_id)
     visit = iter(unvisited).next()
 
     return walk_from(visit, segment, col)
@@ -68,8 +68,7 @@ def segment(col):
                 if neighbor_id in visited:
                     continue
 
-                segment = walk_from(neighbor_id,
-                        set((node["_id"], )), col)
+                segment = walk_from(neighbor_id, [node["_id"]], col)
                 segments.append(segment)
                 visited.update(segment)
 
