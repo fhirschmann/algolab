@@ -53,8 +53,6 @@ def anglereduce_col(point_ids, epsilon, source, target):
     This is similar to `anglereduce`, except that it works on the
     mongodb.
 
-    WARNING: This will delete all entries in the `target` collection
-
     :param point_ids: a sequence of point ids
     :type point_ids: list of integers
     :param epsilon: a threshold value with 0 <  ε < 180.
