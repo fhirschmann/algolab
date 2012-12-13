@@ -48,40 +48,13 @@ def triarea(a, b, c):
     return 0.5 * edist(a, b) * pdist(c, a, b)
 
 
-def segment(lst, nodeid):
+def default(value, replacement):
     """
-    Returns the segment the node is in. If the node is not currently
-    associated with a segment, `None` is returned.
+    Check if ``value`` is ``None`` and then return ``replacement`` or else
+    ``value``.
 
-    :returns: The segment of the node
+    :param value: value to check
+    :param replacement: default replacement for value
+    :returns: return the value or replacement if value is None
     """
-    for seg in lst:
-        if nodeid in seg:
-            return seg
-    return None
-
-
-def extract_segments(db):
-    """
-    Extracts segments from a railway graph.
-
-    A segment is a sequence of points where the start and end points
-    have either no or more than one successor in the railway graph.
-
-    :param rg: railway graph
-    :type rg: dict
-    """
-    segments = []
-
-    for node in db.find():
-        seg = segment(segments, node["_id"])
-        if not seg:
-            seg = {node["_id"]: node["loc"]}
-            segments.append(seg)
-
-        for successor in node["successors"]:
-            if successor["id"] not in seg:
-                seg[successor["id"]] = db.find_one({"_id" : successor["id"]})["loc"]
-
-    return segments
-    return [s.values() for s in segments]
+    return value if value is not None else replacement
