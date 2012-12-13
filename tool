@@ -24,7 +24,8 @@ case "$1" in
         ;;
 
     1)
-        $JAVA 1_osm_railway_graph_import/osm_railway_graph_import.jar \
+        cd 1_osm_railway_graph_import
+        $JAVA osm_railway_graph_import.jar \
             $ALGO_OSM_DATA $ALGO_OSM_HOST $ALGO_OSM_PORT
         ;;
 
@@ -35,7 +36,8 @@ case "$1" in
         ;;
 
     3)
-        $JAVA 3_simple_routes_filter/simple_routes_filter.jar \
+        cd 3_simple_routes_filter
+        $JAVA simple_routes_filter.jar \
             $ALGO_OSM_HOST $ALGO_OSM_PORT
         ;;
 
