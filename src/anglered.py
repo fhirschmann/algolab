@@ -9,6 +9,9 @@ def anglereduce(points, epsilon):
     that is approximated by series of `points`, if the angle between a point
     and its two adjacent neighbors is smaller than a threshold `epsilon`.
 
+    A demonstration of this algorithm can be utilized by executing
+    :file:`bin/visualize anglered`
+
     :param points: a curve that is approximated by a series of points
     :type points: list of 3-tuples (x, y, ANY) where ANY is most likely the id
     :param epsilon: a threshold value with 0 <  ε < 180.
