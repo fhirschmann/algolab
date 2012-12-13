@@ -3,7 +3,7 @@
 import numpy as np
 
 
-def anglereduce(points, epsilon, pos=1):
+def anglereduce(points, epsilon):
     """
     This is a very simple recursive algorithm that removes a point in a curve
     that is approximated by series of `points`, if the angle between a point
@@ -15,9 +15,19 @@ def anglereduce(points, epsilon, pos=1):
     :type epsilon: integer
     :param pos: the current position in the list;
     """
-    if len(points) < 2:
+    if len(points) < 3:
         return points
 
+    if len(points[0]) != 3:
+        raise ValueError("Points need to be a list of 3-tuples")
+
+    return _anglereduce(points, epsilon)
+
+
+def _anglereduce(points, epsilon, pos=1):
+    """
+    Please use :anglereduce: instead.
+    """
     if len(points) - 1 == pos:
         # end of list reached
         return points
@@ -42,10 +52,10 @@ def anglereduce(points, epsilon, pos=1):
     angle = np.arccos(cos_angle) * 360 / 2 / np.pi
     if angle < epsilon:
         # keep the current point
-        return anglereduce(points, epsilon, pos + 1)
+        return _anglereduce(points, epsilon, pos + 1)
     else:
         # remove the current point
-        return anglereduce(points[:pos] + points[pos + 1:], epsilon, pos)
+        return _anglereduce(points[:pos] + points[pos + 1:], epsilon, pos)
 
 
 def anglereduce_col(point_ids, epsilon, source, target):
