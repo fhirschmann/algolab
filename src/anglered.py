@@ -40,7 +40,7 @@ def anglereduce(points, epsilon, pos=1):
     cos_angle = dot / v_modulus / w_modulus
 
     angle = np.arccos(cos_angle) * 360 / 2 / np.pi
-    if angle <= epsilon:
+    if angle < epsilon:
         # keep the current point
         return anglereduce(points, epsilon, pos + 1)
     else:
