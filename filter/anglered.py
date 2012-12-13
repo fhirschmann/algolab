@@ -15,6 +15,9 @@ def anglereduce(points, epsilon, pos=1):
     :type epsilon: integer
     :param pos: the current position in the list;
     """
+    if len(points) < 2:
+        return points
+
     if len(points) - 1 == pos:
         # end of list reached
         return points
@@ -62,7 +65,6 @@ def anglereduce_col(point_ids, epsilon, source, target):
     :type target: a :class:`~pymongo.collection.Collection`
     """
     points = []
-    target.drop()
 
     for point_id in point_ids:
         p = source.find_one({"_id": point_id})

@@ -7,9 +7,13 @@ from segment import segment
 from anglered import anglereduce_col
 
 if __name__ == "__main__":
-    db = Connection("127.0.0.1", 27017)["osm-data"]["test_graph"]
-    db2 = Connection("127.0.0.1", 27017)["osm-data"]["test_graph2"]
+    db = Connection("127.0.0.1", 27017)["osm-data"]["railway_graph"]
+    db2 = Connection("127.0.0.1", 27017)["osm-data"]["railway_graph2"]
+    db2.drop()
 
     segs = segment(db)
+    for seg in segs:
+        anglereduce_col(seg, 179, db, db2)
 
-    anglereduce_col(segs[0], 180, db, db2)
+    print len(list(db.find()))
+    print len(list(db2.find()))
