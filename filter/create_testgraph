@@ -3,7 +3,7 @@ import sys
 
 from pymongo import Connection
 
-from util import edist
+from util import edist, default
 
 points = [[44, 95], [26, 91], [22, 90], [21, 90],
         [19, 89], [17, 89], [15, 87], [15, 86], [16, 85],
@@ -25,10 +25,7 @@ points = [[44, 95], [26, 91], [22, 90], [21, 90],
 
 if __name__ == "__main__":
     for i, point in enumerate(points):
-        if len(sys.argv) > 1:
-            collection = sys.argv[1]
-        else:
-            collection = "test_graph"
+        collection = sys.argv[1] if len(sys.argv) > 1 else "test_graph"
 
         db = Connection("127.0.0.1", 27017)["osm-data"][collection]
         db.drop()
