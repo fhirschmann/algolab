@@ -26,3 +26,8 @@ class LineTest(unittest2.TestCase):
         data = [(1, 1, 1), (4, 1, 2), (30, 2, 3)]
         self.assertEquals(anglereduce(data, 150), [(1, 1, 1), (30, 2, 3)])
         self.assertEquals(anglereduce(data, 179), data)
+
+    def test_angle2(self):
+        data = [(1, 1, 1), (4, 1, 2), (30, -1, 3)]
+        self.assertEquals(anglereduce(data, 150), [(1, 1, 1), (30, -1, 3)])
+        self.assertEquals(anglereduce(data, 179), data)

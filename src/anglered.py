@@ -16,7 +16,6 @@ def anglereduce(points, epsilon):
     :type points: list of 3-tuples (x, y, ANY) where ANY is most likely the id
     :param epsilon: a threshold value with 0 <  ε < 180.
     :type epsilon: integer
-    :param pos: the current position in the list;
     """
     if len(points) < 3:
         return points
@@ -30,6 +29,9 @@ def anglereduce(points, epsilon):
 def _anglereduce(points, epsilon, pos=1):
     """
     Please use :anglereduce: instead.
+
+    :param pos: the current position in the list;
+    :type pos: integer
     """
     if len(points) - 1 == pos:
         # end of list reached
