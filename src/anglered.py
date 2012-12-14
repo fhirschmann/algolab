@@ -14,7 +14,7 @@ def anglereduce(points, epsilon):
 
     :param points: a curve that is approximated by a series of points
     :type points: list of 3-tuples (x, y, ANY) where ANY is most likely the id
-    :param epsilon: a threshold value with 0 <  ε < 180.
+    :param epsilon: a threshold value with 0 <  ε <= 180.
     :type epsilon: integer
     """
     if len(points) < 3:
@@ -22,6 +22,9 @@ def anglereduce(points, epsilon):
 
     if len(points[0]) != 3:
         raise ValueError("Points need to be a list of 3-tuples")
+
+    if not (0 < epsilon <= 180):
+        raise ValueError("Epsilon needs to be > 0 and <= 180 degrees")
 
     return _anglereduce(points, epsilon)
 

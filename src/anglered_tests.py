@@ -11,7 +11,7 @@ class LineTest(unittest2.TestCase):
         self.assertEqual(anglereduce(data, 179.5), expected)
         self.assertEqual(anglereduce(data, 100), expected)
         self.assertEqual(anglereduce(data, 30), expected)
-        self.assertEqual(anglereduce(data, 0), expected)
+        self.assertEqual(anglereduce(data, 1), expected)
 
     def test_vertical_line(self):
         data = [(3, 1, 1), (3, 2, 2), (3, 5, 3), (3, 7, 4)]
@@ -20,7 +20,7 @@ class LineTest(unittest2.TestCase):
         self.assertEqual(anglereduce(data, 179.5), expected)
         self.assertEqual(anglereduce(data, 100), expected)
         self.assertEqual(anglereduce(data, 30), expected)
-        self.assertEqual(anglereduce(data, 0), expected)
+        self.assertEqual(anglereduce(data, 1), expected)
 
     def test_angle(self):
         data = [(1, 1, 1), (4, 1, 2), (30, 2, 3)]
