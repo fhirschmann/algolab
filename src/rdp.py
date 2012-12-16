@@ -4,7 +4,7 @@
 from util import pdist
 
 
-def rdp(points, epsilon=1):
+def rdp(points, epsilon=0):
     """
     This is an implementation of the Ramer-Douglas-Peucker algorithm.
 
@@ -16,15 +16,18 @@ def rdp(points, epsilon=1):
     if epsilon <= 0:
         return points
 
+    if len(points) < 3:
+        return points
+
     dmax = 0.0
-    index = 0
-    for i in xrange(2, len(points) - 1):
+    index = -1
+    for i in xrange(1, len(points)):
         d = pdist(points[i], points[0], points[-1])
         if d > dmax:
             index = i
             dmax = d
-    if dmax >= epsilon:
-        r1 = rdp(points[:index], epsilon)
+    if dmax > epsilon:
+        r1 = rdp(points[:index + 1], epsilon)
         r2 = rdp(points[index:], epsilon)
         return r1[:-1] + r2
     else:
