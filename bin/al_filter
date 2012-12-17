@@ -3,11 +3,15 @@ import sys
 import os
 import logging
 logging.basicConfig(level=logging.INFO)
+from decimal import Decimal, getcontext
+getcontext().prec = 80
 
 # Hack in order to avoid making this a python package
 sys.path.append(os.path.dirname(
     os.path.abspath(sys.argv[0])) + os.sep + os.pardir + os.sep + "algolab")
 
+import argparse
+from datetime import datetime
 from pymongo import Connection
 
 from algolab.anglered import anglereduce
@@ -19,32 +23,75 @@ from algolab.util import epsilon_linear
 
 def log(zoom, msg, points=None):
     logging.info("[zoom=%i] %s %s" % (zoom, msg,
-        ("[%s]" % points) if points is not None else ""))
+        ("[%s nodes remaining]" % points) if points is not None else ""))
+
+
+def progress(msg, start, stop):
+    sys.stdout.write("\r" + msg % (start, stop))
+    if start == stop:
+        sys.stdout.write("\n")
+    sys.stdout.flush()
 
 
 if __name__ == "__main__":
-    rg_ = Connection("127.0.0.1", 27017)["osm-data"]["railway_graph"]
+    parser = argparse.ArgumentParser(description="Algorithm Visualization")
+    parser.add_argument("zl", type=int, nargs="+",
+            help="zoom levels to generate a RG for")
+    parser.add_argument("--host", action="store", dest="host", default="127.0.0.1",
+            type=str, help="host of the mongo database")
+    parser.add_argument("--port", action="store", dest="port", default=27017,
+            type=int, help="port of the mongo database")
+    parser.add_argument("--db", action="store", dest="db", default="osm-data",
+            type=str, help="name of the database")
+    parser.add_argument("--no-progress", action="store_true", dest="np", default=False,
+            help="don't print the progress")
+    args = parser.parse_args()
 
-    rgs = {}
-    for i in xrange(8, 17):
-        rgs[i] = Connection("127.0.0.1", 27017)["osm-data"]["railway_graph_%i" % i]
-        rgs[i].drop()
+    db = Connection(args.host, args.port)[args.db]
 
-    log(-1, "Loaded Railway Graph", rg_.count())
+    rg_ = db["railway_graph"]
+    rgs = {i: db["railway_graph_%i" % i] for i in xrange(8, 17)}
+    now = datetime.now()
 
-    # remove all unnecessary points (points on a straight line)
-    for seg in segment(rg_):
-        sloc = loc_for_mult(seg, rg_)
-        # Please note that anglereduce(x, 180) and rdp(x, 0) should yield
-        # the same result, but anglereduce is faster.
-        create_rg(anglereduce(sloc, 180), rgs[16])
+    zls = list(args.zl)
 
-    log(16, "Removed unnecessary points that are on a straight line", rgs[16].count())
+    if 16 in zls:
+        # Zoom level 16: Remove all unnecessary points (points on a straight
+        # line)
+        log(-1, "Loaded original railway graph", rg_.count())
 
-    segments = segment(rgs[16])
-    for i in reversed(xrange(13, 16)):
-        epsilon = epsilon_linear(i, 0.0000003)
-        for seg in segments:
-            sloc = loc_for_mult(seg, rgs[16])
-            create_rg(rdp(sloc, epsilon), rgs[i])
-        log(15, "Applied RDP with epsilon=%.10f" % epsilon, rgs[i].count())
+        rgs[16].drop()
+        log(16, "Deleted collection railway_graph_16")
+
+        segments = segment(rg_)
+        for i, seg in enumerate(segments):
+            if not args.np:
+                progress("Applying RDP to segment %s of %s", i, len(segments))
+            sloc = loc_for_mult(seg, rg_)
+            # Please note that anglereduce(x, 180) and rdp(x, 0) should yield
+            # the same result, but anglereduce is faster.
+            create_rg(anglereduce(sloc, 180), rgs[16])
+        zls.remove(16)
+        log(16, "Removed unnecessary points that are on a straight line", rgs[16].count())
+
+    r16_segmented = None
+
+    for zl in reversed(sorted(zls)):
+        if zl > 10:
+            if not r16_segmented:
+                if rgs[16].count() == 0:
+                    raise ValueError("railway_graph_16 contains no nodes")
+                r16_segmented = segment(rgs[16])
+
+            rgs[zl].drop()
+            log(zl, "Deleted collection railway_graph_%i" % zl)
+
+            epsilon = Decimal((0, (1, ), -10))
+            for i, seg in enumerate(r16_segmented):
+                if not args.np:
+                    progress("Applying RDP to segment %s of %s", i, len(r16_segmented))
+                sloc = loc_for_mult(seg, rgs[16])
+                create_rg(rdp(sloc, epsilon), rgs[zl])
+            log(zl, "Applied RDP with epsilon=%s" % epsilon.to_eng_string(), rgs[zl].count())
+
+    logging.info("Total time spent: %s" % (datetime.now() - now))
