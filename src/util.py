@@ -59,6 +59,14 @@ def default(value, replacement):
     return value if value is not None else replacement
 
 
+def epsilon_linear(zoom, k=1.5):
+    """
+    A linear function which increments ε by a factor of `k` at each
+    zoom decrement.
+    """
+    return k * (-zoom + 16)
+
+
 def create_rg(points, col):
     """
     Creates a railway graph from a given sequence of `points`
