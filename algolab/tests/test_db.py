@@ -37,4 +37,4 @@ class DBTest(unittest2.TestCase):
         apply_reduction([0, 10, len(points) - 1], self.col0, self.col1)
         self.assertEqual(self.col1.count(), 3)
 
-        self.assertEqual([n["_id"] for n in self.col1.find()], [0, 10, 76])
+        self.assertEqual([n["_id"] for n in self.col1.find()], [0, 10, len(points) - 1])
