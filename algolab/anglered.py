@@ -15,7 +15,7 @@ def anglereduce(points, epsilon):
     :param points: a curve that is approximated by a series of points
     :type points: list of 3-tuples (x, y, id)
     :param epsilon: a threshold value with 0 <  ε <= 180.
-    :type epsilon: integer
+    :type epsilon: a :class:`~decimal.Decimal`
     """
     if len(points) < 3:
         return points

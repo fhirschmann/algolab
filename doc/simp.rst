@@ -5,9 +5,9 @@ Line Simplifaction Algorithms
 Angular Reduction
 -----------------
 
-.. autofunction:: anglered.anglereduce
+.. autofunction:: algolab.anglered.anglereduce
 
 Ramer-Douglas-Peucker
 ---------------------
 
-.. autofunction:: rdp.rdp
+.. autofunction:: algolab.rdp.rdp
