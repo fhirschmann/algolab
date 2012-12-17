@@ -13,7 +13,6 @@ from data import points
 
 
 def visualize(algo, epsilon_min, epsilon_max, epsilon_0):
-    ax = subplot(111)
     subplots_adjust(left=0.15, bottom=0.25)
 
     line, = plot(zip(*points)[0], zip(*points)[1], 'ro-')
@@ -31,7 +30,7 @@ def visualize(algo, epsilon_min, epsilon_max, epsilon_0):
         line2.set_ydata(zip(*points2)[1])
 
         legend([line, line2], ["Original Route (# %s)" % len(points),
-            "Generalized Route (# %s)" % len(points2)], bbox_to_anchor=(1.05,4))
+            "Generalized Route (# %s)" % len(points2)], bbox_to_anchor=(1.05, 4))
 
         draw()
 
@@ -43,9 +42,8 @@ def visualize(algo, epsilon_min, epsilon_max, epsilon_0):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Algorithm Visualization")
-    parser.add_argument("algorithm", type=str)
+    parser.add_argument("algorithm", type=str, help="one of {rdp, anglered}")
     args = parser.parse_args()
-    print args.algorithm
 
     if args.algorithm == "rdp":
         from rdp import rdp
