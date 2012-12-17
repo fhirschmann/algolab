@@ -36,6 +36,15 @@ case "$1" in
             railway_graph 16 $ALGO_OSM_HOST $ALGO_OSM_PORT
         ;;
 
+    2n)
+        cd 2_shortest_routes_finder
+        for i in `seq 11 16`; do
+            echo "Finding shortest routes for zoom level ${i}"
+            $JAVA shortest_routes_finder.jar \
+                railway_graph_${i} ${i} $ALGO_OSM_HOST $ALGO_OSM_PORT
+        done
+        ;;
+
     3)
         cd 3_simple_routes_filter
         $JAVA simple_routes_filter.jar \
@@ -47,6 +56,7 @@ case "$1" in
         java -Xmx${ALGO_MEM} -classpath railviz_2.0.jar railViz/RailViz -p conf/config.xml -s -dr
         ;;
     4r)
+        cd 4_railviz
         echo "Removing serialized data..."
         rm -rvf 4_railviz/data/november2/Optimized/serialized/
         $0 4
