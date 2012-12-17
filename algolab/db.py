@@ -73,9 +73,9 @@ def create_rg(points, col):
                 "id": i + 1,
                 "distance": edist(point[:2], points[i + 1][:2])})
 
-        existing_node = col.find_one({"loc": point})
+        existing_node = col.find_one(point[2])
         if existing_node:
-            existing_node["successors"].append(neighbors)
+            existing_node["successors"].extend(neighbors)
             col.save(existing_node)
         else:
             col.insert({
