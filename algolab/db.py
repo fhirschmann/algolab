@@ -11,7 +11,7 @@ def node_for(_id, col):
     :param col: the collection to read from
     :type col: a :class:`~pymongo.collection.Collection`
     """
-    return col.find_one({"_id": _id})
+    return col.find_one(_id)
 
 
 def loc_for(_id, col):

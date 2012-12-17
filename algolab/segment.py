@@ -1,6 +1,7 @@
 """
 Segmentation algorithm for railway graphs.
 """
+from db import node_for
 
 
 def neighbors(node):
@@ -13,7 +14,7 @@ def walk_from(node_id, segment, col):
 
     unvisited = set(
             neighbors(
-                col.find_one({"_id": node_id}))).difference(segment)
+                node_for(node_id, col))).difference(segment)
 
     if len(unvisited) != 1:
         return segment + [node_id]
