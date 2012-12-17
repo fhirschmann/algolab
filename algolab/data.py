@@ -33,3 +33,4 @@ npoints2 = [[p[0], p[1], i] for i, p in enumerate(points2)]
 # Note: points3 and points4 have one common point!
 npoints3 = [[1, 1, 0], [2, 1, 1], [3, 1, 2], [4, 1, 3]]
 npoints4 = [[3, 0, 4], [3, 1, 2], [3, 5, 5]]
+npoints5 = [[2, 2, 6], [3, 1, 2]]

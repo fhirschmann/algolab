@@ -24,6 +24,10 @@ class SegmentTest(unittest2.TestCase):
         create_rg(npoints4, self.col1)
         self.assertEqual(segment(self.col1)[0], [4, 2, 5])
 
+    def test_already_segmented3(self):
+        create_rg(npoints5, self.col1)
+        self.assertEqual(segment(self.col1)[0], [6, 2])
+
     def test_switch_segment(self):
         create_rg(npoints4, self.col0)
 
