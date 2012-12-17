@@ -81,12 +81,12 @@ def create_rg(points, col):
         if i > 0:
             neighbors.append({
                 "id": points[i - 1][2],
-                "distance": edist(point[:2], points[i - 1][:2])})
+                "distance": float(edist(point[:2], points[i - 1][:2]))})
 
         if i < len(points) - 1:
             neighbors.append({
                 "id": points[i + 1][2],
-                "distance": edist(point[:2], points[i + 1][:2])})
+                "distance": float(edist(point[:2], points[i + 1][:2]))})
 
         existing_node = col.find_one(point[2])
         if existing_node:

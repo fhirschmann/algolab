@@ -1,5 +1,5 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from decimal import Decimal
 
 from algolab.util import pdist
 
@@ -11,12 +11,12 @@ def rdp(points, epsilon=0):
     :param points: a curve that is approximated by a series of points
     :type points: list of 3-tuples (x, y, id)
     :param epsilon: a threshold value with 0 <= ε < 180.
-    :type epsilon: integer
+    :type epsilon: a `Decimal`
     """
     if len(points) < 3:
         return points
 
-    dmax = 0.0
+    dmax = Decimal(0.0)
     index = -1
     for i in xrange(1, len(points)):
         d = pdist(points[i][:2], points[0][:2], points[-1][:2])
