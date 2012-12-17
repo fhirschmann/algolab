@@ -28,7 +28,7 @@ def log(zoom, msg, points=None):
 
 def progress(msg, start, stop):
     sys.stdout.write("\r" + msg % (start, stop))
-    if start == stop:
+    if start == stop - 1:
         sys.stdout.write("\n")
     sys.stdout.flush()
 
