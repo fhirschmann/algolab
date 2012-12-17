@@ -38,6 +38,12 @@ class DBTest(unittest2.TestCase):
 
         self.assertEqual(self.col0.count(), len(npoints3) + len(npoints4) - 1)
 
+    def test_create_rg_switch2(self):
+        create_rg(npoints4, self.col0)
+        create_rg(npoints5, self.col0)
+
+        self.assertEqual(self.col0.count(), len(npoints5) + len(npoints4) - 1)
+
     def test_create_rg_from0(self):
         create_rg(npoints, self.col0)
 
