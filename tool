@@ -17,6 +17,7 @@ ACTION=$1
 
 JAVA="java -jar -Xms256m -Xmx${ALGO_MEM}"
 
+cd $ALGO_PATH
 
 case "$1" in
     dropdb)
