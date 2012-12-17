@@ -1,6 +1,6 @@
 import unittest2
 
-from anglered import *
+from algolab.anglered import *
 
 
 class LineTest(unittest2.TestCase):

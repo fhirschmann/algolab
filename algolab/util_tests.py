@@ -1,6 +1,6 @@
 import unittest2
 
-from util import *
+from anglered.util import *
 
 
 class TriAreaTest(unittest2.TestCase):

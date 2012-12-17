@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from util import pdist
+from algolab.util import pdist
 
 
 def rdp(points, epsilon=0):

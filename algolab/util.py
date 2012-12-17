@@ -16,7 +16,7 @@ def edist(a, b):
 
 def pdist(p, a, b):
     """
-    Calculate the perpendicular distance of `p` to the 
+    Calculate the perpendicular distance of `p` to the
     line given by the points `a` and `b`.
 
     The perpendicular distance from the point (x₁,y₁) to

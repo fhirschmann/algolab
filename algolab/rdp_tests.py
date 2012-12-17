@@ -1,6 +1,6 @@
 import unittest2
 
-from rdp import *
+from anglered.rdp import *
 
 
 class LineTest(unittest2.TestCase):
