@@ -26,11 +26,11 @@ def visualize(algo, epsilon_min, epsilon_max, epsilon_0):
     slider = Slider(axslider, 'Epsilon', epsilon_min, epsilon_max, valinit=epsilon_0)
 
     def update(val):
-        points2 = algo(points, slider.val)
+        points2 = [p[:2] for p in algo([x + [0] for x in points], slider.val)]
         line2.set_xdata(zip(*points2)[0])
         line2.set_ydata(zip(*points2)[1])
 
-        legend([line, line2], ["Original Route (# %s)" % len(points), 
+        legend([line, line2], ["Original Route (# %s)" % len(points),
             "Generalized Route (# %s)" % len(points2)], bbox_to_anchor=(1.05,4))
 
         draw()
