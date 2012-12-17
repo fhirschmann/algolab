@@ -1,6 +1,6 @@
 import unittest2
 
-from anglered.util import *
+from algolab.util import *
 
 
 class TriAreaTest(unittest2.TestCase):
