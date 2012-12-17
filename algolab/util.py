@@ -65,30 +65,3 @@ def epsilon_linear(zoom, k=1.5):
     zoom decrement.
     """
     return k * (-zoom + 16)
-
-
-def create_rg(points, col):
-    """
-    Creates a railway graph from a given sequence of `points`
-    and writes it to a collection `col`.
-
-    WARNING: This will delete all entries in the collection.
-
-    :param col: a collection cursor
-    :type col : a :class:`~pymongo.collection.Collection`
-    """
-    col.drop()
-
-    for i, point in enumerate(points):
-
-        successors = []
-        if i > 0:
-            successors.append({"id": i - 1, "distance": edist(point, points[i - 1])})
-        if i < len(points) - 1:
-            successors.append({"id": i + 1, "distance": edist(point, points[i + 1])})
-
-        col.insert({
-            "_id": i,
-            "loc": point,
-            "successors": successors,
-        })
