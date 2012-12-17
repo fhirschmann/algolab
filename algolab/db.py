@@ -14,6 +14,21 @@ def node_for(_id, col):
     return col.find_one({"_id": _id})
 
 
+def loc_for(_id, col):
+    """
+    Returns the location of a node identified by `_id` in
+    the collection `col`.
+    """
+    return node_for(_id, col)["loc"]
+
+
+def loc_for_mult(_ids, col):
+    """
+    Applies `~algolab.db.loc_for` for each id in `_ids`.
+    """
+    return [loc_for(i, col) + [i] for i in _ids]
+
+
 def node_distance(node1, node2):
     """
     Calculates the distance between two nodes in the database.
@@ -21,7 +36,7 @@ def node_distance(node1, node2):
     return edist(node2["loc"], node2["loc"])
 
 
-def apply_reduction(node_ids, source_col, dest_col):
+def create_rg_from(node_ids, source_col, dest_col):
     """
     Reads all nodes identified by their `ids` from `source_col` and
     writes them to the `dest_col`.
