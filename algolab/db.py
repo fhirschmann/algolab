@@ -79,7 +79,7 @@ def apply_reduction(node_ids, source_col, dest_col):
 def create_rg(points, col):
     """
     Creates a railway graph from a given sequence of `points`
-    and writes it to a collection `col`.
+    and write it to a collection `col`.
 
     :param col: a collection cursor
     :type col : a :class:`~pymongo.collection.Collection`
@@ -90,12 +90,18 @@ def create_rg(points, col):
     for i, point in enumerate(points):
         neighbors = []
         if i > 0:
-            neighbors.append({"id": i - 1, "distance": edist(point, points[i - 1])})
+            neighbors.append({"id": i - 1, "distance": edist(point[:2], points[i - 1][:2])})
         if i < len(points) - 1:
-            neighbors.append({"id": i + 1, "distance": edist(point, points[i + 1])})
+            neighbors.append({"id": i + 1, "distance": edist(point[:2], points[i + 1][:2])})
 
-        col.insert({
-            "_id": i,
-            "loc": point,
-            "successors": neighbors,
-        })
+        existing_node = col.find_one({"loc": point})
+        if existing_node:
+            col.update(
+                    {"_id": point[2]},
+                    {"successors": existing_node["successors"] + neighbors})
+        else:
+            col.insert({
+                "_id": point[2],
+                "loc": point[:2],
+                "successors": neighbors,
+            })
