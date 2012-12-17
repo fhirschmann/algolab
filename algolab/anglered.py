@@ -46,8 +46,8 @@ def _anglereduce(points, epsilon, pos=1):
     #    \ /
     #     a
     ax, ay, _ = points[pos]
-    bx, by, _ = points[pos-1]
-    cx, cy, _ = points[pos+1]
+    bx, by, _ = points[pos - 1]
+    cx, cy, _ = points[pos + 1]
 
     v = np.array([bx - ax, by - ay])
     w = np.array([cx - ax, cy - ay])

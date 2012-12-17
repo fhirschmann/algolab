@@ -11,7 +11,7 @@ def edist(a, b):
     """
     ax, ay = a
     bx, by = b
-    return sqrt((ax - bx)**2 + (ay - by)**2)
+    return sqrt((ax - bx) ** 2 + (ay - by) ** 2)
 
 
 def pdist(p, a, b):
@@ -37,7 +37,7 @@ def pdist(p, a, b):
     k = (by - ay) / (bx - ax)
     m = ay - k * ax
 
-    return abs(k * px - py + m) / sqrt(k**2 + 1)
+    return abs(k * px - py + m) / sqrt(k ** 2 + 1)
 
 
 def triarea(a, b, c):

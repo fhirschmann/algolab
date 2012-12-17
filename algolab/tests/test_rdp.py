@@ -1,6 +1,6 @@
 import unittest2
 
-from algolab.rdp import *
+fromt algolab.rdp import *
 
 
 class LineTest(unittest2.TestCase):
