@@ -86,7 +86,7 @@ if __name__ == "__main__":
             rgs[zl].drop()
             log(zl, "Deleted collection railway_graph_%i" % zl)
 
-            epsilon = Decimal((0, (1, ), -10))
+            epsilon = Decimal((0, (1, ), - 2 * zl + 20))
             for i, seg in enumerate(r16_segmented):
                 if not args.np:
                     progress("Applying RDP to segment %s of %s", i, len(r16_segmented))
