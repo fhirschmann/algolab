@@ -14,6 +14,7 @@ from algolab.anglered import anglereduce
 from algolab.rdp import rdp
 from algolab.segment import segment
 from algolab.db import create_rg, loc_for_mult
+from algolab.util import epsilon_linear
 
 
 def log(zoom, msg, points=None):
@@ -22,25 +23,28 @@ def log(zoom, msg, points=None):
 
 
 if __name__ == "__main__":
-    rg = Connection("127.0.0.1", 27017)["osm-data"]["railway_graph"]
-    rg0 = Connection("127.0.0.1", 27017)["osm-data"]["railway_graph_0"]
-    rg16 = Connection("127.0.0.1", 27017)["osm-data"]["railway_graph_16"]
-    rg0.drop()
+    rg_ = Connection("127.0.0.1", 27017)["osm-data"]["railway_graph"]
 
-    log(-1, "Loaded Railway Graph", rg.count())
+    rgs = {}
+    for i in xrange(8, 17):
+        rgs[i] = Connection("127.0.0.1", 27017)["osm-data"]["railway_graph_%i" % i]
+        rgs[i].drop()
+
+    log(-1, "Loaded Railway Graph", rg_.count())
 
     # remove all unnecessary points (points on a straight line)
-    for seg in segment(rg):
-        sloc = loc_for_mult(seg, rg)
+    for seg in segment(rg_):
+        sloc = loc_for_mult(seg, rg_)
         # Please note that anglereduce(x, 180) and rdp(x, 0) should yield
-        # the same result.
-        create_rg(anglereduce(sloc, 180), rg0)
+        # the same result, but anglereduce is faster.
+        create_rg(anglereduce(sloc, 180), rgs[16])
 
-    log(16, "Removed unnecessary points that are on a straight line", rg0.count())
+    log(16, "Removed unnecessary points that are on a straight line", rgs[16].count())
 
-    for i in reversed(xrange(8, 16)):
-        if i == 15:
-            for seg in segment(rg0):
-                sloc = loc_for_mult(seg, rg0)
-                create_rg(rdp(sloc, 2), rg16)
-            log(15, "Applied RDP with epsilon=%i" % 2, rg16.count())
+    segments = segment(rgs[16])
+    for i in reversed(xrange(13, 16)):
+        epsilon = epsilon_linear(i, 0.0000003)
+        for seg in segments:
+            sloc = loc_for_mult(seg, rgs[16])
+            create_rg(rdp(sloc, epsilon), rgs[i])
+        log(15, "Applied RDP with epsilon=%.10f" % epsilon, rgs[i].count())
