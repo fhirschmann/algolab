@@ -5,9 +5,9 @@ setup(name="algolab",
         description="Algorithm Lab",
         packages=["algolab"],
         scripts=[
-            "bin/filter",
-            "bin/visualize",
-            "bin/create_testgraph"],
+            "bin/al_filter",
+            "bin/al_visualize",
+            "bin/al_create_testgraph"],
         install_requires=[
             "numpy",
         ]

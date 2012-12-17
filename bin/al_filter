@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+import sys
+import os
+
+# Hack in order to avoid making this a python package
+sys.path.append(os.path.dirname(
+    os.path.abspath(sys.argv[0])) + os.sep + os.pardir + os.sep + "algolab")
+
+from pymongo import Connection
+
+from rdp import rdp, epsilon_linear
+from segment import segment
+from anglered import anglereduce_col
+
+if __name__ == "__main__":
+    db = Connection("127.0.0.1", 27017)["osm-data"]["shortest_routes_zoom_level_16"]
+    db2 = Connection("127.0.0.1", 27017)["osm-data"]["shortest_routes_zoom_level_14"]
+    print len(db.find()[0]["route_nodes"])
+    print len(db2.find()[0]["route_nodes"])
+
+    sys.exit(0)
+
+
+
+    db = Connection("127.0.0.1", 27017)["osm-data"]["railway_graph"]
+    db2 = Connection("127.0.0.1", 27017)["osm-data"]["railway_graph2"]
+    db2.drop()
+
+    segs = segment(db)
+    for seg in segs:
+        anglereduce_col(seg, 179.5, db, db2)
+
+    print len(list(db.find()))
+    print len(list(db2.find()))
