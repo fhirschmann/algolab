@@ -1,7 +1,7 @@
-from pymongo import Connection, GEO2D
+from pymongo import GEO2D
+from bson.code import Code
 
-from algolab.util import edist, gcdist
-
+from algolab.util import gcdist
 
 
 def node_for(_id, col):
@@ -32,12 +32,83 @@ def loc_for_mult(_ids, col):
     return [loc_for(i, col) + [i] for i in _ids]
 
 
+def extend_neighbors(node1, node2):
+    """
+    Extends `node1`'s neighbors with those of `node2`.
+    """
+    for n in node2["successors"]:
+        if n["id"] not in [a["id"] for a in node1["successors"]]:
+            node1["successors"].append(n)
+
+
 def empty(col):
     """
     Empties a collection and creates a :class:`GEO2D` index.
     """
     col.drop()
     col.create_index([("loc", GEO2D)])
+
+
+def merge_nodes(rg, node_id, merge_with_ids, distance_function=gcdist):
+    """
+    Merges all nodes identified by their id (`merge_with_ids`) with
+    a node identified by `node_id`.
+
+    Also takes care of the nodes who are neighbors of the node we are
+    going to merge with.
+    """
+    # TODO: Test this
+    node = rg.find_one(node_id)
+
+    visit_ids = set()
+
+    for merge_id in merge_with_ids:
+        merge = rg.find_one(merge_id)
+        extend_neighbors(node, merge)
+
+        for s in merge["successors"]:
+            visit_ids.add(s["id"])
+        rg.remove(merge)
+
+    for visit_id in visit_ids:
+        # Visit all of the duplication's neighbors
+        visit = rg.find_one(visit_id)
+        visit["successors"] = filter(
+                lambda x: x not in merge_with_ids, visit["successors"])
+        visit["successors"].append({
+            "id": node_id,
+            "distance": int(distance_function(node["loc"], visit["loc"]))})
+        rg.save(visit)
+
+    rg.save(node)
+
+
+def dedup(rg):
+    """
+    Removes all duplicates from a railway graph `rg`.
+
+    Two points are duplicates of each other if they have the same location.
+    """
+    # TODO: Test this
+    duplicates = set()
+    duplicates_map = {}
+
+    for node in rg.find():
+        if node["_id"] in duplicates:
+            continue
+        for dup in rg.find({"loc": node["loc"]}):
+            if dup["_id"] != node["_id"]:
+                # `dup` is a duplicate of `node`
+                duplicates.add(dup["_id"])
+                if node["_id"] in duplicates_map:
+                    duplicates_map[node["_id"]].append(dup["_id"])
+                else:
+                    duplicates_map[node["_id"]] = [dup["_id"]]
+
+    for node_id, merge_with_ids in duplicates_map.items():
+        merge_nodes(rg, node_id, merge_with_ids)
+
+    return len(duplicates)
 
 
 def create_rg_from(node_ids, source_col, dest_col):
@@ -94,7 +165,7 @@ def create_rg(points, col, distance_function=gcdist):
 
         existing_node = col.find_one(point[2])
         if existing_node:
-            existing_node["successors"].extend(neighbors)
+            extend_neighbors(existing_node, {"successors": neighbors})
             col.save(existing_node)
         else:
             col.insert({
