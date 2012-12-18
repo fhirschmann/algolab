@@ -2,10 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division
-from math import sqrt
+from math import sqrt, cos, sin, radians, atan2
 
 import numpy as np
 from scipy.spatial.distance import euclidean
+
+EARTH_RADIUS = 6378137
 
 
 def edist(a, b):
@@ -13,6 +15,24 @@ def edist(a, b):
     Calculates the euclidean distance between two points `a` and `b`.
     """
     return euclidean(np.array(a), np.array(b))
+
+
+def gcdist(a, b):
+    """
+    Calculates the great circe distance between `a` and `b`
+    """
+    lat1, lon1 = a
+    lat2, lon2 = b
+
+    dLat = radians(lat2 - lat1)
+    dLon = radians(lon2 - lon1)
+
+    a = (sin(dLat / 2) * sin(dLat / 2) +
+            cos(radians(lat1)) * cos(radians(lat2)) *
+            sin(dLon / 2) * sin(dLon / 2))
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    return EARTH_RADIUS * c
 
 
 def pdist(p, a, b):

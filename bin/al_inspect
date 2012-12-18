@@ -20,11 +20,16 @@ if __name__ == "__main__":
     db = Connection(args.host, args.port)[args.db]
 
     rg_tbl = PrettyTable(["Collection Name", "Nodes"])
+    sr_tbl = PrettyTable(["Collection Name", "Routes"])
 
     for cname in db.collection_names():
         if cname.startswith("railway_graph"):
             rg_tbl.add_row([cname, db[cname].count()])
+        elif cname.startswith("shortest_routes"):
+            sr_tbl.add_row([cname, db[cname].count()])
 
     print("Railway Graphs:")
-
     print(rg_tbl)
+
+    print ("Routes:")
+    print(sr_tbl)

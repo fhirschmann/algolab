@@ -12,7 +12,7 @@ sys.path.append(os.path.dirname(
 
 import argparse
 from datetime import datetime
-from pymongo import Connection
+from pymongo import Connection, GEO2D
 
 from algolab.anglered import anglereduce
 from algolab.rdp import rdp
@@ -31,6 +31,11 @@ def progress(msg, start, stop):
     if start == stop - 1:
         sys.stdout.write("\n")
     sys.stdout.flush()
+
+
+def drop_col(col):
+    col.drop()
+    col.create_index([("loc", GEO2D)])
 
 
 if __name__ == "__main__":
@@ -60,7 +65,7 @@ if __name__ == "__main__":
         # line)
         log(-1, "Loaded original railway graph", rg_.count())
 
-        rgs[16].drop()
+        drop_col(rgs[16])
         log(16, "Deleted collection railway_graph_16")
 
         segments = segment(rg_)
@@ -83,7 +88,7 @@ if __name__ == "__main__":
                     raise ValueError("railway_graph_16 contains no nodes")
                 r16_segmented = segment(rgs[16])
 
-            rgs[zl].drop()
+            drop_col(rgs[zl])
             log(zl, "Deleted collection railway_graph_%i" % zl)
 
             epsilon = Decimal((0, (1, ), - 2 * zl + 20))

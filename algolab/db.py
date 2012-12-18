@@ -1,4 +1,4 @@
-from algolab.util import edist
+from algolab.util import edist, gcdist
 
 
 def node_for(_id, col):
@@ -27,13 +27,6 @@ def loc_for_mult(_ids, col):
     Applies `~algolab.db.loc_for` for each id in `_ids`.
     """
     return [loc_for(i, col) + [i] for i in _ids]
-
-
-def node_distance(node1, node2):
-    """
-    Calculates the distance between two nodes in the database.
-    """
-    return edist(node2["loc"], node2["loc"])
 
 
 def create_rg_from(node_ids, source_col, dest_col):
@@ -81,12 +74,12 @@ def create_rg(points, col):
         if i > 0:
             neighbors.append({
                 "id": points[i - 1][2],
-                "distance": float(edist(point[:2], points[i - 1][:2]))})
+                "distance": int(gcdist(point[:2], points[i - 1][:2]))})
 
         if i < len(points) - 1:
             neighbors.append({
                 "id": points[i + 1][2],
-                "distance": float(edist(point[:2], points[i + 1][:2]))})
+                "distance": int(gcdist(point[:2], points[i + 1][:2]))})
 
         existing_node = col.find_one(point[2])
         if existing_node:
