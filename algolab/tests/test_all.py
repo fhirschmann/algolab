@@ -7,6 +7,7 @@ from algolab.anglered import *
 from algolab.db import *
 from algolab.data import *
 from algolab.segment import *
+from algolab.util import *
 
 
 class AllTest(unittest2.TestCase):

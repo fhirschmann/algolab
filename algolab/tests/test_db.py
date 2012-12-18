@@ -4,6 +4,7 @@ from pymongo import Connection
 
 from algolab.db import *
 from algolab.data import *
+from algolab.util import *
 
 
 class DBTest(unittest2.TestCase):
