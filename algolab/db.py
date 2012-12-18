@@ -41,6 +41,16 @@ def extend_neighbors(node1, node2):
             node1["successors"].append(n)
 
 
+def remove_neighbors(node, neighbor_ids):
+    """
+    Removes the neighbors identified by `neighbor_ids`
+    from a node.
+    """
+    node["successors"] = filter(
+            lambda s: s["id"] not in neighbor_ids,
+            node["successors"])
+
+
 def empty(col):
     """
     Empties a collection and creates a :class:`GEO2D` index.
@@ -57,7 +67,6 @@ def merge_nodes(rg, node_id, merge_with_ids, distance_function=gcdist):
     Also takes care of the nodes who are neighbors of the node we are
     going to merge with.
     """
-    # TODO: Test this
     node = rg.find_one(node_id)
 
     visit_ids = set()
@@ -69,6 +78,8 @@ def merge_nodes(rg, node_id, merge_with_ids, distance_function=gcdist):
         for s in merge["successors"]:
             visit_ids.add(s["id"])
         rg.remove(merge["_id"])
+
+    remove_neighbors(node, merge_with_ids + [node_id])
 
     for visit_id in visit_ids:
         # Visit all of the duplication's neighbors
