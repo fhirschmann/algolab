@@ -68,7 +68,7 @@ def merge_nodes(rg, node_id, merge_with_ids, distance_function=gcdist):
 
         for s in merge["successors"]:
             visit_ids.add(s["id"])
-        rg.remove(merge)
+        rg.remove(merge["_id"])
 
     for visit_id in visit_ids:
         # Visit all of the duplication's neighbors
