@@ -2,16 +2,17 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division
-from decimal import Decimal
+from math import sqrt
+
+import numpy as np
+from scipy.spatial.distance import euclidean
 
 
 def edist(a, b):
     """
     Calculates the euclidean distance between two points `a` and `b`.
     """
-    ax, ay = map(Decimal, a)
-    bx, by = map(Decimal, b)
-    return Decimal((ax - bx) ** 2 + (ay - by) ** 2).sqrt()
+    return euclidean(np.array(a), np.array(b))
 
 
 def pdist(p, a, b):
@@ -27,9 +28,9 @@ def pdist(p, a, b):
     if a == b:
         return edist(p, a)
 
-    ax, ay = map(Decimal, a)
-    bx, by = map(Decimal, b)
-    px, py = map(Decimal, p)
+    ax, ay = a
+    bx, by = b
+    px, py = p
 
     if (ax == bx):
         return abs(ax - px)
@@ -37,14 +38,14 @@ def pdist(p, a, b):
     k = (by - ay) / (bx - ax)
     m = ay - k * ax
 
-    return abs(k * px - py + m) / Decimal(k ** 2 + 1).sqrt()
+    return abs(k * px - py + m) / sqrt(k ** 2 + 1)
 
 
 def triarea(a, b, c):
     """
     Calculates the area of a triangle.
     """
-    return Decimal(0.5) * edist(a, b) * pdist(c, a, b)
+    return 0.5 * edist(a, b) * pdist(c, a, b)
 
 
 def default(value, replacement):
