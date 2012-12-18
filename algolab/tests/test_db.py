@@ -26,7 +26,7 @@ class DBTest(unittest2.TestCase):
         self.assertEqual(len(node_for(len(points) - 1, self.col0)["successors"]), 1)
 
     def test_create_rg_dist(self):
-        create_rg(npoints3, self.col0)
+        create_rg(npoints3, self.col0, distance_function=edist)
 
         for node in self.col0.find():
             for neig in node["successors"]:
@@ -43,6 +43,14 @@ class DBTest(unittest2.TestCase):
         create_rg(npoints5, self.col0)
 
         self.assertEqual(self.col0.count(), len(npoints5) + len(npoints4) - 1)
+
+    def test_create_rg_switch3(self):
+        create_rg(npoints3, self.col0)
+        create_rg(npoints4, self.col0)
+        create_rg(npoints6, self.col0)
+
+        self.assertEqual(self.col0.count(),
+                len(npoints3) + len(npoints4) + len(npoints6) - 2)
 
     def test_create_rg_from0(self):
         create_rg(npoints, self.col0)
