@@ -62,8 +62,6 @@ def segment(col):
         if node["_id"] in visited:
             continue
 
-        n3 = (node["_id"] == 3)
-
         neighbor_ids = neighbors(node)
         if len(neighbor_ids) != 2:
             # this node is either an endpoint or a switch
