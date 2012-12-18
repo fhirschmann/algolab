@@ -71,7 +71,7 @@ if __name__ == "__main__":
         segments = segment(rg_)
         for i, seg in enumerate(segments):
             if not args.np:
-                progress("Applying RDP to segment %s of %s", i, len(segments))
+                progress("Applying Anglered to segment %s of %s", i, len(segments))
             sloc = loc_for_mult(seg, rg_)
             # Please note that anglereduce(x, 180) and rdp(x, 0) should yield
             # the same result, but anglereduce is faster.
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     r16_segmented = None
 
     for zl in reversed(sorted(zls)):
-        if zl > 10:
+        if zl > 7:
             if not r16_segmented:
                 if rgs[16].count() == 0:
                     raise ValueError("railway_graph_16 contains no nodes")
