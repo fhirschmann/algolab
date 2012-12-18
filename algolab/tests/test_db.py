@@ -98,3 +98,29 @@ class DBTest(unittest2.TestCase):
                 len(neighbors_before) - 1)
         self.assertItemsEqual([s["id"] for s in self.col0.find_one(2)["successors"]],
                 [0, 6, 3, 5, 8, 9])
+
+    def test_dedup(self):
+        self.create_rg_for([2, 3, 4, 5])
+        count_before = self.col0.count()
+
+        self.col0.insert({"loc": points[2][1], "successors": []})
+        self.assertEqual(self.col0.count(), count_before + 1)
+
+        dedup(self.col0)
+        self.assertEqual(self.col0.count(), count_before)
+
+    def test_dedup2(self):
+        self.create_rg_for([2, 3, 4, 5])
+        count_before = self.col0.count()
+
+        self.col0.insert({"_id": 100, "loc": points[2][1], "successors": [
+            {"id": 99, "distance": 1}]})
+        self.col0.insert({"_id": 99, "loc": [2, 0], "successors": [
+            {"id": 100, "distance": 1}]})
+
+        print self.col0.find_one(99)
+
+        dedup(self.col0, distance_function=edist)
+        self.assertEqual(self.col0.count(), count_before + 1)
+        self.assertEqual(self.col0.find_one(99)["successors"],
+                [{"id": npoints[2][1][2], "distance": 1}])

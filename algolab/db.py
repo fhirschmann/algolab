@@ -85,7 +85,7 @@ def merge_nodes(rg, node_id, merge_with_ids, distance_function=gcdist):
         # Visit all of the duplication's neighbors
         visit = rg.find_one(visit_id)
         visit["successors"] = filter(
-                lambda x: x not in merge_with_ids, visit["successors"])
+                lambda x: x["id"] not in merge_with_ids, visit["successors"])
         visit["successors"].append({
             "id": node_id,
             "distance": int(distance_function(node["loc"], visit["loc"]))})
@@ -94,13 +94,12 @@ def merge_nodes(rg, node_id, merge_with_ids, distance_function=gcdist):
     rg.save(node)
 
 
-def dedup(rg):
+def dedup(rg, distance_function=gcdist):
     """
     Removes all duplicates from a railway graph `rg`.
 
     Two points are duplicates of each other if they have the same location.
     """
-    # TODO: Test this
     duplicates = set()
     duplicates_map = {}
 
@@ -117,7 +116,7 @@ def dedup(rg):
                     duplicates_map[node["_id"]] = [dup["_id"]]
 
     for node_id, merge_with_ids in duplicates_map.items():
-        merge_nodes(rg, node_id, merge_with_ids)
+        merge_nodes(rg, node_id, merge_with_ids, distance_function)
 
     return len(duplicates)
 
