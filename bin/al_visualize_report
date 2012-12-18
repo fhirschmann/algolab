@@ -1,0 +1,9 @@
+#!/bin/bash
+
+al_visualize_rg --title "Initial Situation" \
+    --collection railway_graph \
+    --save rg_initial.png
+
+al_visualize_rg --title "After Anglered Algorithm" \
+    --collection railway_graph_16 \
+    --save rg_anglered.png

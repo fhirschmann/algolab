@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+import sys
+import os
+
+# Hack in order to avoid making this a python package
+sys.path.append(os.path.dirname(
+    os.path.abspath(sys.argv[0])) + os.sep + os.pardir + os.sep + "algolab")
+
+import argparse
+from pymongo import Connection
+from pylab import *
+
+from algolab.segment import segment
+from algolab.db import loc_for_mult
+from algolab.data import *
+
+
+def visualize(data, ptitle, saveto=False):
+    subplots_adjust(left=0.15, bottom=0.25)
+
+    lines = [plot(zip(*p)[0], zip(*p)[1], 'ro-')[0] for p in data]
+
+    #legend(lines, data.keys())
+    draw()
+
+    grid(True)
+    title("%s %s nodes" % (ptitle, len(data)))
+
+    if saveto:
+        savefig(saveto)
+    else:
+        show()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="AlgoLab Database Inspection")
+    parser.add_argument("--host", action="store", dest="host", default="127.0.0.1",
+            type=str, help="host of the mongo database")
+    parser.add_argument("--port", action="store", dest="port", default=27017,
+            type=int, help="port of the mongo database")
+    parser.add_argument("--db", action="store", dest="db", default="osm-data",
+            type=str, help="name of the database")
+    parser.add_argument("--collection", action="store", dest="rg", default="railway_graph",
+            type=str, help="name of the collection")
+    parser.add_argument("--title", action="store", dest="title", default="RG Visualization",
+            type=str, help="title of the image")
+    parser.add_argument("--save", action="store", dest="saveto", default=None,
+            type=str, help="save image to")
+    args = parser.parse_args()
+
+    rg = Connection(args.host, args.port)[args.db][args.rg]
+
+    segments = segment(rg)
+
+    slocs = []
+    for seg in segments:
+        sloc = loc_for_mult(seg, rg)
+        slocs.append(sloc)
+
+    visualize(slocs, args.title, args.saveto)
