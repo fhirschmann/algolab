@@ -62,12 +62,12 @@ def segment(col):
         if node["_id"] in visited:
             continue
 
+        n3 = (node["_id"] == 3)
+
         neighbor_ids = neighbors(node)
         if len(neighbor_ids) != 2:
             # this node is either an endpoint or a switch
             for neighbor_id in neighbor_ids:
-                if neighbor_id in visited:
-                    continue
                 segment = walk_from(neighbor_id, [node["_id"]], col)
                 segments.append(segment)
                 visited.update(segment)
