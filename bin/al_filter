@@ -12,12 +12,12 @@ sys.path.append(os.path.dirname(
 
 import argparse
 from datetime import datetime
-from pymongo import Connection, GEO2D
+from pymongo import Connection
 
 from algolab.anglered import anglereduce
 from algolab.rdp import rdp
 from algolab.segment import segment
-from algolab.db import create_rg, loc_for_mult
+from algolab.db import create_rg, loc_for_mult, empty
 from algolab.util import epsilon_linear
 
 
@@ -31,11 +31,6 @@ def progress(msg, start, stop):
     if start == stop - 1:
         sys.stdout.write("\n")
     sys.stdout.flush()
-
-
-def drop_col(col):
-    col.drop()
-    col.create_index([("loc", GEO2D)])
 
 
 if __name__ == "__main__":
@@ -65,7 +60,7 @@ if __name__ == "__main__":
         # line)
         log(-1, "Loaded original railway graph", rg_.count())
 
-        drop_col(rgs[16])
+        empty(rgs[16])
         log(16, "Deleted collection railway_graph_16")
 
         segments = segment(rg_)
@@ -88,10 +83,11 @@ if __name__ == "__main__":
                     raise ValueError("railway_graph_16 contains no nodes")
                 r16_segmented = segment(rgs[16])
 
-            drop_col(rgs[zl])
+            empty(rgs[zl])
             log(zl, "Deleted collection railway_graph_%i" % zl)
 
-            epsilon = Decimal((0, (1, ), - 2 * zl + 20))
+            #epsilon = Decimal((0, (1, ), - int(1.6 * zl + 30)))
+            epsilon = Decimal((0, (0, ), 0))
             for i, seg in enumerate(r16_segmented):
                 if not args.np:
                     progress("Applying RDP to segment %s of %s", i, len(r16_segmented))

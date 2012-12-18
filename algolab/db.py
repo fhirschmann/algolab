@@ -1,4 +1,7 @@
+from pymongo import Connection, GEO2D
+
 from algolab.util import edist, gcdist
+
 
 
 def node_for(_id, col):
@@ -27,6 +30,14 @@ def loc_for_mult(_ids, col):
     Applies `~algolab.db.loc_for` for each id in `_ids`.
     """
     return [loc_for(i, col) + [i] for i in _ids]
+
+
+def empty(col):
+    """
+    Empties a collection and creates a :class:`GEO2D` index.
+    """
+    col.drop()
+    col.create_index([("loc", GEO2D)])
 
 
 def create_rg_from(node_ids, source_col, dest_col):
