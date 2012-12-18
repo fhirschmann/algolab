@@ -38,7 +38,7 @@ case "$1" in
 
     2n)
         cd 2_shortest_routes_finder
-        for i in `seq 11 16`; do
+        for i in `seq 8 16`; do
             echo "Finding shortest routes for zoom level ${i}"
             $JAVA shortest_routes_finder.jar \
                 railway_graph_${i} ${i} $ALGO_OSM_HOST $ALGO_OSM_PORT
