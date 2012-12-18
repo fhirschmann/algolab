@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from math import isnan
 
 import numpy as np
+from numpy.linalg import norm
 
 
 def anglereduce(points, epsilon):
@@ -52,12 +54,13 @@ def _anglereduce(points, epsilon, pos=1):
     v = np.array([bx - ax, by - ay])
     w = np.array([cx - ax, cy - ay])
 
-    dot = np.dot(v, w)
-    v_modulus = np.sqrt((v * v).sum())
-    w_modulus = np.sqrt((w * w).sum())
-    cos_angle = dot / v_modulus / w_modulus
+    cos_angle = np.dot(v, w) / norm(v) / norm(w)
 
-    angle = np.arccos(cos_angle) * 360 / 2 / np.pi
+    if not -1 <= cos_angle <= 1:
+        angle = 0.0
+    else:
+        angle = np.arccos(cos_angle) * 360 / 2 / np.pi
+
     if angle < epsilon:
         # keep the current point
         return _anglereduce(points, epsilon, pos + 1)
