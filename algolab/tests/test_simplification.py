@@ -52,9 +52,9 @@ class AngleredTest(unittest2.TestCase):
 class CompareTest(unittest2.TestCase):
     def test_compare(self):
         self.maxDiff = None
-        self.assertEqual(rdp(npoints6, 0)[:2], anglereduce(npoints6, 180)[:2])
-        self.assertEqual(rdp(npoints5, 0)[:2], anglereduce(npoints5, 180)[:2])
-        self.assertEqual(rdp(npoints4, 0)[:2], anglereduce(npoints4, 180)[:2])
-        self.assertEqual(rdp(npoints3, 0)[:2], anglereduce(npoints3, 180)[:2])
-        self.assertEqual(rdp(npoints2, 0)[:2], anglereduce(npoints2, 180)[:2])
-        self.assertEqual(rdp(npoints, 0)[:2], anglereduce(npoints, 180)[:2])
+        self.assertEqual(rdp(npoints[5], 0)[:2], anglereduce(npoints[5], 180)[:2])
+        self.assertEqual(rdp(npoints[4], 0)[:2], anglereduce(npoints[4], 180)[:2])
+        self.assertEqual(rdp(npoints[3], 0)[:2], anglereduce(npoints[3], 180)[:2])
+        self.assertEqual(rdp(npoints[2], 0)[:2], anglereduce(npoints[2], 180)[:2])
+        self.assertEqual(rdp(npoints[1], 0)[:2], anglereduce(npoints[1], 180)[:2])
+        self.assertEqual(rdp(npoints[0], 0)[:2], anglereduce(npoints[0], 180)[:2])

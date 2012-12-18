@@ -2,6 +2,8 @@
 import sys
 import os
 
+import argparse
+
 # Hack in order to avoid making this a python package
 sys.path.append(os.path.dirname(
     os.path.abspath(sys.argv[0])) + os.sep + os.pardir + os.sep + "algolab")
@@ -24,6 +26,11 @@ def visualize(data):
 
 
 if __name__ == "__main__":
-    from data import *
+    from data import points
 
-    visualize({'3': points3, '4': points4, '6': points6, '5': points5})
+    parser = argparse.ArgumentParser(description="Dataset Visualization")
+    parser.add_argument("--datasets", type=int, nargs="+", default=[2, 3, 4, 5],
+            dest="datasets", help="zoom levels to generate a RG for")
+    args = parser.parse_args()
+
+    visualize({k: v for k, v in points.items() if k in args.datasets})

@@ -19,13 +19,13 @@ class AllTest(unittest2.TestCase):
         self.col1.drop()
         self.col2.drop()
 
-        create_rg(npoints3, self.col0, distance_function=edist)
-        create_rg(npoints6, self.col0, distance_function=edist)
+        create_rg(npoints[2], self.col0, distance_function=edist)
+        create_rg(npoints[5], self.col0, distance_function=edist)
 
-        create_rg(npoints3, self.col1, distance_function=edist)
-        create_rg(npoints6, self.col1, distance_function=edist)
-        create_rg(npoints4, self.col1, distance_function=edist)
-        create_rg(npoints5, self.col1, distance_function=edist)
+        create_rg(npoints[2], self.col1, distance_function=edist)
+        create_rg(npoints[5], self.col1, distance_function=edist)
+        create_rg(npoints[3], self.col1, distance_function=edist)
+        create_rg(npoints[4], self.col1, distance_function=edist)
 
     def test_rdp(self):
         segments = segment(self.col0)
