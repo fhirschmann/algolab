@@ -32,6 +32,39 @@ def walk_from(node_id, segment, col):
     return walk_from(visit, segment, col)
 
 
+class Segmenter(object):
+    # TODO: Test and document this
+    def __init__(self, collection):
+        self.collection = collection
+        self.visited = set()
+
+        # endpoints and switches
+        self.es = nodes_with_num_neighbors_ne(collection, 2)
+
+    @property
+    def estimated_num_segments(self):
+        # TODO: Learn from existing data
+        return int(len(self.es) / 2)
+
+    @property
+    def segments(self):
+        visited = set()
+
+        es = nodes_with_num_neighbors_ne(col, 2)
+
+        for node in es:
+            neighbor_ids = neighbors(node)
+
+            for neighbor_id in neighbor_ids:
+                if neighbor_id in visited:
+                    continue
+                segment = walk_from(neighbor_id, [node["_id"]], col)
+                visited.update(segment)
+                visited.add(node["_id"])
+                yield segment
+
+
+
 def segment(col):
     """
     Segments a railway graph.
