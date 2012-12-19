@@ -17,7 +17,7 @@ from pymongo import Connection
 from algolab.anglered import anglereduce
 from algolab.rdp import rdp
 from algolab.segment import segment
-from algolab.db import create_rg, loc_for_mult, empty
+from algolab.db import create_rg, loc_for_mult, empty, dedup
 from algolab.util import epsilon_linear
 
 
@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     db = Connection(args.host, args.port)[args.db]
 
-    rg_ = db["railway_graph"]
+    rg_ = db["test"]
     rgs = {i: db["railway_graph_%i" % i] for i in xrange(8, 17)}
     now = datetime.now()
 
@@ -57,16 +57,16 @@ if __name__ == "__main__":
 
     if 16 in zls:
         # Zoom level 16: Remove all unnecessary points (points on a straight
-        # line)
+        # line) and duplicates.
         log(-1, "Loaded original railway graph", rg_.count())
-
+        log(-1, "Removed %i duplicate(s) from railway_graph" % dedup(rg_), rg_.count())
         empty(rgs[16])
         log(16, "Deleted collection railway_graph_16")
 
         segments = segment(rg_)
         for i, seg in enumerate(segments):
-            if not args.np:
-                progress("Applying Anglered to segment %s of %s", i, len(segments))
+            #if not args.np:
+            #    progress("Applying Anglered to segment %s of %s", 0, 0)
             sloc = loc_for_mult(seg, rg_)
             # Please note that anglereduce(x, 180) and rdp(x, 0) should yield
             # the same result, but anglereduce is faster.
@@ -89,8 +89,8 @@ if __name__ == "__main__":
             #epsilon = Decimal((0, (1, ), - int(1.6 * zl + 30)))
             epsilon = Decimal((0, (0, ), 0))
             for i, seg in enumerate(r16_segmented):
-                if not args.np:
-                    progress("Applying RDP to segment %s of %s", i, len(r16_segmented))
+                #if not args.np:
+                #    progress("Applying RDP to segment %s of %s", i, len(r16_segmented))
                 sloc = loc_for_mult(seg, rgs[16])
                 create_rg(rdp(sloc, epsilon), rgs[zl])
             log(zl, "Applied RDP with epsilon=%s" % epsilon.to_eng_string(), rgs[zl].count())
