@@ -86,3 +86,12 @@ def epsilon_linear(zoom, k=1.5):
     zoom decrement.
     """
     return k * (-zoom + 16)
+
+
+def raise_or_return(obj, exception, msg):
+    """
+    Raises `exception` if `obj` is None.
+    """
+    if obj is None:
+        raise exception(msg)
+    return obj
