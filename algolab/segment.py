@@ -90,21 +90,3 @@ class Segmenter(object):
                 visited.update(segment)
                 visited.add(node["_id"])
                 yield segment
-
-
-def segment2(col):
-    visited = set()
-
-    # endpoints and switches
-    es = nodes_with_num_neighbors_ne(col, 2)
-
-    for node in es:
-        neighbor_ids = neighbors(node)
-
-        for neighbor_id in neighbor_ids:
-            if neighbor_id in visited:
-                continue
-            segment = walk_from(neighbor_id, [node["_id"]], col)
-            visited.update(segment)
-            visited.add(node["_id"])
-            yield segment
