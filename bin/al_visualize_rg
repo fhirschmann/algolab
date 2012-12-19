@@ -27,7 +27,7 @@ def visualize(data, ptitle, saveto=False):
     title("%s %s nodes" % (ptitle, len(data)))
 
     if saveto:
-        savefig(saveto)
+        savefig(saveto, dpi=250)
     else:
         show()
 
