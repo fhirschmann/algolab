@@ -62,6 +62,8 @@ def segment(col):
     :type col : a :class:`~pymongo.collection.Collection`
     :returns: A list of lists (segments) of node ids
     """
+    # TODO: This does not yet work correctly
+    # TODO: Use db.nodes_with_num_neighbors_ne(col, 2)
     segments = []
     visited = set()
 

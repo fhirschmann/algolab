@@ -51,11 +51,31 @@ def remove_neighbors(node, neighbor_ids):
             node["successors"])
 
 
+def nodes_with_num_neighbors_gt(col, num):
+    return col.find({"$where": "this.successors.length > %s" % num})
+
+
 def intersections(col):
     """
     Finds intersections/crossings in a railway graph.
     """
-    return col.find({"$where": "this.successors.length > 2"})
+    return nodes_with_num_neighbors_gt(col, 2)
+
+
+def nodes_with_num_neighbors(col, num):
+    return col.find({"successors": {"$size": num}})
+
+
+def nodes_with_num_neighbors_ne(col, num):
+    # TODO: Maybe this can be made faster by not using JavaScript
+    return col.find({"$where": "this.successors.length != %s" % num})
+
+
+def endpoints(col):
+    """
+    Finds endpoints in a railway graph.
+    """
+    return nodes_with_num_neighbors(col, 1)
 
 
 def inconsistent_edges(col):
@@ -71,13 +91,6 @@ def inconsistent_edges(col):
                 result.add((node["_id"], successor_id))
 
     return result
-
-
-def endpoints(col):
-    """
-    Finds endpoints in a railway graph.
-    """
-    return col.find({"successors": {"$size": 1}})
 
 
 def empty(col):
