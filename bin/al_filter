@@ -16,7 +16,7 @@ from pymongo import Connection
 
 from algolab.anglered import anglereduce
 from algolab.rdp import rdp
-from algolab.segment import segment
+from algolab.segment import Segmenter
 from algolab.db import create_rg, loc_for_mult, empty, dedup
 from algolab.util import epsilon_linear
 
@@ -49,7 +49,7 @@ if __name__ == "__main__":
 
     db = Connection(args.host, args.port)[args.db]
 
-    rg_ = db["test"]
+    rg_ = db["railway_graph"]
     rgs = {i: db["railway_graph_%i" % i] for i in xrange(8, 17)}
     now = datetime.now()
 
@@ -63,7 +63,7 @@ if __name__ == "__main__":
         empty(rgs[16])
         log(16, "Deleted collection railway_graph_16")
 
-        segments = segment(rg_)
+        segments = Segmenter.segments(rg_)
         for i, seg in enumerate(segments):
             #if not args.np:
             #    progress("Applying Anglered to segment %s of %s", 0, 0)
@@ -81,7 +81,7 @@ if __name__ == "__main__":
             if not r16_segmented:
                 if rgs[16].count() == 0:
                     raise ValueError("railway_graph_16 contains no nodes")
-                r16_segmented = segment(rgs[16])
+                r16_segmented = Segmenter(rgs[16]).segments
 
             empty(rgs[zl])
             log(zl, "Deleted collection railway_graph_%i" % zl)

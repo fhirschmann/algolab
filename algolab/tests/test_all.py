@@ -6,7 +6,7 @@ from algolab.rdp import *
 from algolab.anglered import *
 from algolab.db import *
 from algolab.data import *
-from algolab.segment import *
+from algolab.segment import Segmenter as S
 from algolab.util import *
 
 
@@ -28,7 +28,7 @@ class AllTest(unittest2.TestCase):
         create_rg(npoints[4], self.col1, distance_function=edist)
 
     def test_rdp(self):
-        segments = segment(self.col0)
+        segments = S(self.col0).segments
         for seg in segments:
             sloc = loc_for_mult(seg, self.col0)
             create_rg(rdp(sloc, 0), self.col2)
@@ -36,7 +36,7 @@ class AllTest(unittest2.TestCase):
         self.assertEqual(self.col2.count(), 8)
 
     def test_rdp2(self):
-        segments = segment(self.col1)
+        segments = S(self.col1).segments
 
         for seg in segments:
             sloc = loc_for_mult(seg, self.col1)
@@ -45,7 +45,7 @@ class AllTest(unittest2.TestCase):
         self.assertEqual(self.col2.count(), 11)
 
     def test_rdp3(self):
-        segments = segment(self.col1)
+        segments = S(self.col1).segments
         for seg in segments:
             sloc = loc_for_mult(seg, self.col1)
             create_rg(rdp(sloc, 100000), self.col2)
@@ -53,7 +53,7 @@ class AllTest(unittest2.TestCase):
         self.assertEqual(self.col2.count(), 8)
 
     def test_anglered(self):
-        segments = segment(self.col1)
+        segments = S(self.col1).segments
         for seg in segments:
             sloc = loc_for_mult(seg, self.col1)
             create_rg(anglereduce(sloc, 1), self.col2)
@@ -61,7 +61,7 @@ class AllTest(unittest2.TestCase):
         self.assertEqual(self.col2.count(), 8)
 
     def test_anglered2(self):
-        segments = segment(self.col1)
+        segments = S(self.col1).segments
         for seg in segments:
             sloc = loc_for_mult(seg, self.col1)
             create_rg(anglereduce(sloc, 180), self.col2)

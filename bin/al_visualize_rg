@@ -10,7 +10,7 @@ import argparse
 from pymongo import Connection
 from pylab import *
 
-from algolab.segment import segment
+from algolab.segment import Segmenter
 from algolab.db import loc_for_mult
 from algolab.data import *
 
@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
     rg = Connection(args.host, args.port)[args.db][args.rg]
 
-    segments = segment(rg)
+    segments = Segmenter(rg).segments
 
     slocs = []
     for seg in segments:
