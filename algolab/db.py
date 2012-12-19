@@ -1,7 +1,7 @@
 from pymongo import GEO2D
 from bson.code import Code
 
-from algolab.util import gcdist
+from algolab.util import gcdist, raise_or_return
 
 
 def node_for(_id, col):
@@ -13,28 +13,48 @@ def node_for(_id, col):
     :type _id: integer
     :param col: the collection to read from
     :type col: a :class:`~pymongo.collection.Collection`
+    :returns: a node
+    :raise: :exc:`ValueError` if there is no such node
     """
-    return col.find_one(_id)
+    return raise_or_return(col.find_one(_id),
+            ValueError, "There is no such node %s" % _id)
 
 
 def loc_for(_id, col):
     """
-    Returns the location of a node identified by `_id` in
-    the collection `col`.
+    Returns a 3-tuple (lon, lat, id) for the node
+    identified by `_id` from the collection `col`.
+
+    :param _id: the id of the node
+    :type _id: integer
+    :param col: the collection to read from
+    :type col: a :class:`~pymongo.collection.Collection`
+    :returns: 3-tuple (lon, lat, id)
+    :raise: :exc:`ValueError` if there is no such node
     """
-    return node_for(_id, col)["loc"]
+    return node_for(_id, col)["loc"] + [_id]
 
 
-def loc_for_mult(_ids, col):
+def locs_for_mult(_ids, col):
     """
     Applies `~algolab.db.loc_for` for each id in `_ids`.
+
+    :param _ids: list of the ids of the nodes
+    :type _id: list of integers
+    :param col: the collection to read from
+    :type col: a :class:`~pymongo.collection.Collection`
+    :returns: a list of 3-tuples (lon, lat, id)
+    :raise: :exc:`ValueError` if there is no such node
     """
-    return [loc_for(i, col) + [i] for i in _ids]
+    return [loc_for(i, col) for i in _ids]
 
 
 def extend_neighbors(node1, node2):
     """
     Extends `node1`'s neighbors with those of `node2`.
+
+    :param node1: the node to extend
+    :param node2: the node to extend `node1` with
     """
     for n in node2["successors"]:
         if n["id"] not in [a["id"] for a in node1["successors"]]:
@@ -45,6 +65,10 @@ def remove_neighbors(node, neighbor_ids):
     """
     Removes the neighbors identified by `neighbor_ids`
     from a node.
+
+    :param node: the node to remove the neighbors from
+    :param neighbor_ids: the ids of the neighbors to remove
+    :type neighbor_ids: list
     """
     node["successors"] = filter(
             lambda s: s["id"] not in neighbor_ids,
@@ -52,6 +76,9 @@ def remove_neighbors(node, neighbor_ids):
 
 
 def nodes_with_num_neighbors_gt(col, num):
+    """
+    Find all nodes that have more than `num` neighbors.
+    """
     return col.find({"$where": "this.successors.length > %s" % num})
 
 
