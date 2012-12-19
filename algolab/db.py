@@ -51,6 +51,35 @@ def remove_neighbors(node, neighbor_ids):
             node["successors"])
 
 
+def intersections(col):
+    """
+    Finds intersections/crossings in a railway graph.
+    """
+    return col.find({"$where": "this.successors.length > 2"})
+
+
+def inconsistent_edges(col):
+    """
+    Returns edges that lead to a non-existing node.
+    """
+    result = set()
+
+    for node in col.find():
+        for successor_id in node["successors"]:
+            successor = col.find_one(successor_id)
+            if not successor:
+                result.add((node["_id"], successor_id))
+
+    return result
+
+
+def endpoints(col):
+    """
+    Finds endpoints in a railway graph.
+    """
+    return col.find({"successors": {"$size": 1}})
+
+
 def empty(col):
     """
     Empties a collection and creates a :class:`GEO2D` index.
