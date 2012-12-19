@@ -19,15 +19,15 @@ class SegmentTest(unittest2.TestCase):
         create_rg(npoints[2], self.col0, distance_function=edist)
 
     def test_already_segmented(self):
-        self.assertEqual(segment(self.col0)[0], range(0, len(npoints[2])))
+        self.assertEqual(list(segment(self.col0))[0], range(0, len(npoints[2])))
 
     def test_already_segmented2(self):
         create_rg(npoints[3], self.col1)
-        self.assertEqual(segment(self.col1)[0], [4, 2, 5])
+        self.assertEqual(list(segment(self.col1))[0], [4, 2, 5])
 
     def test_already_segmented3(self):
         create_rg(npoints[4], self.col1)
-        self.assertEqual(segment(self.col1)[0], [6, 2])
+        self.assertEqual(list(segment(self.col1))[0], [6, 2])
 
     def test_switch_segment(self):
         create_rg(npoints[3], self.col0, distance_function=edist)

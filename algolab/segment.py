@@ -64,7 +64,6 @@ def segment(col):
     """
     # TODO: This does not yet work correctly
     # TODO: Use db.nodes_with_num_neighbors_ne(col, 2)
-    segments = []
     visited = set()
 
     for node in col.find():
@@ -76,7 +75,5 @@ def segment(col):
             # this node is either an endpoint or a switch
             for neighbor_id in neighbor_ids:
                 segment = walk_from(neighbor_id, [node["_id"]], col)
-                segments.append(segment)
                 visited.update(segment)
-
-    return segments
+                yield segment
