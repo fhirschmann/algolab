@@ -3,7 +3,7 @@ Segmentation algorithm for railway graphs.
 """
 import logging
 
-from db import node_for
+from db import node_for, nodes_with_num_neighbors_ne
 
 
 def neighbors(node):
@@ -63,17 +63,18 @@ def segment(col):
     :returns: A list of lists (segments) of node ids
     """
     # TODO: This does not yet work correctly
-    # TODO: Use db.nodes_with_num_neighbors_ne(col, 2)
     visited = set()
 
-    for node in col.find():
-        if node["_id"] in visited:
-            continue
+    # endpoints and switches
+    es = nodes_with_num_neighbors_ne(col, 2)
 
+    for node in es:
         neighbor_ids = neighbors(node)
-        if len(neighbor_ids) != 2:
-            # this node is either an endpoint or a switch
-            for neighbor_id in neighbor_ids:
-                segment = walk_from(neighbor_id, [node["_id"]], col)
-                visited.update(segment)
-                yield segment
+
+        for neighbor_id in neighbor_ids:
+            if neighbor_id in visited:
+                continue
+            segment = walk_from(neighbor_id, [node["_id"]], col)
+            visited.update(segment)
+            visited.add(node["_id"])
+            yield segment

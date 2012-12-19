@@ -9,6 +9,10 @@ from algolab.db import create_rg
 
 
 class SegmentTest(unittest2.TestCase):
+    def create_rg_for(self, datasets, col=None):
+        for n in datasets:
+            create_rg(npoints[n], col if col else self.col0, distance_function=edist)
+
     def setUp(self):
         self.col0 = Connection("127.0.0.1", 27017)["algolab-test"]["rg0"]
         self.col1 = Connection("127.0.0.1", 27017)["algolab-test"]["rg1"]
@@ -40,3 +44,17 @@ class SegmentTest(unittest2.TestCase):
         self.assertTrue({"distance": 1, "id": 3} in n["successors"])
         self.assertTrue({"distance": 1, "id": 4} in n["successors"])
         self.assertTrue({"distance": 4, "id": 5} in n["successors"])
+
+    def test_switch_segment2(self):
+        self.create_rg_for([2, 3, 4, 5])
+        self.assertItemsEqual(list(segment(self.col0)),
+                [[0, 1, 2], [2, 3], [2, 4], [2, 5],
+                    [2, 6], [2, 8, 7], [2, 9, 10, 11]])
+
+    def test_switch_segment3(self):
+        self.create_rg_for([2, 3, 4, 5, 6, 7])
+        self.assertItemsEqual(list(segment(self.col0)),
+                [[0, 1, 2], [2, 3], [2, 4], [2, 5],
+                    [2, 6], [7, 8, 2], [11, 10, 9, 2],
+                    [2, 12], [13, 15], [13, 16], [2, 13], [13, 14]])
+        self.assertEqual(len(list(segment(self.col0))), 12)

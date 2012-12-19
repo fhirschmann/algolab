@@ -75,3 +75,9 @@ points[4] = [[p[0], p[1]] for p in npoints[4]]
 
 npoints[5] = [[9, 4, 7], [8, 5, 8], [3, 1, 2], [8, 0, 9], [9, 1, 10], [8, 2, 11]]
 points[5] = [[p[0], p[1]] for p in npoints[5]]
+
+npoints[6] = [[0, 0, 12], [3, 1, 2], [6, 2, 13], [6, 3, 14]]
+points[6] = [[p[0], p[1]] for p in npoints[6]]
+
+npoints[7] = [[4, 3, 15], [6, 2, 13], [8, 3, 16]]
+points[7] = [[p[0], p[1]] for p in npoints[7]]
