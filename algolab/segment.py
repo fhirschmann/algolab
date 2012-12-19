@@ -62,7 +62,6 @@ def segment(col):
     :type col : a :class:`~pymongo.collection.Collection`
     :returns: A list of lists (segments) of node ids
     """
-    # TODO: This does not yet work correctly
     visited = set()
 
     # endpoints and switches
