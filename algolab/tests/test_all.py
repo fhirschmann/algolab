@@ -30,7 +30,7 @@ class AllTest(unittest2.TestCase):
     def test_rdp(self):
         segments = S(self.col0).segments
         for seg in segments:
-            sloc = loc_for_mult(seg, self.col0)
+            sloc = locs_for(seg, self.col0)
             create_rg(rdp(sloc, 0), self.col2)
 
         self.assertEqual(self.col2.count(), 8)
@@ -39,7 +39,7 @@ class AllTest(unittest2.TestCase):
         segments = S(self.col1).segments
 
         for seg in segments:
-            sloc = loc_for_mult(seg, self.col1)
+            sloc = locs_for(seg, self.col1)
             create_rg(rdp(sloc, 0), self.col2)
 
         self.assertEqual(self.col2.count(), 11)
@@ -47,7 +47,7 @@ class AllTest(unittest2.TestCase):
     def test_rdp3(self):
         segments = S(self.col1).segments
         for seg in segments:
-            sloc = loc_for_mult(seg, self.col1)
+            sloc = locs_for(seg, self.col1)
             create_rg(rdp(sloc, 100000), self.col2)
 
         self.assertEqual(self.col2.count(), 8)
@@ -55,7 +55,7 @@ class AllTest(unittest2.TestCase):
     def test_anglered(self):
         segments = S(self.col1).segments
         for seg in segments:
-            sloc = loc_for_mult(seg, self.col1)
+            sloc = locs_for(seg, self.col1)
             create_rg(anglereduce(sloc, 1), self.col2)
 
         self.assertEqual(self.col2.count(), 8)
@@ -63,7 +63,7 @@ class AllTest(unittest2.TestCase):
     def test_anglered2(self):
         segments = S(self.col1).segments
         for seg in segments:
-            sloc = loc_for_mult(seg, self.col1)
+            sloc = locs_for(seg, self.col1)
             create_rg(anglereduce(sloc, 180), self.col2)
 
         self.assertEqual(self.col2.count(), 11)

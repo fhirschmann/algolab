@@ -1,5 +1,4 @@
 from pymongo import GEO2D
-from bson.code import Code
 
 from algolab.util import gcdist, raise_or_return
 
@@ -35,7 +34,7 @@ def loc_for(_id, col):
     return node_for(_id, col)["loc"] + [_id]
 
 
-def locs_for_mult(_ids, col):
+def locs_for(_ids, col):
     """
     Applies `~algolab.db.loc_for` for each id in `_ids`.
 
