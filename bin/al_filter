@@ -61,17 +61,18 @@ if __name__ == "__main__":
 
     if 16 in zls:
         with log_progress("Removing duplicates (z=16)"):
-            dedup(rg_)
+            #dedup(rg_)
+            pass
 
         empty(rgs[16])
 
         with log_progress("Removing unnecessary points (zoom=16)"):
             segmenter = Segmenter(rg_)
-            for i, seg in enumerate(segmenter.segments):
+            for i, seg in enumerate(segmenter.segments_as_triplets):
                 if not args.np:
                     progress("Applying Anglered to segment %s of %s", i,
                             segmenter.estimated_num_segments)
-                create_rg(anglereduce(locs_for(seg, rg_), 180), rgs[16])
+                create_rg(anglereduce(seg, 179.5), rgs[16])
             zls.remove(16)
             log_change(rgs[16].count(), rg_.count())
 
@@ -82,16 +83,15 @@ if __name__ == "__main__":
             empty(rgs[zl])
 
             #epsilon = Decimal((0, (1, ), - int(1.6 * zl + 30)))
-            epsilon = Decimal((0, (1, ), - 6))
+            epsilon = Decimal((0, (1, ), + 6))
 
             with log_progress("Applying RDP with epsilon=%s (zoom=%i)" % (
                 epsilon.to_eng_string(), zl)):
-                for i, seg in enumerate(segmenter.segments):
+                for i, seg in enumerate(segmenter.segments_as_triplets):
                     if not args.np:
                         progress("Applying RDP to segment %s of %s", i,
                                 segmenter.estimated_num_segments)
                     #if not args.np:
                     #    progress("Applying RDP to segment %s of %s", i, len(r16_segmented))
-                    sloc = locs_for(seg, rgs[16])
-                    create_rg(rdp(sloc, epsilon), rgs[zl])
+                    create_rg(rdp(seg, epsilon), rgs[zl])
                 log_change(rgs[zl].count(), rgs[16].count())

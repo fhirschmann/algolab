@@ -21,12 +21,12 @@ def walk_from(node_id, segment, col):
     else:
         unvisited = set(
                 neighbors(
-                    node_for(node_id, col))).difference(segment)
+                    node_for(node_id, col))).difference([s["_id"] for s in segment])
 
     if len(unvisited) != 1:
-        return segment + [node_id]
+        return segment + [node]
 
-    segment.append(node_id)
+    segment.append(node)
     visit = iter(unvisited).next()
 
     return walk_from(visit, segment, col)
@@ -67,11 +67,18 @@ class Segmenter(object):
 
         # endpoints and switches
         self.es = nodes_with_num_neighbors_ne(collection, 2)
+        self._estimated = int(self.es.count() / 0.96)
 
     @property
     def estimated_num_segments(self):
-        # TODO: Learn from existing data
-        return int(len(self.es) / 2)
+        """
+        Returns the estimated number of segments (based on the number
+        of switches and endpoints).
+
+        :returns: estimated number of segments
+        :rtype: integer
+        """
+        return self._estimated
 
     @property
     def segments(self):
@@ -86,7 +93,12 @@ class Segmenter(object):
                 if neighbor_id in visited:
                     continue
                 segment = walk_from(neighbor_id,
-                        [node["_id"]], self.collection)
-                visited.update(segment)
+                        [node], self.collection)
+                visited.update([s["_id"] for s in segment])
                 visited.add(node["_id"])
                 yield segment
+
+    @property
+    def segments_as_triplets(self):
+        for segment in self.segments:
+            yield [n["loc"] + [n["_id"]] for n in segment]
