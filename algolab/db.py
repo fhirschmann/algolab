@@ -1,4 +1,7 @@
+import logging
+
 from pymongo import GEO2D
+from bson.code import Code
 
 from algolab.util import gcdist, raise_or_return
 
@@ -204,25 +207,28 @@ def dedup(rg, distance_function=gcdist):
     :type distance_function: a function with signature
         f((lon1, lat1), (lon2, lat2)) signature
     """
-    duplicates = set()
-    duplicates_map = {}
+    num_dups = 0
+    map_ = Code("""
+        function() {
+            emit(this.loc.join('|'), 1);
+        }
+        """)
+    reduce_ = Code("""
+        function(key, values) {
+            return Array.sum(values);
+        }
+        """)
+    result = rg.map_reduce(map_, reduce_, "tmp_find_dups")
+    loc_ids = result.find({"value": {"$gt": 1}})
+    for loc_id in loc_ids:
+        num_dups += loc_id["value"] - 1
+        loc = [float(c) for c in loc_id["_id"].split("|")]
 
-    for node in rg.find():
-        if node["_id"] in duplicates:
-            continue
-        for dup in rg.find({"loc": node["loc"]}):
-            if dup["_id"] != node["_id"]:
-                # `dup` is a duplicate of `node`
-                duplicates.add(dup["_id"])
-                if node["_id"] in duplicates_map:
-                    duplicates_map[node["_id"]].append(dup["_id"])
-                else:
-                    duplicates_map[node["_id"]] = [dup["_id"]]
+        dups = [n["_id"] for n in list(rg.find({"loc": loc}))]
+        this = dups.pop()
+        merge_nodes(rg, this, dups, distance_function)
 
-    for node_id, merge_with_ids in duplicates_map.items():
-        merge_nodes(rg, node_id, merge_with_ids, distance_function)
-
-    return len(duplicates)
+    return int(num_dups)
 
 
 def create_rg_from(node_ids, source_col, dest_col):
