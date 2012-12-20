@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
     if 16 in zls:
         with log_progress("Removing duplicates (z=16)"):
-            #dedup(rg_)
+            dedup(rg_)
             pass
 
         empty(rgs[16])
