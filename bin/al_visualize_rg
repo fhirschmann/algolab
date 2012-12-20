@@ -11,7 +11,7 @@ from pymongo import Connection
 from pylab import *
 
 from algolab.segment import Segmenter
-from algolab.db import loc_for_mult
+from algolab.db import locs_for
 from algolab.data import *
 
 
@@ -24,7 +24,7 @@ def visualize(data, ptitle, saveto=False):
     draw()
 
     grid(True)
-    title("%s %s nodes" % (ptitle, len(data)))
+    title("%s (%s nodes)" % (ptitle, len(data)))
 
     if saveto:
         savefig(saveto, dpi=250)
@@ -50,11 +50,7 @@ if __name__ == "__main__":
 
     rg = Connection(args.host, args.port)[args.db][args.rg]
 
-    segments = Segmenter(rg).segments
+    segments = Segmenter(rg).segments_as_triplets
 
-    slocs = []
-    for seg in segments:
-        sloc = loc_for_mult(seg, rg)
-        slocs.append(sloc)
 
-    visualize(slocs, args.title, args.saveto)
+    visualize(list(segments), args.title, args.saveto)
