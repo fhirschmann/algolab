@@ -16,13 +16,23 @@ EARTH_RADIUS = 6378137
 def edist(a, b):
     """
     Calculates the euclidean distance between two points `a` and `b`.
+
+    :param a: first point
+    :type a: sequence of two integers/floats; a coordinate
+    :param b: second point
+    :type b: sequence of two integers/floats; a coordinate
     """
     return euclidean(np.array(a), np.array(b))
 
 
 def gcdist(a, b):
     """
-    Calculates the great circe distance between `a` and `b`
+    Calculates the great circle distance between `a` and `b`.
+
+    :param a: first point
+    :type a: sequence of two integers/floats; a coordinate
+    :param b: second point
+    :type b: sequence of two integers/floats; a coordinate
     """
     lat1, lon1 = a
     lat2, lon2 = b
@@ -44,9 +54,16 @@ def pdist(p, a, b):
     line given by the points `a` and `b`.
 
     The perpendicular distance from the point (x₁,y₁) to
-    the line y = kx + m is given by
+    the line y = kx + m is given by::
 
         d = |kx₁ - y₁ + m| / sqrt(k² + 1)
+
+    :param a: first point
+    :type a: sequence of two integers/floats; a coordinate
+    :param b: second point
+    :type b: sequence of two integers/floats; a coordinate
+    :param p: third point
+    :type p: sequence of two integers/floats; a coordinate
     """
     if a == b:
         return edist(p, a)
@@ -67,6 +84,13 @@ def pdist(p, a, b):
 def triarea(a, b, c):
     """
     Calculates the area of a triangle.
+
+    :param a: first point
+    :type a: sequence of two integers/floats; a coordinate
+    :param b: second point
+    :type b: sequence of two integers/floats; a coordinate
+    :param c: third point
+    :type c: sequence of two integers/floats; a coordinate
     """
     return 0.5 * edist(a, b) * pdist(c, a, b)
 
@@ -94,6 +118,13 @@ def epsilon_linear(zoom, k=1.5):
 def raise_or_return(obj, exception, msg):
     """
     Raises `exception` if `obj` is None.
+
+    :param obj: object to check/return
+    :type obj: object
+    :param exception: the exception to throw
+    :type excpetion: `Exception`
+    :param msg: message to pass to the exception
+    :type msg: string
     """
     if obj is None:
         raise exception(msg)

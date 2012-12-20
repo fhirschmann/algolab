@@ -42,26 +42,27 @@ class Segmenter(object):
 
     For example, running `segment` on the following railway graph
 
-           A
-          / \
-         /   \
-        B----C
-       /
-      /
-     D
+    .. graphviz::
 
-    will yield the following segments:
+        graph seg {
+            a -- b -- d;
+            b -- c;
+            a -- c;
+        }
+
+    will yield the following segments::
+
         [
-          [A, ..., B]
-          [A, ..., C]
-          [B, ..., C]
-          [D, ..., B]
+          [a, ..., b]
+          [a, ..., c]
+          [b, ..., c]
+          [d, ..., b]
         ]
     """
     def __init__(self, collection):
         """
         :param collection: a collection cursor
-        :type collection : a :class:`~pymongo.collection.Collection`
+        :type collection: a :class:`~pymongo.collection.Collection`
         """
         self.collection = collection
 
@@ -72,7 +73,7 @@ class Segmenter(object):
     @property
     def estimated_num_segments(self):
         """
-        Returns the estimated number of segments (based on the number
+        The estimated number of segments (based on the number
         of switches and endpoints).
 
         :returns: estimated number of segments
@@ -82,6 +83,13 @@ class Segmenter(object):
 
     @property
     def segments(self):
+        """
+        A python generator that generates segments
+        (lists of nodes) lazily.
+
+        :returns: segment generator
+        :rtype: generator
+        """
         visited = set()
 
         for node in self.es:
@@ -98,5 +106,9 @@ class Segmenter(object):
 
     @property
     def segments_as_triplets(self):
+        """
+        Equal to :py:obj:`.segments`, except that this is a list
+        of triplets (lon, lat, id).
+        """
         for segment in self.segments:
             yield [n["loc"] + [n["_id"]] for n in segment]

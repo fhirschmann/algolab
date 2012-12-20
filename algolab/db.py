@@ -36,7 +36,7 @@ def loc_for(_id, col):
 
 def locs_for(_ids, col):
     """
-    Applies `~algolab.db.loc_for` for each id in `_ids`.
+    Applies :func:`~algolab.db.loc_for` for each id in `_ids`.
 
     :param _ids: list of the ids of the nodes
     :type _id: list of integers
@@ -77,6 +77,10 @@ def remove_neighbors(node, neighbor_ids):
 def nodes_with_num_neighbors_gt(col, num):
     """
     Find all nodes that have more than `num` neighbors.
+
+    :param col: the collection to read from
+    :type col: a :class:`~pymongo.collection.Collection`
+    :returns: a collection cursor
     """
     return col.find({"$where": "this.successors.length > %s" % num})
 
@@ -84,6 +88,10 @@ def nodes_with_num_neighbors_gt(col, num):
 def intersections(col):
     """
     Finds intersections/crossings in a railway graph.
+
+    :param col: the collection to read from
+    :type col: a :class:`~pymongo.collection.Collection`
+    :returns: a collection cursor
     """
     return nodes_with_num_neighbors_gt(col, 2)
 
@@ -93,6 +101,15 @@ def nodes_with_num_neighbors(col, num):
 
 
 def nodes_with_num_neighbors_ne(col, num):
+    """
+    Find nodes that don't have `num` neighbors.
+
+    :param col: the collection to read from
+    :type col: a :class:`~pymongo.collection.Collection`
+    :param num: number of neighbors
+    :type num: integer
+    :returns: a collection cursor
+    """
     # TODO: Maybe this can be made faster by not using JavaScript
     return col.find({"$where": "this.successors.length != %s" % num})
 
@@ -100,6 +117,9 @@ def nodes_with_num_neighbors_ne(col, num):
 def endpoints(col):
     """
     Finds endpoints in a railway graph.
+
+    :param col: the collection to read from
+    :type col: a :class:`~pymongo.collection.Collection`
     """
     return nodes_with_num_neighbors(col, 1)
 
@@ -107,6 +127,9 @@ def endpoints(col):
 def inconsistent_edges(col):
     """
     Returns edges that lead to a non-existing node.
+
+    :param col: the collection to read from
+    :type col: a :class:`~pymongo.collection.Collection`
     """
     result = set()
 
@@ -121,7 +144,10 @@ def inconsistent_edges(col):
 
 def empty(col):
     """
-    Empties a collection and creates a :class:`GEO2D` index.
+    Empties a collection and creates a :class:`~pymongo.GEO2D` index.
+
+    :param col: the collection to read from
+    :type col: a :class:`~pymongo.collection.Collection`
     """
     col.drop()
     col.create_index([("loc", GEO2D)])
@@ -151,13 +177,17 @@ def merge_nodes(rg, node_id, merge_with_ids, distance_function=gcdist):
 
     for visit_id in visit_ids:
         # Visit all of the duplication's neighbors
-        visit = rg.find_one(visit_id)
-        visit["successors"] = filter(
-                lambda x: x["id"] not in merge_with_ids, visit["successors"])
-        visit["successors"].append({
-            "id": node_id,
-            "distance": int(distance_function(node["loc"], visit["loc"]))})
-        rg.save(visit)
+        try:
+            visit = rg.find_one(visit_id)
+            visit["successors"] = filter(
+                    lambda x: x["id"] not in merge_with_ids, visit["successors"])
+            visit["successors"].append({
+                "id": node_id,
+                "distance": int(distance_function(node["loc"], visit["loc"]))})
+            rg.save(visit)
+        except:
+            print visit
+            raise
 
     rg.save(node)
 
@@ -167,6 +197,12 @@ def dedup(rg, distance_function=gcdist):
     Removes all duplicates from a railway graph `rg`.
 
     Two points are duplicates of each other if they have the same location.
+
+    :param rg: a collection cursor to a railway graph
+    :type rg: a :class:`~pymongo.collection.Collection`
+    :param distance_function: function to calculate the distance with
+    :type distance_function: a function with signature
+        f((lon1, lat1), (lon2, lat2)) signature
     """
     duplicates = set()
     duplicates_map = {}
@@ -194,7 +230,7 @@ def create_rg_from(node_ids, source_col, dest_col):
     Reads all nodes identified by their `ids` from `source_col` and
     writes them to the `dest_col`.
 
-    Please see `~algolab.db.create_rg` for details.
+    Please see :func:`~algolab.db.create_rg` for details.
 
     :param node_ids: list of node ids in a segment to keep
     :type node_ids: list of integers
@@ -211,7 +247,7 @@ def create_rg_from(node_ids, source_col, dest_col):
 def create_rg(points, col, distance_function=gcdist):
     """
     Creates a railway graph from a given sequence of `points`
-    and write it to a collection `col`.
+    and writes it to a collection `col`.
 
     If a node already exists, it is modified to include the new
     neighbors.
@@ -224,7 +260,7 @@ def create_rg(points, col, distance_function=gcdist):
     :param points: a curve that is approximated by a series of points
     :type points: list of 3-tuples (x, y, id)
     :param col: a collection cursor
-    :type col : a :class:`~pymongo.collection.Collection`
+    :type col: a :class:`~pymongo.collection.Collection`
     """
     if len(points) < 2:
         raise ValueError("At least two points are required.")
