@@ -10,18 +10,12 @@ def neighbors(node):
     return [s["id"] for s in node["successors"]]
 
 
-def walk_from(node_id, segment, col):
-    if node_id in segment:
+def walk_from(node, segment, col):
+    if node["_id"] in segment:
         return segment
 
-    node = node_for(node_id, col)
-    if not node:
-        logging.error("No such node: %i" % node_id)
-        return segment
-    else:
-        unvisited = set(
-                neighbors(
-                    node_for(node_id, col))).difference([s["_id"] for s in segment])
+    unvisited = set(neighbors(node)).difference(
+        [s["_id"] for s in segment])
 
     if len(unvisited) != 1:
         return segment + [node]
@@ -29,7 +23,7 @@ def walk_from(node_id, segment, col):
     segment.append(node)
     visit = iter(unvisited).next()
 
-    return walk_from(visit, segment, col)
+    return walk_from(node_for(visit, col), segment, col)
 
 
 class Segmenter(object):
@@ -98,8 +92,11 @@ class Segmenter(object):
             for neighbor_id in neighbor_ids:
                 if neighbor_id in visited:
                     continue
-                segment = walk_from(neighbor_id,
-                        [node], self.collection)
+                neighbor = node_for(neighbor_id, self.collection)
+                if not neighbor:
+                    logging.error("%i's neighbor %i does not exist.",
+                                  node["_id"], neighbor_id)
+                segment = walk_from(neighbor, [node], self.collection)
                 visited.update([s["_id"] for s in segment])
                 visited.add(node["_id"])
                 yield segment

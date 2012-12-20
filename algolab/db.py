@@ -137,10 +137,10 @@ def inconsistent_edges(col):
     result = set()
 
     for node in col.find():
-        for successor_id in node["successors"]:
-            successor = col.find_one(successor_id)
+        for succ in node["successors"]:
+            successor = col.find_one(succ["id"])
             if not successor:
-                result.add((node["_id"], successor_id))
+                result.add((node["_id"], succ["id"]))
 
     return result
 
@@ -187,17 +187,16 @@ def merge_nodes(rg, node_id, merge_with_ids, distance_function=gcdist):
 
     for visit_id in visit_ids:
         # Visit all of the duplication's neighbors
-        try:
-            visit = rg.find_one(visit_id)
-            visit["successors"] = filter(
-                    lambda x: x["id"] not in merge_with_ids, visit["successors"])
-            visit["successors"].append({
-                "id": node_id,
-                "distance": int(distance_function(node["loc"], visit["loc"]))})
-            rg.save(visit)
-        except:
-            print visit
-            raise
+        visit = rg.find_one(visit_id)
+        if not visit:
+            logging.error("%i's neighbor %i does not exist.", node_id, visit_id)
+            continue
+        visit["successors"] = filter(
+                lambda x: x["id"] not in merge_with_ids, visit["successors"])
+        visit["successors"].append({
+            "id": node_id,
+            "distance": int(distance_function(node["loc"], visit["loc"]))})
+        rg.save(visit)
 
     rg.save(node)
 
@@ -252,7 +251,7 @@ def create_rg_from(node_ids, source_col, dest_col):
     :param dest_col: the collection to read from
     :type dest_col: a :class:`~pymongo.collection.Collection`
     """
-    points = [(n["loc"][0], n["loc"][1], n["_id"]) for n in \
+    points = [(n["loc"][0], n["loc"][1], n["_id"]) for n in
             source_col.find({"_id": {"$in": node_ids}})]
     return create_rg(points, dest_col)
 
