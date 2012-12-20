@@ -112,3 +112,12 @@ class Segmenter(object):
         """
         for segment in self.segments:
             yield [n["loc"] + [n["_id"]] for n in segment]
+
+    @property
+    def segment_ids(self):
+        """
+        Equal to :py:obj:`.segments`, except that this is a list
+        of ids.
+        """
+        for segment in self.segments:
+            yield [n["_id"] for n in segment]
