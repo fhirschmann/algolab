@@ -2,7 +2,10 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division
+import logging
 from math import sqrt, cos, sin, radians, atan2
+from contextlib import contextmanager
+from datetime import datetime
 
 import numpy as np
 from scipy.spatial.distance import euclidean
@@ -95,3 +98,17 @@ def raise_or_return(obj, exception, msg):
     if obj is None:
         raise exception(msg)
     return obj
+
+
+@contextmanager
+def log_progress(name, log_function=logging.info):
+    log_function("-" * 50)
+    log_function("=> Starting step '%s'" % name)
+    now = datetime.now()
+    yield
+    log_function("<= Step '%s' finished (took %s)." % (
+        name, datetime.now() - now))
+
+
+def log_change(u, v, log_function=logging.info):
+    log_function("Reduced to %i nodes from %i nodes: - %.3f%%" % (u, v, ((v - u) / v) * 100))
