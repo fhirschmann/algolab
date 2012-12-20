@@ -91,7 +91,5 @@ if __name__ == "__main__":
                     if not args.np:
                         progress("Applying RDP to segment %s of %s", i,
                                 segmenter.estimated_num_segments)
-                    #if not args.np:
-                    #    progress("Applying RDP to segment %s of %s", i, len(r16_segmented))
                     create_rg(rdp(seg, epsilon), rgs[zl])
                 log_change(rgs[zl].count(), rgs[16].count())
