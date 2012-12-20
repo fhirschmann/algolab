@@ -56,30 +56,3 @@ def _anglereduce(points, epsilon, pos=1):
     else:
         # remove the current point
         return _anglereduce(points[:pos] + points[pos + 1:], epsilon, pos)
-
-
-def anglereduce_col(point_ids, epsilon, source, target):
-    """
-    This is similar to `anglereduce`, except that it works on the
-    mongodb.
-
-    :param point_ids: a sequence of point ids
-    :type point_ids: list of integers
-    :param epsilon: a threshold value with 0 <  ε < 180.
-    :type epsilon: integer
-    :param source: a collection cursor
-    :type source: a :class:`~pymongo.collection.Collection`
-    :param target: a collection cursor
-    :type target: a :class:`~pymongo.collection.Collection`
-    """
-    points = []
-
-    for point_id in point_ids:
-        p = source.find_one({"_id": point_id})
-        points.append((p["loc"][0], p["loc"][1], p["_id"]))
-
-    reduced = anglereduce(points, epsilon)
-
-    for p in reduced:
-        x, y, i = p
-        target.insert({"_id": i, "loc": [x, y]})
