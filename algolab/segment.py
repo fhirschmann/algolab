@@ -84,9 +84,7 @@ class Segmenter(object):
     def segments(self):
         visited = set()
 
-        es = nodes_with_num_neighbors_ne(self.collection, 2)
-
-        for node in es:
+        for node in self.es:
             neighbor_ids = neighbors(node)
 
             for neighbor_id in neighbor_ids:
