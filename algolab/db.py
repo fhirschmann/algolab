@@ -163,6 +163,13 @@ def merge_nodes(rg, node_id, merge_with_ids, distance_function=gcdist):
 
     Also takes care of the nodes who are neighbors of the node we are
     going to merge with.
+
+    :param rg: the railway graph (collection) to work on
+    :type rg: a :class:`~pymongo.collection.Collection`
+    :param node_id: the id of the node that survives
+    :type node_id: integer
+    :param merge_with_ids: list of node ids to merge with
+    :type merge_with_ids: list of integers
     """
     node = rg.find_one(node_id)
 
