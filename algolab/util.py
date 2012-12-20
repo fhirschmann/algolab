@@ -8,9 +8,11 @@ from contextlib import contextmanager
 from datetime import datetime
 
 import numpy as np
+from numpy.linalg import norm
 from scipy.spatial.distance import euclidean
 
 EARTH_RADIUS = 6378137
+PRECISION = 10
 
 
 def edist(a, b):
@@ -93,6 +95,31 @@ def triarea(a, b, c):
     :type c: sequence of two integers/floats; a coordinate
     """
     return 0.5 * edist(a, b) * pdist(c, a, b)
+
+
+def angle_between(v1, v2):
+    """
+    Calculates the angle between vector `v1` and vector `v2`.
+
+    :param v1: a vector
+    :type v1: sequence of two integers/floats
+    :param v2: another vector
+    :type v2: sequence of two integers/floats
+    :returns: the angle in degrees
+    :rtype: float
+    """
+    v = np.array(v1)
+    w = np.array(v2)
+
+    norm_v = norm(v)
+    norm_w = norm(w)
+
+    cos_angle = np.around(np.dot(v, w) / norm_v / norm_w, PRECISION)
+
+    if not -1 <= cos_angle <= 1:
+        return None
+    else:
+        return np.around(np.arccos(cos_angle) * 360 / 2 / np.pi, PRECISION)
 
 
 def default(value, replacement):
