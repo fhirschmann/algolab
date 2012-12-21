@@ -20,14 +20,13 @@ def visualize(data, ptitle, count, saveto=False):
 
     lines = [plot(zip(*p)[0], zip(*p)[1], 'ro-')[0] for p in data]
 
-    #legend(lines, data.keys())
     draw()
 
     grid(True)
     title("%s (%s nodes)" % (ptitle, count))
 
     if saveto:
-        savefig(saveto, dpi=250)
+        savefig(saveto, dpi=120)
     else:
         show()
 
@@ -40,11 +39,11 @@ if __name__ == "__main__":
             type=int, help="port of the mongo database")
     parser.add_argument("--db", action="store", dest="db", default="osm-data",
             type=str, help="name of the database")
-    parser.add_argument("--collection", action="store", dest="rg", default="railway_graph",
+    parser.add_argument("-c", "--collection", action="store", dest="rg", default="railway_graph",
             type=str, help="name of the collection")
-    parser.add_argument("--title", action="store", dest="title", default="RG Visualization",
+    parser.add_argument("-t", "--title", action="store", dest="title", default="RG Visualization",
             type=str, help="title of the image")
-    parser.add_argument("--save", action="store", dest="saveto", default=None,
+    parser.add_argument("-s", "--save", action="store", dest="saveto", default=None,
             type=str, help="save image to")
     args = parser.parse_args()
 
@@ -52,4 +51,4 @@ if __name__ == "__main__":
 
     segments = Segmenter(rg).segments_as_triplets
 
-    visualize(list(segments), args.title + "[%s]" % args.rg, rg.count(), args.saveto)
+    visualize(list(segments), args.title + " [%s]" % args.rg, rg.count(), args.saveto)
