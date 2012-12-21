@@ -19,6 +19,9 @@ def edist(a, b):
     """
     Calculates the euclidean distance between two points `a` and `b`.
 
+    >>> edist([3, 5], [3, 2])
+    3.0
+
     :param a: first point
     :type a: sequence of two integers/floats; a coordinate
     :param b: second point
@@ -60,6 +63,9 @@ def pdist(p, a, b):
 
         d = |kx₁ - y₁ + m| / sqrt(k² + 1)
 
+    >>> pdist([2, 0], [0, 2], [4, 2])
+    2.0
+
     :param a: first point
     :type a: sequence of two integers/floats; a coordinate
     :param b: second point
@@ -87,6 +93,9 @@ def triarea(a, b, c):
     """
     Calculates the area of a triangle.
 
+    >>> triarea([1, 1], [5, 1], [3, 5])
+    8.0
+
     :param a: first point
     :type a: sequence of two integers/floats; a coordinate
     :param b: second point
@@ -101,6 +110,9 @@ def midpoint(a, b):
     """
     Calculates the midpoint of a line segment defined by the
     points `a` and `b`.
+
+    >>> list(midpoint([2, 1], [4, 5]))
+    [3.0, 3.0]
 
     :param a: a coordinate
     :rtype a: a sequence of two integers/floats
