@@ -123,7 +123,7 @@ def midpoint(a, b):
     :param b: a coordinate
     :rtype a: a sequence of two integers/floats
     """
-    return np.mean(np.array([a, b]), axis=0)
+    return ((a[0] + b[0]) / 2, (a[1] + b[1]) / 2)
 
 
 def angle_between(v1, v2):
