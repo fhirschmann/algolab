@@ -15,9 +15,9 @@ from pymongo import Connection
 from algolab.anglered import anglereduce
 from algolab.rdp import rdp
 from algolab.segment import Segmenter
-from algolab.db import create_rg, empty, dedup
+from algolab.db import create_rg, empty, dedup, delonelynize, new
 from algolab.util import log_progress, log_change
-from algolab.logging import FORMAT as LOGGING_FORMAT
+from algolab.log import FORMAT as LOGGING_FORMAT
 
 
 def progress(msg, current, stop):
@@ -56,23 +56,40 @@ if __name__ == "__main__":
     rg_ = db["railway_graph"]
 
     # Collections for zoom level 8 - 16
-    rgs = {i: db["railway_graph_%i" % i] for i in xrange(8, 17)}
+    rgs = {i: db["railway_graph_%i" % i] for i in range(8, 17) + [0]}
 
     zls = list(args.zl)
 
-    if 16 in zls:
-        with log_progress("Removing duplicates (z=16)"):
-            dedup(rg_)
+    if 0 in zls:
+        empty(rgs[0])
 
+        with log_progress("Copying database to railway_graph_0"):
+            for node in rg_.find():
+                rgs[0].insert(dict(node))
+            c0 = rgs[0].count()
+            logging.info("Copied %i nodes" % rgs[0].count())
+
+        # This is the general cleaning step
+        with log_progress("Removing lonely nodes in railway_graph_0"):
+            c1 = delonelynize(rgs[0])
+            log_change(rgs[0].count(), c0)
+
+        with log_progress("Removing duplicates in railway_graph_0"):
+            c2 = dedup(rgs[0])
+            log_change(rgs[0].count(), c0 - c1)
+        zls.remove(0)
+
+    if 16 in zls:
         empty(rgs[16])
 
         with log_progress("Removing unnecessary points (zoom=16)"):
-            segmenter = Segmenter(rg_)
+            segmenter = Segmenter(rgs[0])
             for i, seg in enumerate(segmenter.segments_as_triplets):
                 if not args.np:
-                    progress("Applying Anglered to segment %s of %s (estimated)",
+                    progress("Applying anglereduce to segment %s of %s (estimated)",
                             i, segmenter.estimated_num_segments)
                 create_rg(anglereduce(seg, 179.99), rgs[16])
+            print "\n"
             zls.remove(16)
             log_change(rgs[16].count(), rg_.count())
 
@@ -93,4 +110,5 @@ if __name__ == "__main__":
                         progress("Applying RDP to segment %s of %s", i,
                                 segmenter.estimated_num_segments)
                     create_rg(rdp(seg, epsilon), rgs[zl])
+                print "\n"
                 log_change(rgs[zl].count(), rgs[16].count())

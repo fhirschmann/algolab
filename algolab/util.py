@@ -97,6 +97,19 @@ def triarea(a, b, c):
     return 0.5 * edist(a, b) * pdist(c, a, b)
 
 
+def midpoint(a, b):
+    """
+    Calculates the midpoint of a line segment defined by the
+    points `a` and `b`.
+
+    :param a: a coordinate
+    :rtype a: a sequence of two integers/floats
+    :param b: a coordinate
+    :rtype a: a sequence of two integers/floats
+    """
+    return np.mean(np.array([a, b]), axis=0)
+
+
 def angle_between(v1, v2):
     """
     Calculates the angle between vector `v1` and vector `v2`.
@@ -169,4 +182,5 @@ def log_progress(name, log_function=logging.info):
 
 
 def log_change(u, v, log_function=logging.info):
-    log_function("Reduced to %i nodes from %i nodes: - %.3f%%" % (u, v, ((v - u) / v) * 100))
+    log_function("Reduced to %i nodes from %i nodes. "
+                 "Change: -%i (-%.3f%%)" % (u, v, v - u, ((v - u) / v) * 100))
