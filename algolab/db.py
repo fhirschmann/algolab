@@ -297,16 +297,21 @@ def create_rg(points, col, distance_function=gcdist):
     :param col: a collection cursor
     :type col: a :class:`~pymongo.collection.Collection`
     """
+    # TODO: This does not work correctly. Try running bug.py - there
+    # are even fewer intersections afterwards.
     if len(points) < 2:
         raise ValueError("At least two points are required.")
 
     for i, point in enumerate(points):
         neighbors = []
+
+        # node has a predecessor
         if i > 0:
             neighbors.append({
                 "id": points[i - 1][2],
                 "distance": int(distance_function(point[:2], points[i - 1][:2]))})
 
+        # node has a successor
         if i < len(points) - 1:
             neighbors.append({
                 "id": points[i + 1][2],
