@@ -1,6 +1,6 @@
 import logging
 
-FORMAT = "[%(asctime)s] p%(process)s {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s','%m-%d %H:%M:%S"
+FORMAT = "[%(asctime)s] %(message)s"
 
 
 def configure_logging():
