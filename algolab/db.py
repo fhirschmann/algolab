@@ -51,6 +51,10 @@ def locs_for(_ids, col):
     return [loc_for(i, col) for i in _ids]
 
 
+def neighbors(node):
+    return [s["id"] for s in node["successors"]]
+
+
 def extend_neighbors(node1, node2):
     """
     Extends `node1`'s neighbors with those of `node2`.
@@ -151,9 +155,13 @@ def empty(col):
 
     :param col: the collection to read from
     :type col: a :class:`~pymongo.collection.Collection`
+    :returns: the new collection
     """
     col.drop()
     col.create_index([("loc", GEO2D)])
+
+    return col
+new = empty
 
 
 def merge_nodes(rg, node_id, merge_with_ids, distance_function=gcdist):
@@ -235,6 +243,21 @@ def dedup(rg, distance_function=gcdist):
         merge_nodes(rg, this, dups, distance_function)
 
     return int(num_dups)
+
+
+def delonelynize(rg):
+    """
+    Removes all lonely nodes (nodes without neighbors) from
+    the railway graph `rg`.
+
+    :param rg: a collection cursor to a railway graph
+    :type rg: a :class:`~pymongo.collection.Collection`
+    """
+    nodes = nodes_with_num_neighbors(rg, 0)
+    for node in nodes:
+        node.remove()
+
+    return nodes.count()
 
 
 def create_rg_from(node_ids, source_col, dest_col):
