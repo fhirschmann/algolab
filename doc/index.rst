@@ -3,14 +3,19 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Algorithm Lab's documentation!
-=========================================
+Algorithm Lab documentation
+===========================
 
-Contents:
+During the algorithm lab project, we developed a framework for cleaning,
+combining, segmenting and simplyfing cartographic data, with an emphasis
+on train tracks. Below you'll find several algorithms for each of the
+mentioned sections.
 
 .. toctree::
    :maxdepth: 2
 
+   clean
+   comb
    seg
    simp
    api
