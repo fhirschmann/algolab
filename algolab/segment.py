@@ -3,11 +3,7 @@ Segmentation algorithm for railway graphs.
 """
 import logging
 
-from db import node_for, nodes_with_num_neighbors_ne
-
-
-def neighbors(node):
-    return [s["id"] for s in node["successors"]]
+from db import node_for, nodes_with_num_neighbors_ne, neighbors
 
 
 def walk_from(node, segment, col):
