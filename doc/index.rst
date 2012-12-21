@@ -14,6 +14,7 @@ Contents:
    seg
    simp
    api
+   data
 
 Indices and tables
 ==================

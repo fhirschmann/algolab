@@ -1,8 +1,60 @@
 # -*- coding: utf-8 -*-
 """
-Sample data.
+Sample data. This data can be used to test algorithms.
 
 .. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
+
+Data Set 0
+----------
+
+.. plot::
+
+    from algolab.data import points
+    from pylab import *
+
+    title("Data Set 0")
+    plot(zip(*points[0])[0], zip(*points[0])[1], 'o-')
+    show()
+
+Data Set 1
+----------
+
+.. plot::
+
+    from algolab.data import points
+    from pylab import *
+
+    title("Data Set 1")
+    plot(zip(*points[1])[0], zip(*points[1])[1], 'o-')
+    show()
+
+Data Set 2 - 7
+--------------
+
+.. plot::
+
+    from algolab.data import points
+    from pylab import *
+
+    data = {k: v for k, v in points.items() if k in [2, 3, 4, 5, 6, 7]}
+    title("Data Set 2 - 5")
+    lines = [plot(zip(*p)[0], zip(*p)[1], 'o-')[0] for p in data.values()]
+    legend(lines, data.keys())
+    show()
+
+Data Set 8 - 11
+---------------
+
+.. plot::
+
+    from algolab.data import points
+    from pylab import *
+
+    data = {k: v for k, v in points.items() if k in [8, 9, 10, 11]}
+    title("Data Set 8 - 10")
+    lines = [plot(zip(*p)[0], zip(*p)[1], 'o-')[0] for p in data.values()]
+    legend(lines, data.keys())
+    show()
 """
 
 points = {}

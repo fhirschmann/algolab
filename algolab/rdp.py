@@ -21,6 +21,20 @@ def rdp(points, epsilon=0):
         the impact of different ε values can be started by executing
         :file:`al_visualize_algo rdp`.
 
+    Examples:
+
+    .. plot::
+
+        from algolab.data import points
+        from pylab import *
+
+        title("Initial Situation")
+        plot(zip(*points[0])[0], zip(*points[0])[1], 'o-')
+        show()
+
+    TODO: Apply RDP
+
+
     :param points: a curve that is approximated by a series of points
     :type points: list of 3-tuples (x, y, id)
     :param epsilon: a threshold value with ε ≥ 0.
