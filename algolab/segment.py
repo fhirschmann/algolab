@@ -43,10 +43,8 @@ class Segmenter(object):
     will yield the following segments::
 
         [
-          [a, ..., b]
-          [a, ..., c]
-          [b, ..., c]
-          [d, ..., b]
+          [b, a, c]
+          [b, d]
         ]
     """
     def __init__(self, collection):
