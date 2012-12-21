@@ -19,10 +19,10 @@ def anglecombine(rg, epsilon):
     :param epsilon: an angle (should be < 15°)
     :type epsilon: float
     """
-    int_ids = set([n["_id"] for n in intersections(rg)])
+    int_ids = list([n["_id"] for n in intersections(rg)])
 
     while int_ids:
-        int_ = rg.find_one(int_ids.pop())
+        int_ = rg.find_one(int_ids.pop(0))
         ix, iy = int_["loc"]
 
         for n_id_1, n_id_2 in combinations(neighbors(int_), 2):
@@ -42,24 +42,6 @@ def anglecombine(rg, epsilon):
                 rg.save(n1)
                 merge_nodes(rg, n1["_id"], [n2["_id"]])
 
-                int_ids.add(int_["_id"])
-                int_ids.add(n1["_id"])
+                int_ids.insert(0, int_["_id"])
+                int_ids.append(n1["_id"])
                 break
-
-
-#from algolab.db import create_rg
-#from algolab.data import npoints
-#from algolab.test import col
-
-#empty(col)
-#create_rg(npoints[12], col)
-#create_rg(npoints[13], col)
-#create_rg(npoints[14], col)
-#create_rg(npoints[15], col)
-
-#anglecombine(col, 40)
-#d = {}
-#for n in col.find():
-    #d[n["_id"]] = n["loc"]
-
-#print d
