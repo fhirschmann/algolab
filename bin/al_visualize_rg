@@ -15,7 +15,7 @@ from algolab.db import locs_for
 from algolab.data import *
 
 
-def visualize(data, ptitle, saveto=False):
+def visualize(data, ptitle, count, saveto=False):
     subplots_adjust(left=0.15, bottom=0.25)
 
     lines = [plot(zip(*p)[0], zip(*p)[1], 'ro-')[0] for p in data]
@@ -24,7 +24,7 @@ def visualize(data, ptitle, saveto=False):
     draw()
 
     grid(True)
-    title("%s (%s nodes)" % (ptitle, len(data)))
+    title("%s (%s nodes)" % (ptitle, count))
 
     if saveto:
         savefig(saveto, dpi=250)
@@ -52,5 +52,4 @@ if __name__ == "__main__":
 
     segments = Segmenter(rg).segments_as_triplets
 
-
-    visualize(list(segments), args.title, args.saveto)
+    visualize(list(segments), args.title + "[%s]" % args.rg, rg.count(), args.saveto)
