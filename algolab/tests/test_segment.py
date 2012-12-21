@@ -5,7 +5,7 @@ from pymongo import Connection
 from algolab.segment import Segmenter as S
 from algolab.data import *
 from algolab.util import *
-from algolab.db import create_rg
+from algolab.db import create_rg, empty
 
 
 class SegmentTest(unittest2.TestCase):
@@ -27,7 +27,7 @@ class SegmentTest(unittest2.TestCase):
 
     def test_already_segmented2(self):
         create_rg(npoints[3], self.col1)
-        self.assertEqual(list(S(self.col1).segment_ids)[0], [4, 2, 5])
+        self.assertItemsEqual(list(S(self.col1).segment_ids)[0], [4, 2, 5])
 
     def test_already_segmented3(self):
         create_rg(npoints[4], self.col1)
@@ -48,13 +48,25 @@ class SegmentTest(unittest2.TestCase):
     def test_switch_segment2(self):
         self.create_rg_for([2, 3, 4, 5])
         self.assertItemsEqual(list(S(self.col0).segment_ids),
-                [[0, 1, 2], [2, 3], [2, 4], [2, 5],
+                [[0, 1, 2], [3, 2], [4, 2], [2, 5],
                     [2, 6], [2, 8, 7], [2, 9, 10, 11]])
 
     def test_switch_segment3(self):
         self.create_rg_for([2, 3, 4, 5, 6, 7])
         self.assertItemsEqual(list(S(self.col0).segment_ids),
-                [[0, 1, 2], [2, 3], [2, 4], [2, 5],
-                    [2, 6], [7, 8, 2], [11, 10, 9, 2],
-                    [2, 12], [13, 15], [13, 16], [2, 13], [13, 14]])
+                [[0, 1, 2], [3, 2], [4, 2], [5, 2],
+                    [6, 2], [7, 8, 2], [11, 10, 9, 2],
+                    [12, 2], [13, 15], [13, 16], [2, 13], [13, 14]])
         self.assertEqual(len(list(S(self.col0).segment_ids)), 12)
+
+    def test_swith2_segment(self):
+        empty(self.col0)
+        self.create_rg_for([8, 9, 10, 11])
+        segmenter = S(self.col0)
+
+        segs = list(segmenter.segments_as_triplets)
+
+        for s in segs:
+            print s
+
+        self.assertEqual(len(segs), 4)

@@ -81,3 +81,13 @@ points[6] = [[p[0], p[1]] for p in npoints[6]]
 
 npoints[7] = [[4, 3, 15], [6, 2, 13], [8, 3, 16]]
 points[7] = [[p[0], p[1]] for p in npoints[7]]
+
+
+npoints[8] = [[1, 1, 0], [2, 2, 1]]
+points[8] = [[p[0], p[1]] for p in npoints[8]]
+npoints[9] = [[2, 0, 2], [3, 1, 3]]
+points[9] = [[p[0], p[1]] for p in npoints[9]]
+npoints[10] = [[2, 2, 1], [3, 1, 3]]
+points[10] = [[p[0], p[1]] for p in npoints[10]]
+npoints[11] = [[2, 2, 1], [3, 3, 4], [4, 4, 5], [4, 2, 6], [3, 1, 3]]
+points[11] = [[p[0], p[1]] for p in npoints[11]]

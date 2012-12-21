@@ -80,21 +80,31 @@ class Segmenter(object):
         :returns: segment generator
         :rtype: generator
         """
+        # All of the visited nodes
         visited = set()
+
+        # Visisted intersections
+        visited2 = set()
 
         for node in self.es:
             neighbor_ids = neighbors(node)
 
             for neighbor_id in neighbor_ids:
-                if neighbor_id in visited:
-                    continue
                 neighbor = node_for(neighbor_id, self.collection)
+
+                if neighbor_id in visited:
+                    # Without the following, intersection to intersection
+                    # connections will not be picked up
+                    if neighbor_id in visited2:
+                        continue
+                    if len(neighbor["successors"]) < 3:
+                        continue
                 if not neighbor:
                     logging.error("%i's neighbor %i does not exist.",
                                   node["_id"], neighbor_id)
                 segment = walk_from(neighbor, [node], self.collection)
                 visited.update([s["_id"] for s in segment])
-                visited.add(node["_id"])
+                visited2.add(node["_id"])
                 yield segment
 
     @property

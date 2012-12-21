@@ -297,8 +297,6 @@ def create_rg(points, col, distance_function=gcdist):
     :param col: a collection cursor
     :type col: a :class:`~pymongo.collection.Collection`
     """
-    # TODO: This does not work correctly. Try running bug.py - there
-    # are even fewer intersections afterwards.
     if len(points) < 2:
         raise ValueError("At least two points are required.")
 
