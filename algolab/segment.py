@@ -32,20 +32,27 @@ class Segmenter(object):
 
     For example, running `segment` on the following railway graph
 
-    .. graphviz::
+    .. plot::
 
-        graph seg {
-            a -- b -- d;
-            b -- c;
-            a -- c;
-        }
+        from algolab.data import points
+        from pylab import *
 
-    will yield the following segments::
+        title("Segmentation visualization")
+        for i in [2, 3]:
+            plot(zip(*points[i])[0], zip(*points[i])[1], 'o-')
+        show()
 
-        [
-          [b, a, c]
-          [b, d]
-        ]
+    will yield the segments:
+
+    >>> from algolab.data import npoints
+    >>> from algolab.db import create_rg
+    >>> from algolab.segment import Segmenter
+    >>> from pymongo import Connection
+    >>> col = Connection("127.0.0.1", 27017)["test"]["test"]
+    >>> col.drop()
+    >>> for i in [2, 3]: create_rg(npoints[i], col)
+    >>> list(Segmenter(col).segments_as_coordinates)
+    [[[1, 1], [2, 1], [3, 1]], [[4, 1], [3, 1]], [[3, 0], [3, 1]], [[3, 1], [3, 5]]]
     """
     def __init__(self, collection):
         """
@@ -113,6 +120,15 @@ class Segmenter(object):
         """
         for segment in self.segments:
             yield [n["loc"] + [n["_id"]] for n in segment]
+
+    @property
+    def segments_as_coordinates(self):
+        """
+        Equal to :py:obj:`.segments`, except that this is a list
+        of triplets (lon, lat).
+        """
+        for segment in self.segments:
+            yield [n["loc"] for n in segment]
 
     @property
     def segment_ids(self):
