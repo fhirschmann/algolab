@@ -9,20 +9,21 @@ from algolab.util import angle_between
 
 def anglereduce(points, epsilon):
     """
+    :type points: list of 3-tuples (x, y, id)
+    :param epsilon: a threshold value with 0 <  ε <= 180.
+    :type epsilon: a :class:`~decimal.Decimal`
+    :returns: a list of 3-tuples (x, y, id)
+    :rtype: list of 3-tuples
+
     This is a very simple recursive algorithm that removes a point in a curve
     that is approximated by series of `points`, if the angle between a point
     and its two adjacent neighbors is smaller than a threshold `epsilon`.
 
     .. note::
 
-        An interactive visualization of this algorithm which shows
-        the impact of different ε values can be started by executing
+        An interactive visualization of this algorithm, which shows
+        the impact of different ε values, can be started by executing
         :file:`al_visualize_algo anglered`.
-
-    :param points: a curve that is approximated by a series of points
-    :type points: list of 3-tuples (x, y, id)
-    :param epsilon: a threshold value with 0 <  ε <= 180.
-    :type epsilon: a :class:`~decimal.Decimal`
     """
     if len(points) < 3:
         return points

@@ -13,32 +13,22 @@ def rdp(points, epsilon=0):
     """
     This is an implementation of the Ramer-Douglas-Peucker algorithm.
 
+    :param points: a curve that is approximated by a series of points
+    :type points: list of 3-tuples (x, y, id)
+    :param epsilon: a threshold value with ε ≥ 0.
+    :type epsilon: a float or :class:`~decimal.Decimal`
+    :returns: a list of 3-tuples (x, y, id)
+    :rtype: list of 3-tuples
+
+    The following figure animates the algorithm:
+
     .. image:: img/rdp.gif
 
     .. note::
 
-        An interactive visualization of this algorithm which shows
-        the impact of different ε values can be started by executing
+        An interactive visualization of this algorithm, which shows
+        the impact of different ε values, can be started by executing
         :file:`al_visualize_algo rdp`.
-
-    Examples:
-
-    .. plot::
-
-        from algolab.data import points
-        from pylab import *
-
-        title("Initial Situation")
-        plot(zip(*points[0])[0], zip(*points[0])[1], 'o-')
-        show()
-
-    TODO: Apply RDP
-
-
-    :param points: a curve that is approximated by a series of points
-    :type points: list of 3-tuples (x, y, id)
-    :param epsilon: a threshold value with ε ≥ 0.
-    :type epsilon: a :class:`~decimal.Decimal`
     """
     if len(points) < 3:
         return points
