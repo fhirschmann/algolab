@@ -140,6 +140,7 @@ npoints[7] = [[4, 3, 15], [6, 2, 13], [8, 3, 16]]
 points[7] = [[p[0], p[1]] for p in npoints[7]]
 
 
+# Intersection <-> Intersection connection
 npoints[8] = [[1, 1, 0], [2, 2, 1]]
 points[8] = [[p[0], p[1]] for p in npoints[8]]
 npoints[9] = [[2, 0, 2], [3, 1, 3]]
@@ -148,3 +149,13 @@ npoints[10] = [[2, 2, 1], [3, 1, 3]]
 points[10] = [[p[0], p[1]] for p in npoints[10]]
 npoints[11] = [[2, 2, 1], [3, 3, 4], [4, 4, 5], [4, 2, 6], [3, 1, 3]]
 points[11] = [[p[0], p[1]] for p in npoints[11]]
+
+
+# Parallel tracks
+npoints[12] = [[1, 1, 0], [2, 1, 1], [3, 1, 2], [4, 1, 3], [5, 1, 4], [6, 1, 5], [7, 1, 6]]
+points[12] = [[p[0], p[1]] for p in npoints[12]]
+npoints[13] = [[2, 1, 1], [3, 1.3, 7], [4, 1.3, 8], [5, 1.3, 9], [6, 1, 5]]
+points[13] = [[p[0], p[1]] for p in npoints[13]]
+npoints[14] = [[4, 1, 3], [5, 0.7, 10], [6, 0.7, 11], [7, 1, 6]]
+points[14] = [[p[0], p[1]] for p in npoints[14]]
+npoints[15] = [[4, 1.3, 8], [4, 4, 12]]
