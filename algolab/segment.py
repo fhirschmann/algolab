@@ -1,5 +1,7 @@
 """
 Segmentation algorithm for railway graphs.
+
+.. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
 """
 import logging
 

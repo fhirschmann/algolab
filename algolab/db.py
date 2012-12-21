@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+Database-related utilities.
+
+.. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
+"""
 import logging
 
 from pymongo import GEO2D

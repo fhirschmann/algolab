@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""
+Angle-based reduction algorithm.
+
+.. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
+"""
 from algolab.util import angle_between
 
 

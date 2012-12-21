@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""
+The Ramer-Douglas-Peucker Algorithm.
+
+.. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
+"""
 from decimal import Decimal
 
 from algolab.util import pdist

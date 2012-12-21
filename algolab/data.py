@@ -1,4 +1,9 @@
-# Sample railway graph points
+# -*- coding: utf-8 -*-
+"""
+Sample data.
+
+.. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
+"""
 
 points = {}
 npoints = {}

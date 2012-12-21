@@ -1,5 +1,9 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+Miscellaneous utilities.
+
+.. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
+"""
 
 from __future__ import division
 import logging
