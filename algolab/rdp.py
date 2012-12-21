@@ -8,6 +8,14 @@ def rdp(points, epsilon=0):
     """
     This is an implementation of the Ramer-Douglas-Peucker algorithm.
 
+    .. image:: img/rdp.gif
+
+    .. note::
+
+        An interactive visualization of this algorithm which shows
+        the impact of different ε values can be started by executing
+        :file:`al_visualize_algo rdp`.
+
     :param points: a curve that is approximated by a series of points
     :type points: list of 3-tuples (x, y, id)
     :param epsilon: a threshold value with ε ≥ 0.
