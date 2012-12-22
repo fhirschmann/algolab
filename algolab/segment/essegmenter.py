@@ -65,7 +65,7 @@ class ESSegmenter(object):
 
         # endpoints and switches
         self.es = nodes_with_num_neighbors_ne(collection, 2)
-        self._estimated = int(self.es.count() / 0.96)
+        self._estimated = int(self.es.count() * 1.3)
 
     @property
     def estimated_num_segments(self):
