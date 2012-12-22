@@ -5,7 +5,7 @@ from pymongo import Connection
 from algolab.simplify import rdp, anglereduce
 from algolab.db import *
 from algolab.data import *
-from algolab.segment import Segmenter as S
+from algolab.segment import ESSegmenter as S
 from algolab.util import *
 
 

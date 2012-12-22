@@ -2,7 +2,7 @@ import unittest2
 
 from pymongo import Connection
 
-from algolab.segment import Segmenter as S
+from algolab.segment import ESSegmenter as S
 from algolab.data import *
 from algolab.util import *
 from algolab.db import create_rg, empty

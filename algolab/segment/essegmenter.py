@@ -5,7 +5,7 @@ Segmentation algorithm for railway graphs.
 """
 import logging
 
-from db import node_for, nodes_with_num_neighbors_ne, neighbors
+from algolab.db import node_for, nodes_with_num_neighbors_ne, neighbors
 
 
 def walk_from(node, segment, col):
@@ -24,9 +24,9 @@ def walk_from(node, segment, col):
     return walk_from(node_for(visit, col), segment, col)
 
 
-class Segmenter(object):
+class ESSegmenter(object):
     """
-    Segments a railway graph.
+    Endpoint or Switch Segmenter - segments a railway graph.
 
     This is a very simple algorithm that extracts segments from a railway
     graph. A segment is defined by its bounds, which is either an endpoint

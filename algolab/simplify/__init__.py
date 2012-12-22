@@ -2,7 +2,7 @@ import os
 import sys
 
 from algolab.db import create_rg
-from algolab.segment import Segmenter
+from algolab.segment import ESSegmenter
 
 from algolab.simplify.rdp import rdp
 from algolab.simplify.anglered import anglereduce
@@ -10,9 +10,9 @@ from algolab.simplify.anglered import anglereduce
 __all__ = ['simplify', 'rdp', 'anglereduce']
 
 
-def simplify(algo, source_col, dest_col, args=[], segmenter=Segmenter,
+def simplify(algo, source_col, dest_col, args=[], segmenter=ESSegmenter,
              progress=True):
-    segmenter = Segmenter(source_col)
+    segmenter = ESSegmenter(source_col)
 
     n = segmenter.estimated_num_segments
 

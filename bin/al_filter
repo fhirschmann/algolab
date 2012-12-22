@@ -15,7 +15,7 @@ from pymongo import Connection
 from algolab.anglered import anglereduce
 from algolab.rdp import rdp
 from algolab.combine import anglecombine
-from algolab.segment import Segmenter
+from algolab.segment import ESSegmenter
 from algolab.db import create_rg, empty, dedup, delonelynize, new
 from algolab.util import log_progress, log_change
 from algolab.simplify import simplify
@@ -88,7 +88,7 @@ if __name__ == "__main__":
             zls.remove(16)
             log_change(rgs[16].count(), rg_.count())
 
-    segmenter = Segmenter(rgs[16])
+    segmenter = ESSegmenter(rgs[16])
 
     for zl in reversed(sorted(zls)):
         if zl > 7:

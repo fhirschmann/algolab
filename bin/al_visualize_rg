@@ -10,7 +10,7 @@ import argparse
 from pymongo import Connection
 from pylab import *
 
-from algolab.segment import Segmenter
+from algolab.segment import ESSegmenter
 from algolab.db import locs_for
 from algolab.data import *
 
@@ -49,6 +49,6 @@ if __name__ == "__main__":
 
     rg = Connection(args.host, args.port)[args.db][args.rg]
 
-    segments = Segmenter(rg).segments_as_triplets
+    segments = ESSegmenter(rg).segments_as_triplets
 
     visualize(list(segments), args.title + " [%s]" % args.rg, rg.count(), args.saveto)
