@@ -8,5 +8,5 @@ The following segmentation algorithms are available:
 Segmenter
 ---------
 
-.. autoclass:: algolab.segment.Segmenter
+.. autoclass:: algolab.segment.ESSegmenter
    :members:

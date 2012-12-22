@@ -28,6 +28,13 @@ Simplification
    :noindex:
    :members:
 
+Combination
+-----------
+
+.. automodule:: algolab.combine
+   :noindex:
+   :members:
+
 Miscellaneous
 -------------
 

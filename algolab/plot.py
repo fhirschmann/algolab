@@ -5,7 +5,7 @@ Plotting helpers.
 .. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
 """
 from algolab.data import npoints, points
-from algolab.segment import ESESESSegmenter
+from algolab.segment import ESSegmenter
 
 import pylab as pl
 
@@ -29,6 +29,6 @@ def plot_datasets(datasets, title=None):
 
 def plot_rg(rg, title):
     pl.title(title)
-    segments = ESESESSegmenter(rg).segments_as_triplets
+    segments = ESSegmenter(rg).segments_as_triplets
     for s in segments:
         pl.plot(zip(*s)[0], zip(*s)[1], 'ro-')
