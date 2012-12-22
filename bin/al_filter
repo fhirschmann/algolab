@@ -18,14 +18,8 @@ from algolab.combine import anglecombine
 from algolab.segment import Segmenter
 from algolab.db import create_rg, empty, dedup, delonelynize, new
 from algolab.util import log_progress, log_change
+from algolab.simplify import simplify
 from algolab.log import FORMAT as LOGGING_FORMAT
-
-
-def progress(msg, current, stop):
-    sys.stdout.write("\r" + msg % (current, stop))
-    if current == stop - 1:
-        sys.stdout.write("\n")
-    sys.stdout.flush()
 
 
 if __name__ == "__main__":
@@ -86,18 +80,11 @@ if __name__ == "__main__":
 
         zls.remove(0)
 
-
     if 16 in zls:
         empty(rgs[16])
 
         with log_progress("Removing unnecessary points (zoom=16)"):
-            segmenter = Segmenter(rgs[0])
-            for i, seg in enumerate(segmenter.segments_as_triplets):
-                if not args.np:
-                    progress("Applying anglereduce to segment %s of %s (estimated)",
-                            i, segmenter.estimated_num_segments)
-                create_rg(anglereduce(seg, 179.99), rgs[16])
-            print "\n"
+            simplify(anglereduce, rgs[0], rgs[16], [179.99])
             zls.remove(16)
             log_change(rgs[16].count(), rg_.count())
 
@@ -112,11 +99,5 @@ if __name__ == "__main__":
 
             with log_progress("Applying RDP with epsilon=%s (zoom=%i)" % (
                 epsilon.to_eng_string(), zl)):
-
-                for i, seg in enumerate(segmenter.segments_as_triplets):
-                    if not args.np:
-                        progress("Applying RDP to segment %s of %s", i,
-                                segmenter.estimated_num_segments)
-                    create_rg(rdp(seg, epsilon), rgs[zl])
-                print "\n"
+                simplify(rdp, rgs[16], rgs[zl], [epsilon])
                 log_change(rgs[zl].count(), rgs[16].count())
