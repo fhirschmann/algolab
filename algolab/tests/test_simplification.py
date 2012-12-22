@@ -1,7 +1,6 @@
 import unittest2
 
-from algolab.rdp import *
-from algolab.anglered import *
+from algolab.simplify import rdp, anglereduce
 from algolab.data import *
 
 

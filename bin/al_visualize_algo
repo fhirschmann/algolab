@@ -46,8 +46,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.algorithm == "rdp":
-        from rdp import rdp
+        from algolab.simplify import rdp
         visualize(rdp, 0, 4, 0)
     elif args.algorithm == "anglered":
-        from anglered import anglereduce
+        from algolab.simplify import anglereduce
         visualize(anglereduce, 0, 180, 180)

@@ -2,8 +2,7 @@ import unittest2
 
 from pymongo import Connection
 
-from algolab.rdp import *
-from algolab.anglered import *
+from algolab.simplify import rdp, anglereduce
 from algolab.db import *
 from algolab.data import *
 from algolab.segment import Segmenter as S
