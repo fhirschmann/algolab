@@ -5,7 +5,7 @@ Line Simplifaction Algorithms
 Angular Reduction
 -----------------
 
-.. autofunction:: algolab.anglered.anglereduce
+.. autofunction:: algolab.simplify.anglereduce
 
 Examples: Given the following initial situation:
 
@@ -33,7 +33,7 @@ And applying the algorithm with ε = 150 gives:
 Ramer-Douglas-Peucker
 ---------------------
 
-.. autofunction:: algolab.rdp.rdp
+.. autofunction:: algolab.simplify.rdp
 
 Examples: Given the following initial situation:
 

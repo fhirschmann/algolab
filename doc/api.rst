@@ -24,14 +24,9 @@ Segmentation
 Simplification
 --------------
 
-.. automodule:: algolab.rdp
+.. automodule:: algolab.simplify
    :noindex:
    :members:
-
-.. automodule:: algolab.anglered
-   :noindex:
-   :members:
-
 
 Miscellaneous
 -------------
