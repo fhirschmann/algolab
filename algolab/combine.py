@@ -23,6 +23,8 @@ def anglecombine(rg, epsilon):
 
     while int_ids:
         int_ = rg.find_one(int_ids.pop(0))
+        if not int_:
+            continue
         ix, iy = int_["loc"]
 
         for n_id_1, n_id_2 in combinations(neighbors(int_), 2):

@@ -14,6 +14,7 @@ from pymongo import Connection
 
 from algolab.anglered import anglereduce
 from algolab.rdp import rdp
+from algolab.combine import anglecombine
 from algolab.segment import Segmenter
 from algolab.db import create_rg, empty, dedup, delonelynize, new
 from algolab.util import log_progress, log_change
@@ -70,14 +71,21 @@ if __name__ == "__main__":
             logging.info("Copied %i nodes" % rgs[0].count())
 
         # This is the general cleaning step
-        with log_progress("Removing lonely nodes in railway_graph_0"):
+        with log_progress("Removing lonely nodes from railway_graph_0"):
             c1 = delonelynize(rgs[0])
             log_change(rgs[0].count(), c0)
 
-        with log_progress("Removing duplicates in railway_graph_0"):
+        with log_progress("Removing duplicates from railway_graph_0"):
             c2 = dedup(rgs[0])
-            log_change(rgs[0].count(), c0 - c1)
+            c3 = rgs[0].count()
+            log_change(c3, c0 - c1)
+
+        with log_progress("Removing parallel tracks from railway_graph_0"):
+            anglecombine(rgs[0], 10)
+            log_change(rgs[0].count(), c3)
+
         zls.remove(0)
+
 
     if 16 in zls:
         empty(rgs[16])
