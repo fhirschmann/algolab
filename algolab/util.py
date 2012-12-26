@@ -130,6 +130,9 @@ def angle_between(v1, v2):
     """
     Calculates the angle between vector `v1` and vector `v2`.
 
+    >>> round(angle_between((0, 5), (1, 1)))
+    45.0
+
     :param v1: a vector
     :type v1: sequence of two integers/floats
     :param v2: another vector

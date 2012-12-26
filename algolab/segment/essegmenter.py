@@ -48,12 +48,12 @@ class ESSegmenter(object):
 
     >>> from algolab.data import npoints
     >>> from algolab.db import create_rg
-    >>> from algolab.segment import Segmenter
+    >>> from algolab.segment import ESSegmenter
     >>> from pymongo import Connection
     >>> col = Connection("127.0.0.1", 27017)["test"]["test"]
     >>> col.drop()
     >>> for i in [2, 3]: create_rg(npoints[i], col)
-    >>> list(Segmenter(col).segments_as_coordinates)
+    >>> list(ESSegmenter(col).segments_as_coordinates)
     [[[1, 1], [2, 1], [3, 1]], [[4, 1], [3, 1]], [[3, 0], [3, 1]], [[3, 1], [3, 5]]]
     """
     def __init__(self, collection):
