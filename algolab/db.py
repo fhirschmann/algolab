@@ -12,7 +12,7 @@ from bson.code import Code
 from algolab.util import gcdist, raise_or_return
 
 
-def node_for(_id, col):
+def node_for(id_, col):
     """
     Returns the node from a collection `col` identified
     by a given `_id`.
@@ -24,11 +24,11 @@ def node_for(_id, col):
     :returns: a node
     :raise: :exc:`ValueError` if there is no such node
     """
-    return raise_or_return(col.find_one(_id),
-            ValueError, "There is no such node %s" % _id)
+    return raise_or_return(col.find_one(id_),
+            ValueError, "There is no such node %s" % id_)
 
 
-def loc_for(_id, col):
+def loc_for(id_, col):
     """
     Returns a 3-tuple (lon, lat, id) for the node
     identified by `_id` from the collection `col`.
@@ -40,10 +40,10 @@ def loc_for(_id, col):
     :returns: 3-tuple (lon, lat, id)
     :raise: :exc:`ValueError` if there is no such node
     """
-    return node_for(_id, col)["loc"] + [_id]
+    return node_for(id_, col)["loc"] + [id_]
 
 
-def locs_for(_ids, col):
+def locs_for(ids_, col):
     """
     Applies :func:`~algolab.db.loc_for` for each id in `_ids`.
 
@@ -54,7 +54,7 @@ def locs_for(_ids, col):
     :returns: a list of 3-tuples (lon, lat, id)
     :raise: :exc:`ValueError` if there is no such node
     """
-    return [loc_for(i, col) for i in _ids]
+    return [loc_for(i, col) for i in ids_]
 
 
 def neighbors(node):
@@ -220,6 +220,7 @@ def dedup(rg, distance_function=gcdist):
     Removes all duplicates from a railway graph `rg`.
 
     Two points are duplicates of each other if they have the same location.
+    This function uses mongodb's map-reduce.
 
     :param rg: a collection cursor to a railway graph
     :type rg: a :class:`~pymongo.collection.Collection`
