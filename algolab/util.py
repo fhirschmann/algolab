@@ -202,8 +202,9 @@ def log_progress(name, log_function=logging.info):
 
 
 def log_change(u, v, log_function=logging.info):
+    change = ((v - u) / v) * 100 if v is not 0 else 0
     log_function("Reduced to %i nodes from %i nodes. "
-                 "Change: -%i (-%.3f%%)" % (u, v, v - u, ((v - u) / v) * 100))
+                 "Change: -%i (-%.3f%%)" % (u, v, v - u, change))
 
 
 def memoized(f):
