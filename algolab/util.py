@@ -16,7 +16,9 @@ import numpy as np
 from numpy.linalg import norm
 from scipy.spatial.distance import euclidean
 from proj import Proj
-proj = Proj(proj='utm', ellps='WGS84')
+
+# Use Mercator projection (like google maps)
+proj = Proj(proj='merc', ellps='WGS84')
 
 EARTH_RADIUS = 6378137
 PRECISION = 10
