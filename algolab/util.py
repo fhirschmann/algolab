@@ -19,6 +19,8 @@ from scipy.spatial.distance import euclidean
 EARTH_RADIUS = 6378137
 PRECISION = 10
 
+log = logging.getLogger(__name__)
+
 
 def edist(a, b):
     """
@@ -192,7 +194,7 @@ def raise_or_return(obj, exception, msg):
 
 
 @contextmanager
-def log_progress(name, log_function=logging.info):
+def log_progress(name, log_function=log.info):
     log_function("-" * 50)
     log_function("=> Starting step '%s'" % name)
     now = datetime.now()
@@ -201,7 +203,7 @@ def log_progress(name, log_function=logging.info):
         name, datetime.now() - now))
 
 
-def log_change(u, v, log_function=logging.info):
+def log_change(u, v, log_function=log.info):
     change = ((v - u) / v) * 100 if v is not 0 else 0
     log_function("Reduced to %i nodes from %i nodes. "
                  "Change: -%i (-%.3f%%)" % (u, v, v - u, change))
