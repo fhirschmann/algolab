@@ -10,6 +10,7 @@ import logging
 from math import sqrt, cos, sin, radians, atan2
 from contextlib import contextmanager
 from datetime import datetime
+from functools import wraps
 
 import numpy as np
 from numpy.linalg import norm
@@ -203,3 +204,27 @@ def log_progress(name, log_function=logging.info):
 def log_change(u, v, log_function=logging.info):
     log_function("Reduced to %i nodes from %i nodes. "
                  "Change: -%i (-%.3f%%)" % (u, v, v - u, ((v - u) / v) * 100))
+
+
+def memoized(f):
+    """
+    Decorator that provides memoization, i.e. a cache that saves the result of
+    a function call and returns them if called with the same arguments.
+
+    The function will not be evaluated if the arguments are present in the
+    cache.
+    """
+    cache = {}
+
+    @wraps(f)
+    def _memoized(*args, **kwargs):
+        key = tuple(args) + tuple(kwargs.items())
+        try:
+            if key in cache:
+                return cache[key]
+        except TypeError:       # if passed an unhashable type evaluate directly
+            return f(*args, **kwargs)
+        ret = f(*args, **kwargs)
+        cache[key] = ret
+        return ret
+    return _memoized
