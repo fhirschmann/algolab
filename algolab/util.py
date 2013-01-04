@@ -15,6 +15,8 @@ from functools import wraps
 import numpy as np
 from numpy.linalg import norm
 from scipy.spatial.distance import euclidean
+from proj import Proj
+proj = Proj(proj='utm', ellps='WGS84')
 
 EARTH_RADIUS = 6378137
 PRECISION = 10
@@ -44,6 +46,14 @@ def memoized(f):
         cache[key] = ret
         return ret
     return _memoized
+
+
+def lonlat2xy(lon, lat):
+    """
+    Performs cartographic transformations (converts from
+    longitude, latitude to native map projection x, y.
+    """
+    return proj(lon, lat)
 
 
 def edist(a, b):
