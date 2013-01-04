@@ -106,4 +106,5 @@ if __name__ == "__main__":
 
     db = Connection(args.host, args.port)[args.db]
 
-    main(args.zl, db)
+    with log_progress("Overall process"):
+        main(args.zl, db)
