@@ -22,6 +22,30 @@ PRECISION = 10
 log = logging.getLogger(__name__)
 
 
+def memoized(f):
+    """
+    Decorator that provides memoization, i.e. a cache that saves the result of
+    a function call and returns them if called with the same arguments.
+
+    The function will not be evaluated if the arguments are present in the
+    cache.
+    """
+    cache = {}
+
+    @wraps(f)
+    def _memoized(*args, **kwargs):
+        key = tuple(args) + tuple(kwargs.items())
+        try:
+            if key in cache:
+                return cache[key]
+        except TypeError:       # if passed an unhashable type evaluate directly
+            return f(*args, **kwargs)
+        ret = f(*args, **kwargs)
+        cache[key] = ret
+        return ret
+    return _memoized
+
+
 def edist(a, b):
     """
     Calculates the euclidean distance between two points `a` and `b`.
@@ -207,27 +231,3 @@ def log_change(u, v, log_function=log.info):
     change = ((v - u) / v) * 100 if v is not 0 else 0
     log_function("Reduced to %i nodes from %i nodes. "
                  "Change: -%i (-%.3f%%)" % (u, v, v - u, change))
-
-
-def memoized(f):
-    """
-    Decorator that provides memoization, i.e. a cache that saves the result of
-    a function call and returns them if called with the same arguments.
-
-    The function will not be evaluated if the arguments are present in the
-    cache.
-    """
-    cache = {}
-
-    @wraps(f)
-    def _memoized(*args, **kwargs):
-        key = tuple(args) + tuple(kwargs.items())
-        try:
-            if key in cache:
-                return cache[key]
-        except TypeError:       # if passed an unhashable type evaluate directly
-            return f(*args, **kwargs)
-        ret = f(*args, **kwargs)
-        cache[key] = ret
-        return ret
-    return _memoized
