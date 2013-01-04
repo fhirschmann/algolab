@@ -15,7 +15,7 @@ from functools import wraps
 import numpy as np
 from numpy.linalg import norm
 from scipy.spatial.distance import euclidean
-from proj import Proj
+from pyproj import Proj
 
 # Use Mercator projection (like google maps)
 proj = Proj(proj='merc', ellps='WGS84')
@@ -56,6 +56,14 @@ def lonlat2xy(lon, lat):
     longitude, latitude to native map projection x, y.
     """
     return proj(lon, lat)
+
+
+def xy2lonlat(x, y):
+    """
+    Performs cartographic transformations (converts from
+    x, y to longitutde, latitude.
+    """
+    return proj(x, y, inverse=True)
 
 
 def edist(a, b):
