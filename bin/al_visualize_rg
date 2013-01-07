@@ -11,14 +11,15 @@ from pymongo import Connection
 from pylab import *
 
 from algolab.segment import ESSegmenter
-from algolab.db import locs_for
-from algolab.data import *
+from algolab.util import lonlat2xy
 
 
 def visualize(data, ptitle, count, saveto=False):
     subplots_adjust(left=0.15, bottom=0.25)
+    print data[0]
+    projection = [[lonlat2xy(*p[0:2]) for p in seg] for seg in data]
 
-    lines = [plot(zip(*p)[0], zip(*p)[1], 'ro-')[0] for p in data]
+    lines = [plot(zip(*p)[0], zip(*p)[1], 'r-')[0] for p in projection]
 
     draw()
 
