@@ -10,5 +10,7 @@ setup(name="algolab",
             "bin/al_create_testgraph"],
         install_requires=[
             "numpy",
+            "scipy",
+            "pyproj",
         ]
         )
