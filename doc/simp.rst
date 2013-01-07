@@ -2,8 +2,8 @@
 Line Simplifaction Algorithms
 =============================
 
-Angular Reduction
------------------
+Angle-based Reduction
+----------------------
 
 .. autofunction:: algolab.simplify.anglereduce
 
