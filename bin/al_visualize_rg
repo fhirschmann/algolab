@@ -14,14 +14,15 @@ from algolab.segment import ESSegmenter
 from algolab.util import lonlat2xy
 
 
-def visualize(data, ptitle, count, saveto=False):
+def visualize(segments, ptitle, count, saveto=False):
     subplots_adjust(left=0.15, bottom=0.25)
-    projection = [[lonlat2xy(*p[0:2]) for p in seg] for seg in data]
 
     axes().get_xaxis().set_visible(False)
     axes().get_yaxis().set_visible(False)
 
-    lines = [plot(zip(*p)[0], zip(*p)[1], 'r-')[0] for p in projection]
+    for segment in segments:
+        projection = [lonlat2xy(*p) for p in segment]
+        plot(zip(*projection)[0], zip(*projection)[1], 'r-')
 
     draw()
 
@@ -35,7 +36,7 @@ def visualize(data, ptitle, count, saveto=False):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="AlgoLab Database Inspection")
+    parser = argparse.ArgumentParser(description="Railway Graph Visualization")
     parser.add_argument("--host", action="store", dest="host", default="127.0.0.1",
             type=str, help="host of the mongo database")
     parser.add_argument("--port", action="store", dest="port", default=27017,
@@ -51,7 +52,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     rg = Connection(args.host, args.port)[args.db][args.rg]
+    segments = ESSegmenter(rg).segments_as_coordinates
 
-    segments = ESSegmenter(rg).segments_as_triplets
-
-    visualize(list(segments), args.title + " [%s]" % args.rg, rg.count(), args.saveto)
+    visualize(segments, args.title + " [%s]" % args.rg, rg.count(), args.saveto)
