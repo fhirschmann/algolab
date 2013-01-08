@@ -127,7 +127,7 @@ class ESSegmenter(object):
     def segments_as_coordinates(self):
         """
         Equal to :py:obj:`.segments`, except that this is a list
-        of triplets (lon, lat).
+        of dublets (lon, lat).
         """
         for segment in self.segments:
             yield [n["loc"] for n in segment]
