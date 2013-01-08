@@ -17,7 +17,7 @@ def anglereduce(points, epsilon):
 
     This is a very simple recursive algorithm that removes a point in a curve
     that is approximated by series of `points`, if the angle between a point
-    and its two adjacent neighbors is smaller than a threshold `epsilon`.
+    and its two adjacent neighbors is greater than a threshold `epsilon`.
 
     .. note::
 
