@@ -11,6 +11,8 @@ from bson.code import Code
 
 from algolab.util import gcdist, raise_or_return
 
+log = logging.getLogger(__name__)
+
 
 def node_for(id_, col):
     """
@@ -168,6 +170,23 @@ def empty(col):
 
     return col
 new = empty
+
+
+def copy(source_col, dest_col):
+    """
+    Copies a collection from `source_col` to `dest_col`.
+
+    WARNING: This will erase all data storted in `dest_col`.
+
+    :param source_col: the source collection
+    :param dest_col: the destination collection
+    """
+    empty(dest_col)
+
+    for node in source_col.find():
+        dest_col.insert(dict(node))
+    log.debug("Copied %i nodes from '%s' to '%s'" % (dest_col.count(),
+                 source_col.name, dest_col.name))
 
 
 def merge_nodes(rg, node_id, merge_with_ids, distance_function=gcdist):
