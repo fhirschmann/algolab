@@ -5,7 +5,8 @@ Miscellaneous utilities.
 .. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
 """
 
-from __future__ import division
+from __future__ import division, print_function
+import sys
 import logging
 from math import sqrt, cos, sin, radians, atan2
 from contextlib import contextmanager
@@ -251,3 +252,14 @@ def log_change(u, v, log_function=log.info):
     change = ((v - u) / v) * 100 if v is not 0 else 0
     log_function("Reduced to %i nodes from %i nodes. "
                  "Change: -%i (-%.3f%%)" % (u, v, v - u, change))
+
+
+def die(msg):
+    """
+    Print msg to stderr and exit with exit code 1.
+
+    :param msg: msg to print
+    :type msg: str
+    """
+    print(msg, file=sys.stderr)
+    sys.exit(1)
