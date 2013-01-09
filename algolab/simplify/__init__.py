@@ -23,4 +23,5 @@ def simplify(algo, source_col, dest_col, args=[], segmenter=ESSegmenter,
 
         create_rg(algo(seg, *args), dest_col)
 
-    print(os.linesep)
+    if progress:
+        print(os.linesep)

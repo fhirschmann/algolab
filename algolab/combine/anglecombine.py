@@ -4,13 +4,15 @@ Angle-based combination algorithm.
 
 .. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
 """
+import sys
+import os
 from itertools import combinations
 
 from algolab.util import angle_between, midpoint
-from algolab.db import intersections, neighbors, merge_nodes, empty, create_rg
+from algolab.db import intersections, neighbors, merge_nodes, create_rg
 
 
-def anglecombine(rg, epsilon):
+def anglecombine(rg, epsilon, progress=True):
     """
     Combines (nearly) parallel train tracks in a railway graph.
 
@@ -26,6 +28,9 @@ def anglecombine(rg, epsilon):
         if not int_:
             continue
         ix, iy = int_["loc"]
+
+        if progress:
+            sys.stdout.write("\rIntersections left: %d" % len(int_ids))
 
         for n_id_1, n_id_2 in combinations(neighbors(int_), 2):
             # Neighbor 1
@@ -47,3 +52,6 @@ def anglecombine(rg, epsilon):
                 int_ids.insert(0, int_["_id"])
                 int_ids.append(n1["_id"])
                 break
+
+    if progress:
+        print(os.linesep)
