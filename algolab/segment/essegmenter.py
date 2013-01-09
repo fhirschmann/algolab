@@ -5,6 +5,7 @@ Segmentation algorithm for railway graphs.
 """
 import logging
 
+from algolab.segment import Segmenter
 from algolab.db import node_for, nodes_with_num_neighbors_ne, neighbors
 
 
@@ -24,7 +25,7 @@ def walk_from(node, segment, col):
     return walk_from(node_for(visit, col), segment, col)
 
 
-class ESSegmenter(object):
+class ESSegmenter(Segmenter):
     """
     Endpoint or Switch Segmenter - segments a railway graph.
 
@@ -113,30 +114,3 @@ class ESSegmenter(object):
                 visited.update([s["_id"] for s in segment])
                 visited2.add(node["_id"])
                 yield segment
-
-    @property
-    def segments_as_triplets(self):
-        """
-        Equal to :py:obj:`.segments`, except that this is a list
-        of triplets (lon, lat, id).
-        """
-        for segment in self.segments:
-            yield [n["loc"] + [n["_id"]] for n in segment]
-
-    @property
-    def segments_as_coordinates(self):
-        """
-        Equal to :py:obj:`.segments`, except that this is a list
-        of dublets (lon, lat).
-        """
-        for segment in self.segments:
-            yield [n["loc"] for n in segment]
-
-    @property
-    def segment_ids(self):
-        """
-        Equal to :py:obj:`.segments`, except that this is a list
-        of ids.
-        """
-        for segment in self.segments:
-            yield [n["_id"] for n in segment]
