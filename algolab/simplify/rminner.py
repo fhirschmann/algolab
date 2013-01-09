@@ -1,6 +1,6 @@
 def rminner(points):
     """
-    Removes all inner points of a line segment.
+    Removes all inner points from a line segment.
 
     In other words, this algorithm deletes all points but
     the start- and endpoint.
