@@ -6,8 +6,9 @@ from algolab.segment import ESSegmenter
 
 from algolab.simplify.rdp import rdp
 from algolab.simplify.anglered import anglereduce
+from algolab.simplify.rminner import rminner
 
-__all__ = ['simplify', 'rdp', 'anglereduce']
+__all__ = ['simplify', 'rdp', 'anglereduce', 'rminner']
 
 
 def simplify(algo, source_col, dest_col, args=[], segmenter=ESSegmenter,
