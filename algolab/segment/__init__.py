@@ -38,6 +38,6 @@ class Segmenter(object):
             yield [n["_id"] for n in segment]
 
 
-from algolab.segment.essegmenter import ESSegmenter
+from algolab.segment.essegmenter import ESSegmenter, CESSegmenter
 
-__all__ = ['ESSegmenter', 'Segmenter']
+__all__ = ['CESSegmenter', 'ESSegmenter', 'Segmenter']
