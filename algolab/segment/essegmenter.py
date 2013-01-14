@@ -9,22 +9,6 @@ from algolab.segment import Segmenter
 from algolab.db import node_for, nodes_with_num_neighbors_ne, neighbors
 
 
-def walk_from(node, segment, col):
-    if node["_id"] in segment:
-        return segment
-
-    unvisited = set(neighbors(node)).difference(
-        [s["_id"] for s in segment])
-
-    if len(unvisited) != 1:
-        return segment + [node]
-
-    segment.append(node)
-    visit = iter(unvisited).next()
-
-    return walk_from(node_for(visit, col), segment, col)
-
-
 class ESSegmenter(Segmenter):
     """
     Endpoint or Switch Segmenter - segments a railway graph.
@@ -68,6 +52,21 @@ class ESSegmenter(Segmenter):
         self.es = nodes_with_num_neighbors_ne(collection, 2)
         self._estimated = int(self.es.count() * 1.3)
 
+    def _walk_from(self, node, segment):
+        if node["_id"] in segment:
+            return segment
+
+        unvisited = set(neighbors(node)).difference(
+            [s["_id"] for s in segment])
+
+        if len(unvisited) != 1:
+            return segment + [node]
+
+        segment.append(node)
+        visit = iter(unvisited).next()
+
+        return self._walk_from(node_for(visit, self.collection), segment)
+
     @property
     def estimated_num_segments(self):
         """
@@ -110,7 +109,7 @@ class ESSegmenter(Segmenter):
                 if not neighbor:
                     logging.error("%i's neighbor %i does not exist.",
                                   node["_id"], neighbor_id)
-                segment = walk_from(neighbor, [node], self.collection)
+                segment = self._walk_from(neighbor, [node])
                 visited.update([s["_id"] for s in segment])
                 visited2.add(node["_id"])
                 yield segment
