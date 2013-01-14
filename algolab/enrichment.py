@@ -6,7 +6,7 @@ Railway Graph enrichment
 """
 import csv
 
-from stations import _Stations
+from algolab.stations import _Stations
 
 def enrich_with_routes(collection, station_path, routes_path):
     """
@@ -27,10 +27,3 @@ def enrich_with_routes(collection, station_path, routes_path):
             for node in start, end:
                 collection.update({'_id': stations.get_node_id(node.strip())},
                                   {'$inc': {'routes': 1}})
-if __name__ == '__main__':
-    import pymongo
-    db = pymongo.Connection('127.0.0.1', 27017)
-    rg = db['osm-data2']['railway_graph']
-    enrich_with_routes(rg,
-                       '../2_shortest_routes_finder/Stations.txt',
-                       '../2_shortest_routes_finder/sgrv.csv')
