@@ -25,6 +25,8 @@ if __name__ == "__main__":
     for cname in db.collection_names():
         if cname.startswith("railway_graph"):
             rg_tbl.add_row([cname, db[cname].count()])
+        elif cname.startswith("station_graph"):
+            rg_tbl.add_row([cname, db[cname].count()])
         elif cname.startswith("shortest_routes"):
             sr_tbl.add_row([cname, db[cname].count()])
 
