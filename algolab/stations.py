@@ -109,19 +109,22 @@ def build_rg_from_routes(base_collection, target_collection,
         for line in reader:
             # TODO: await info from supervisor what unknown actually does
             start, end, unknown = line[:3] # compensate for trailing space
-            start_node = base_collection.find_one(
-                {'_id': stations.get_node_id(start.strip())})
-            end_id = stations.get_node_id(end.strip())
-            end_location = node_for(end_id, base_collection)['loc']
+            start_node = base_collection.find_one(stations.get_node_id(start.strip()))
+            end_node = base_collection.find_one(stations.get_node_id(end.strip()))
 
-            successor = {'id': end_id,
-                         'distance': gcdist(start_node['loc'], end_location)
-                     }
-            station_node = target_collection.find_one({'_id': start_node['_id']})
-            if station_node:
-                station_node['successors'].append(successor)
-            else:
-                target_collection.insert({'_id': start_node['_id'],
-                                          'loc': start_node['loc'],
-                                          'successors': [successor]
-                                      })
+            distance = gcdist(start_node['loc'], end_node['loc'])
+            successors = {'id': end_node['_id'], 'distance': distance}, \
+                         {'id': start_node['_id'], 'distance': distance}
+            nodes = target_collection.find_one(start_node['_id']), \
+                    target_collection.find_one(end_node['_id'])
+            ids = start_node['_id'], end_node['_id']
+            locs = start_node['loc'], end_node['loc']
+            for node, successor, id_, loc in zip(nodes, successors, ids, locs):
+                if node and successor['id'] not in set(s['id']
+                                                for s in node['successors']):
+                    node['successors'].append(successor)
+                else:
+                    target_collection.insert({'_id': id_,
+                                              'loc': loc,
+                                              'successors': [successor]
+                                          })
