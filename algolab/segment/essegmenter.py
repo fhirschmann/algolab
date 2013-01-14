@@ -8,6 +8,8 @@ import logging
 from algolab.segment import Segmenter
 from algolab.db import node_for, nodes_with_num_neighbors_ne, neighbors
 
+from algolab.util import angle_between_ll
+
 
 class ESSegmenter(Segmenter):
     """
@@ -52,6 +54,12 @@ class ESSegmenter(Segmenter):
         self.es = nodes_with_num_neighbors_ne(collection, 2)
         self._estimated = int(self.es.count() * 1.3)
 
+        # All of the visited nodes
+        self.visited = set()
+
+        # Visited intersections
+        self.visited_ints = set()
+
     def _walk_from(self, node, segment):
         if node["_id"] in segment:
             return segment
@@ -87,22 +95,16 @@ class ESSegmenter(Segmenter):
         :returns: segment generator
         :rtype: generator
         """
-        # All of the visited nodes
-        visited = set()
-
-        # Visisted intersections
-        visited2 = set()
-
         for node in self.es:
             neighbor_ids = neighbors(node)
 
             for neighbor_id in neighbor_ids:
                 neighbor = node_for(neighbor_id, self.collection)
 
-                if neighbor_id in visited:
+                if neighbor_id in self.visited:
                     # Without the following, intersection to intersection
                     # connections will not be picked up
-                    if neighbor_id in visited2:
+                    if neighbor_id in self.visited_ints:
                         continue
                     if len(neighbor["successors"]) < 3:
                         continue
@@ -110,6 +112,42 @@ class ESSegmenter(Segmenter):
                     logging.error("%i's neighbor %i does not exist.",
                                   node["_id"], neighbor_id)
                 segment = self._walk_from(neighbor, [node])
-                visited.update([s["_id"] for s in segment])
-                visited2.add(node["_id"])
+                self.visited.update([s["_id"] for s in segment])
+                self.visited_ints.add(node["_id"])
                 yield segment
+
+
+class CESSegmenter(ESSegmenter):
+    """
+    Continuous Endpoint or Switch Segmenter - segments a railway graph.
+
+    This is similar to :class:`ESSegmenter`, except that it will not
+    stop the segment when a switch is reached. Instead, it will continue
+    the current segment.
+    """
+    @property
+    def segments(self):
+        for segment in super(CESSegmenter, self).segments:
+
+            n1, n2 = segment[-2:]
+            unvisited_ids = set(neighbors(n2)).difference(self.visited)
+
+            while unvisited_ids:
+                neighbor_nodes = [node_for(id_, self.collection) for id_ in unvisited_ids]
+                unvisited_angles = [{n["_id"]: abs(180 - angle_between_ll(
+                    node_for(n1, self.collection)["loc"],
+                    node_for(n2, self.collection)["loc"],
+                    n["loc"]))} for n in neighbor_nodes]
+
+                best_id = sorted(unvisited_angles, reverse=True)[0].keys()[0]
+
+                segment2 = self._walk_from(node_for(best_id, self.collection), [n2])
+                segment += segment2[1:]
+
+                n1, n2 = segment2[-2:]
+                self.visited.update([s["_id"] for s in segment2])
+                self.visited_ints.add(n2["_id"])
+
+                unvisited_ids = set(neighbors(n2)).difference(self.visited)
+
+            yield segment
