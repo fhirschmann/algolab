@@ -202,6 +202,26 @@ def angle_between(v1, v2):
         return np.around(np.arccos(cos_angle) * 360 / 2 / np.pi, PRECISION)
 
 
+def angle_between_points(a, b, c):
+    """
+    Calculates the angle between the three given points with
+    `b` as vertex.
+    """
+    ax, ay = a
+    bx, by = b
+    cx, cy = c
+
+    return angle_between([ax - bx, ay - by], [cx - bx, cy - by])
+
+
+def angle_between_ll(ll1, ll2, ll3):
+    """
+    Calculates the angle between the three given coordinates
+    with `ll2` as vertex.
+    """
+    return angle_between(lonlat2xy(*ll1), lonlat2xy(*ll2), lonlat2xy(*ll3))
+
+
 def default(value, replacement):
     """
     Check if ``value`` is ``None`` and then return ``replacement`` or else

@@ -4,7 +4,7 @@ Angle-based reduction algorithm.
 
 .. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
 """
-from algolab.util import angle_between
+from algolab.util import angle_between_points
 
 
 def anglereduce(points, epsilon):
@@ -53,11 +53,11 @@ def _anglereduce(points, epsilon, pos=1):
     #  v\   /w
     #    \ /
     #     a
-    ax, ay, _ = points[pos]
-    bx, by, _ = points[pos - 1]
-    cx, cy, _ = points[pos + 1]
+    a = points[pos][0:2]
+    b = points[pos - 1][0:2]
+    c = points[pos + 1][0:2]
 
-    angle = angle_between([bx - ax, by - ay], [cx - ax, cy - ay])
+    angle = angle_between_points(b, a, c)
 
     if angle and angle < epsilon:
         # keep the current point
