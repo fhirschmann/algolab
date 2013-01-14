@@ -117,11 +117,11 @@ def build_rg_from_routes(base_collection, target_collection,
             successor = {'id': end_id,
                          'distance': gcdist(start_node['loc'], end_location)
                      }
-            station_node = target_collection.find_one({'id': start_node['_id']})
+            station_node = target_collection.find_one({'_id': start_node['_id']})
             if station_node:
                 station_node['successors'].append(successor)
             else:
-                target_collection.insert({'id': start_node['_id'],
+                target_collection.insert({'_id': start_node['_id'],
                                           'loc': start_node['loc'],
                                           'successors': [successor]
                                       })
