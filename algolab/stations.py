@@ -4,6 +4,10 @@ Provides utilities to work with station data.
 
 .. moduleauthor:: Michael Markert <markert.michael@googlemail.com>
 """
+import csv
+
+from algolab.db import node_for
+from algolab.util import gcdist
 
 class _Stations(object):
     """
@@ -82,3 +86,42 @@ class _Stations(object):
         # someone really fucked that file up ...
         return left == right or (left[0] == '0' and
                                left[1:] == right)
+
+def build_rg_from_routes(base_collection, target_collection,
+                         station_path, routes_path):
+    """Construct a simplified rg from routes and station information based on the
+    rg contained in base_collection.
+
+    A node of the base collection is only included if its coordinates correspond
+    to a station that is included in the routes and stations files.
+
+    :param base_collection: mongodb collection containing rg nodes to base new
+                            rg on
+    :param target_collection: mongodb collection to write the simplified rg to
+    :param station_path: path to the stations file
+    :param routes_path: path to the routes file
+
+    """
+    stations = _Stations(station_path, base_collection)
+    with open(routes_path) as routes_file:
+        next(routes_file)
+        reader = csv.reader(routes_file, delimiter=';')
+        for line in reader:
+            # TODO: await info from supervisor what unknown actually does
+            start, end, unknown = line[:3] # compensate for trailing space
+            start_node = base_collection.find_one(
+                {'_id': stations.get_node_id(start.strip())})
+            end_id = stations.get_node_id(end.strip())
+            end_location = node_for(end_id, base_collection)['loc']
+
+            successor = {'id': end_id,
+                         'distance': gcdist(start_node['loc'], end_location)
+                     }
+            station_node = target_collection.find_one({'id': start_node['_id']})
+            if station_node:
+                station_node['successors'].append(successor)
+            else:
+                target_collection.insert({'id': start_node['_id'],
+                                          'loc': start_node['loc'],
+                                          'successors': [successor]
+                                      })
