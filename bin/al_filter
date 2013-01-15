@@ -57,14 +57,14 @@ def main(zls, db):
     with on_zl(16) as do:
         if do:
             with log_progress("Removing unnecessary points (zoom=16)"):
-                simplify(anglereduce, rgs[0], rgs[16], [179.99])
+                simplify(rdp, rgs[0], rgs[16], [1])
                 zls.remove(16)
                 log_change(rgs[16].count(), rg_.count())
 
     with on_zl(15) as do:
         if do:
             with log_progress("Applying RDP"):
-                simplify(rdp, rgs[16], rgs[15], [0.000004])
+                simplify(rdp, rgs[16], rgs[15], [5])
                 log_change(rgs[15].count(), rgs[16].count())
 
     with on_zl(14) as do:

@@ -2,6 +2,7 @@ import os
 import sys
 
 from algolab.db import create_rg
+from algolab.util import lonlat2xy, xy2lonlat
 from algolab.segment import ESSegmenter
 
 from algolab.simplify.rdp import rdp
@@ -12,7 +13,7 @@ __all__ = ['simplify', 'rdp', 'anglereduce', 'rminner']
 
 
 def simplify(algo, source_col, dest_col, args=[], segmenter=ESSegmenter,
-             progress=True):
+             progress=True, projection=True):
     """
     Segments a railway graph using `segmenter`, applies the segmentation
     algorithm `algo` with arguments `args` to `source_col` and stores the
@@ -30,6 +31,8 @@ def simplify(algo, source_col, dest_col, args=[], segmenter=ESSegmenter,
     :type segmenter: `~algolab.segment.Segmenter`
     :param progress: show progress
     :type progress: boolean
+    :param projection: project points onto a map (useful coordinates are given)
+    :type projection: boolean
     """
     s = segmenter(source_col)
     n = s.estimated_num_segments
@@ -39,7 +42,13 @@ def simplify(algo, source_col, dest_col, args=[], segmenter=ESSegmenter,
             sys.stdout.write("\rApplying %s to segment %i of %i" % (
                 algo.__name__, i, n))
 
-        create_rg(algo(seg, *args), dest_col)
+        if projection:
+            proj = [list(lonlat2xy(*p[0:2])) + [p[2]] for p in seg]
+            res = algo(proj, *args)
+            rev_proj = [list(xy2lonlat(*p[0:2])) + [p[2]] for p in res]
+            create_rg(rev_proj, dest_col)
+        else:
+            create_rg(algo(seg, *args), dest_col)
 
     if progress:
         print(os.linesep)
