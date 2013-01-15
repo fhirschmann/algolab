@@ -163,3 +163,6 @@ points[15] = [[p[0], p[1]] for p in npoints[15]]
 
 npoints[16] = [[8, 2, 11], [7, 2, 17], [6, 2, 16], [4, 1, 3]]
 points[16] = [[p[0], p[1]] for p in npoints[16]]
+
+npoints[17] = [[7, 2, 17], [8, 3, 18], [8, 4, 19]]
+points[17] = [[p[0], p[1]] for p in npoints[17]]

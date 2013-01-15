@@ -56,9 +56,13 @@ class ESSegmenter(Segmenter):
 
         # All of the visited nodes
         self.visited = set()
+        self.visited_intersections = set()
+        self.visited_endpoints = set()
+        self.x = set()
 
-        # Visited intersections
-        self.visited_ints = set()
+    @property
+    def visited_intersections_and_endpoints(self):
+        return self.visited_intersections.union(self.visited_endpoints)
 
     def _walk_from(self, node, segment):
         if node["_id"] in segment:
@@ -74,6 +78,14 @@ class ESSegmenter(Segmenter):
         visit = iter(unvisited).next()
 
         return self._walk_from(node_for(visit, self.collection), segment)
+
+    def _visit(self, segment):
+        if len(segment[0]["successors"]) > 2:
+            self.visited_intersections.add(segment[0]["_id"])
+        elif len(segment[0]["successors"]) == 1:
+            self.visited_endpoints.add(segment[0]["_id"])
+
+        self.visited.update([s["_id"] for s in segment])
 
     @property
     def estimated_num_segments(self):
@@ -104,7 +116,7 @@ class ESSegmenter(Segmenter):
                 if neighbor_id in self.visited:
                     # Without the following, intersection to intersection
                     # connections will not be picked up
-                    if neighbor_id in self.visited_ints:
+                    if neighbor_id in self.visited_intersections_and_endpoints:
                         continue
                     if len(neighbor["successors"]) < 3:
                         continue
@@ -112,8 +124,7 @@ class ESSegmenter(Segmenter):
                     logging.error("%i's neighbor %i does not exist.",
                                   node["_id"], neighbor_id)
                 segment = self._walk_from(neighbor, [node])
-                self.visited.update([s["_id"] for s in segment])
-                self.visited_ints.add(node["_id"])
+                self._visit(segment)
                 yield segment
 
 
@@ -127,27 +138,67 @@ class CESSegmenter(ESSegmenter):
     """
     @property
     def segments(self):
-        for segment in super(CESSegmenter, self).segments:
+        """
+        A python generator that generates segments
+        (lists of nodes) lazily.
 
-            n1, n2 = segment[-2:]
-            unvisited_ids = set(neighbors(n2)).difference(self.visited)
+        :returns: segment generator
+        :rtype: generator
+        """
+        for node in self.es:
+            self.seg_buffer = []
+            neighbor_ids = neighbors(node)
 
-            while unvisited_ids:
-                neighbor_nodes = [node_for(id_, self.collection) for id_ in unvisited_ids]
-                unvisited_angles = [{n["_id"]: abs(180 - angle_between_ll(
-                    node_for(n1, self.collection)["loc"],
-                    node_for(n2, self.collection)["loc"],
-                    n["loc"]))} for n in neighbor_nodes]
+            for neighbor_id in neighbor_ids:
+                neighbor = node_for(neighbor_id, self.collection)
 
-                best_id = sorted(unvisited_angles, reverse=True)[0].keys()[0]
+                if neighbor_id in self.visited:
+                    # Without the following, intersection to intersection
+                    # connections will not be picked up
+                    if neighbor_id in self.visited_intersections_and_endpoints:
+                        continue
+                    if len(neighbor["successors"]) < 3:
+                        continue
+                if not neighbor:
+                    logging.error("%i's neighbor %i does not exist.",
+                                  node["_id"], neighbor_id)
+                segment = self._walk_from(neighbor, [node])
+                self._visit(segment)
 
-                segment2 = self._walk_from(node_for(best_id, self.collection), [n2])
-                segment += segment2[1:]
-
-                n1, n2 = segment2[-2:]
-                self.visited.update([s["_id"] for s in segment2])
-                self.visited_ints.add(n2["_id"])
-
+                n1, n2 = segment[-2:]
                 unvisited_ids = set(neighbors(n2)).difference(self.visited)
 
-            yield segment
+                if len(n2["successors"]) > 2:
+                    intersections_in_segment = set([n2["_id"]])
+
+                while unvisited_ids:
+                    neighbor_nodes = [node_for(id_, self.collection) for id_ in unvisited_ids]
+                    unvisited_angles = [(n["_id"], abs(180 - angle_between_ll(
+                        node_for(n1, self.collection)["loc"],
+                        node_for(n2, self.collection)["loc"],
+                        n["loc"]))) for n in neighbor_nodes]
+
+                    successors = [x[0] for x in sorted(unvisited_angles, key=lambda x: x[1])]
+                    best_id = successors.pop(0)
+                    intersections_in_segment.add(best_id)
+                    segment2 = self._walk_from(node_for(best_id, self.collection), [n2])
+
+                    self._visit(segment2)
+
+                    if segment2[-1]["_id"] in self.visited_intersections:
+                        if len(segment2[:-2]) > 1:
+                            yield segment2[:-2]
+                        segment += segment2[1:][:-1]
+                    else:
+                        segment += segment2[1:]
+
+                    n1, n2 = segment[-2:]
+                    unvisited_ids = set(neighbors(n2)).difference(self.visited)
+                    #print "segment: ", [s["_id"] for s in segment]
+                    #print "unvisited: ", unvisited_ids
+
+                    # detect cycles
+                    for id_ in set(neighbors(n2)).intersection(intersections_in_segment):
+                        yield [n2, node_for(id_, self.collection)]
+
+                yield segment
