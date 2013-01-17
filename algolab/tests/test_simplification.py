@@ -1,6 +1,6 @@
 import unittest2
 
-from algolab.simplify import rdp, anglereduce
+from algolab.simplify import rdp, anglereduce, rminner
 from algolab.data import *
 
 
@@ -46,6 +46,11 @@ class AngleredTest(unittest2.TestCase):
         data = [(1, 1, 1), (4, 1, 2), (30, -1, 3)]
         self.assertEquals(anglereduce(data, 150), [(1, 1, 1), (30, -1, 3)])
         self.assertEquals(anglereduce(data, 179), data)
+
+
+class RmInnerTest(unittest2.TestCase):
+    def test_only(self):
+        self.assertEqual(rminner([(1, 1, 1), (2, 1, 2), (3, 1, 3)]), [(1, 1, 1), (3, 1, 3)])
 
 
 class CompareTest(unittest2.TestCase):
