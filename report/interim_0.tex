@@ -11,6 +11,7 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{geometry}
+\usepackage{hyperref}
 \usepackage[ngerman]{babel}
 \geometry{hmargin={1cm,1cm},vmargin={2.4cm,3cm}}
 \usepackage{comment}
@@ -47,6 +48,9 @@ for each intersection:
 \subsection{Intersection/Endpoint Segmentation Algorithm}
 Segments a network graph. Segments are defined by its bounds, which are
 either endpoints or intersections.
+\subsection{Continuous Intersection/Endpoint Segmentation Algorithm}
+Like the previous algorithm, but tries to extend the current segment based
+on the angle between the last point of the segment and its neighbors.
 \newpage
 
 \section{Line Simplification}
@@ -70,8 +74,7 @@ line segment.\\
 
 \subsection{Rating-based Algorithms}
 Based on an enriched Railway-Graph -- currently with the number of routes
-involved, "notable" points planned.
-
+involved, "notable" points planned.\\\\
 Resulting algorithms will select the
 \begin{itemize}
 \item highest rated \(n\) nodes
@@ -85,6 +88,11 @@ Mostly suitable for higher zoom levels.
 We build a alternative Railway Graph based on \texttt{Stations.txt} and
 \texttt{sgrv.csv} yielding a drastically reduced RG suitable for higher zoom
 levels.
+
+\section{Notes}
+\begin{itemize}
+    \item Algorithms work on mercator projection
+\end{itemize}
 
 \section{Metric}
 We have (at least) the following data available (per segment)
@@ -103,15 +111,35 @@ From those we will derive the following metrics:
 \item distance of removed nodes to simplified segment
 \end{itemize}
 
-\section{Other achievements}
-\begin{itemize}
-    \item Sphinx documentation
-\end{itemize}
+\section{Documentation}
+Online documentation is available at \url{http://algolab.0x0b.de}.\\\\
+\includegraphics[scale=0.5]{doc.png}
 
-\section{Todo}
-\begin{itemize}
-    \item Mercator projection before applying simplification algorithms
-\end{itemize}
+\section{Test coverage}
+\begin{verbatim}
+Name                                Stmts   Miss  Cover
+-------------------------------------------------------
+algolab/__init__                        0      0   100%
+algolab/combine/__init__                2      0   100%
+algolab/combine/anglecombine           32      1    97%
+algolab/data                           39      0   100%
+algolab/db                            102     20    80%
+algolab/segment/__init__               16      4    75%
+algolab/segment/essegmenter            85     39    54%
+algolab/simplify/__init__              23     13    43%
+algolab/simplify/anglered              20      2    90%
+algolab/simplify/rdp                   18      0   100%
+algolab/simplify/rminner                2      0   100%
+algolab/tests/__init__                  0      0   100%
+algolab/tests/test_all                 51      0   100%
+algolab/tests/test_combine             25      0   100%
+algolab/tests/test_db                  72      0   100%
+algolab/tests/test_segment             57      3    95%
+algolab/tests/test_simplification      51      0   100%
+algolab/util                           95     29    69%
+-------------------------------------------------------
+TOTAL                                 690    111    84%
+\end{verbatim}
 
 \section{Open Questions}
 \begin{itemize}
