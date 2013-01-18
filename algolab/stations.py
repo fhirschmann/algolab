@@ -65,7 +65,7 @@ class Stations(object):
         :param id_: station to look for
         :returns: the entry for the station id_
         """
-        self._reset_file()      # RFI: only reset pointer if necessary
+        self._reset_file()
         for entry in self._station_reader:
             if self._equal_ids(self._get_id(entry), id_):
                 return entry
