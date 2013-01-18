@@ -15,7 +15,7 @@ def enrich_with_routes(collection, station_usage_path, routes_path):
     found in the station and routes files.
 
     :param collection: mongodb collection that contains a railway graph
-    :param station_usge_path: path to the stations usage file
+    :param station_usage_path: path to the stations usage file
     :param routes_path: path to the routes file
     """
     stations = StationUsage(station_usage_path, collection)
