@@ -9,6 +9,12 @@ import csv
 from algolab.db import node_for
 from algolab.util import gcdist
 
+class StationNotFound(Exception):
+    """Indicates that a station is not contained in a stations or station usage
+    file.
+    """
+    pass
+
 class Stations(object):
     """
     Abstraction for the stations file.
@@ -69,6 +75,7 @@ class Stations(object):
         for entry in self._station_reader:
             if self._equal_ids(self._get_id(entry), id_):
                 return entry
+        raise StationNotFound('Station ID (EVA) %s not found' % id_)
 
     def _reset_file(self):
         self._station_file.seek(0)

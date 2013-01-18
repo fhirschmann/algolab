@@ -5,8 +5,9 @@ Railway Graph enrichment
 .. moduleauthor:: Michael Markert <markert.michael@googlemail.com>
 """
 import csv
+import logging
 
-from algolab.stations import StationUsage
+from algolab.stations import StationUsage, StationNotFound
 
 def enrich_with_routes(collection, station_usage_path, routes_path):
     """
@@ -25,6 +26,10 @@ def enrich_with_routes(collection, station_usage_path, routes_path):
             start, end, type_ = line[:3] # compensate for trailing space
             for node in start, end:
                 id_ = node.strip()
-                collection.update({'_id': stations.get_node_id(id_)},
-                                  {'$inc':
-                                   {'value': stations.get_id_value(id_)}})
+                try:
+                    collection.update({'_id': stations.get_node_id(id_)},
+                                      {'$inc':
+                                       {'value': stations.get_id_value(id_)}})
+                except StationNotFound:
+                    logging.debug('Station with ID %s not found in usage file %s',
+                                  id_, station_usage_path)
