@@ -88,6 +88,71 @@ class Stations(object):
         return left == right or (left[0] == '0' and
                                left[1:] == right)
 
+class StationUsage(Stations):
+    """Abstraction for the station usage file.
+
+    A station usage file has the following structure::
+
+        head # describes the columns
+        ...
+
+        ID|name|longitude|latitude|#events|#class0|#class1|#class2|#class3
+        station_number%id|name|shortcut|location numbers
+
+    `id` is 7 digit number padded with zeroes
+    `location numbers` are several numbers, important are number 2 and 3:
+                    longitude and latitude
+
+    `id` is referenced within the routes file to describe route endpoints.
+    """
+
+    def __init__(self, station_usage_path, collection):
+        """
+        :param station_usage_path:
+        :param collection:
+        """
+        super(StationUsage, self).__init__(station_usage_path, collection)
+        self._value_cache = dict()
+
+    def get_node_value(self, id_):
+        """
+        :param id_: id of station
+        :returns: valuation of type
+        :rtype: int
+        """
+        if id_ not in self._value_cache:
+            node_id = self.get_node_id(id_)
+            successors = self._collection.find_one(node_id)['successors']
+            entry = self._search_entry(id_)
+            self._value_cache[id_] = self._value(successors, entry[6:10])
+
+        return self._value_cache[id_]
+
+    @staticmethod
+    def _value(successors, routes):
+        """Value a node based on the numbers of its successors and routes
+        (according to their types).
+        """
+        value = 0
+        if len(successors) == 1:
+            value += 50
+        value += 10 * int(routes[0]) # class0
+        value += 5 * int(routes[1]) # class1
+        value += 3 * int(routes[2]) # class2
+        value += int(routes[3])     # class3
+
+        return value
+
+    def _get_location(self, id_):
+        """
+        :param id_: id of station
+        :returns: longitude and latitude of station
+        :rtype: tuple(float, float)
+        """
+        entry = self._search_entry(id_)
+        longitude, latitude = float(entry[2]), float(entry[3])
+        return longitude, latitude
+
 def build_rg_from_routes(base_collection, target_collection,
                          station_path, routes_path):
     """Construct a simplified rg from routes and station information based on the
