@@ -110,6 +110,8 @@ class StationUsage(Stations):
         :param collection:
         """
         super(StationUsage, self).__init__(station_usage_path, collection)
+        # patch up reader, uses other delimiter
+        self._station_reader = csv.reader(self._station_file, delimiter=';')
         self._value_cache = dict()
 
     def get_node_value(self, id_):
