@@ -54,6 +54,7 @@ class _Stations(object):
         """
         :param id_: id of station
         :returns: longitude and latitude of station
+        :rtype: tuple(float, float)
         """
         entry = self._search_entry(id_)
         locations = entry[3].split()
