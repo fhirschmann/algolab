@@ -124,7 +124,7 @@ class StationUsage(Stations):
             node_id = self.get_node_id(id_)
             successors = self._collection.find_one(node_id)['successors']
             entry = self._search_entry(id_)
-            self._value_cache[id_] = self._value(successors, entry[6:10])
+            self._value_cache[id_] = self._value(successors, entry[5:9])
 
         return self._value_cache[id_]
 
