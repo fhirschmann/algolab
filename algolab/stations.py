@@ -107,8 +107,7 @@ def build_rg_from_routes(base_collection, target_collection,
         next(routes_file)
         reader = csv.reader(routes_file, delimiter=';')
         for line in reader:
-            # TODO: await info from supervisor what unknown actually does
-            start, end, unknown = line[:3] # compensate for trailing space
+            start, end, type_ = line[:3] # compensate for trailing space
             start_node = base_collection.find_one(stations.get_node_id(start.strip()))
             end_node = base_collection.find_one(stations.get_node_id(end.strip()))
 
