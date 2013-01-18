@@ -114,7 +114,7 @@ class StationUsage(Stations):
         self._station_reader = csv.reader(self._station_file, delimiter=';')
         self._value_cache = dict()
 
-    def get_node_value(self, id_):
+    def get_id_value(self, id_):
         """
         :param id_: id of station
         :returns: valuation of type
