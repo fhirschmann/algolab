@@ -9,7 +9,7 @@ import csv
 from algolab.db import node_for
 from algolab.util import gcdist
 
-class _Stations(object):
+class Stations(object):
     """
     Abstraction for the stations file.
 
@@ -103,7 +103,7 @@ def build_rg_from_routes(base_collection, target_collection,
     :param routes_path: path to the routes file
 
     """
-    stations = _Stations(station_path, base_collection)
+    stations = Stations(station_path, base_collection)
     with open(routes_path) as routes_file:
         next(routes_file)
         reader = csv.reader(routes_file, delimiter=';')

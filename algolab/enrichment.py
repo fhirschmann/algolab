@@ -6,7 +6,7 @@ Railway Graph enrichment
 """
 import csv
 
-from algolab.stations import _Stations
+from algolab.stations import Stations
 
 def enrich_with_routes(collection, station_path, routes_path):
     """
@@ -17,7 +17,7 @@ def enrich_with_routes(collection, station_path, routes_path):
     :param station_path: path to the stations file
     :param routes_path: path to the routes file
     """
-    stations = _Stations(station_path, collection)
+    stations = Stations(station_usage_path, collection)
     with open(routes_path) as routes_file:
         next(routes_file)
         reader = csv.reader(routes_file, delimiter=';')
