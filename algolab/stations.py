@@ -32,7 +32,7 @@ class _Stations(object):
         :param collection: mongodb collection containing railway graph nodes
         """
         self._station_path = station_path
-        self._cache = {}
+        self._id_cache = {}
         self._station_file = open(station_path)
         self._reset_file()
         self._station_reader = csv.reader(self._station_file, delimiter='|')
@@ -44,11 +44,11 @@ class _Stations(object):
 
         :param id_: id of station
         """
-        if id_ not in self._cache:
+        if id_ not in self._id_cache:
             longitude, latitude = self._get_location(self._pad_id(id_))
             doc = self._collection.find_one({'loc': {'$near': [longitude, latitude]}})
-            self._cache[id_] = doc['_id']
-        return self._cache[id_]
+            self._id_cache[id_] = doc['_id']
+        return self._id_cache[id_]
 
     def _get_location(self, id_):
         """
