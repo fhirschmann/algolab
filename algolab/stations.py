@@ -118,16 +118,13 @@ class StationUsage(Stations):
         head # describes the columns
         ...
 
-        ID|name|longitude|latitude|#events|#class0|#class1|#class2|#class3
-        station_number%id|name|shortcut|location numbers
+        ID;name;longitude;latitude;#events;#class0;#class1;#class2;#class3
 
     `id` is 7 digit number padded with zeroes
-    `location numbers` are several numbers, important are number 2 and 3:
-                    longitude and latitude
-
-    `id` is referenced within the routes file to describe route endpoints.
+    #events describes the amount of events occuring at the station
+    #classN describes the amount of events with class N (does not have to sum
+    up with #events)
     """
-
     def __init__(self, station_usage_path, collection, cache=True):
         """
         :param station_usage_path: path to file describing stations and their
