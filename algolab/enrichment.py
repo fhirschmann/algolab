@@ -24,6 +24,7 @@ def enrich_with_routes(collection, station_usage_path, routes_path):
         for line in reader:
             start, end, type_ = line[:3] # compensate for trailing space
             for node in start, end:
-                node = node.strip()
-                collection.update(stations.get_node_id(node),
-                                  {'$inc': {'value': stations.get_value(node)}})
+                id_ = node.strip()
+                collection.update(stations.get_node_id(id_),
+                                  {'$inc':
+                                   {'value': stations.get_id_value(id_)}})
