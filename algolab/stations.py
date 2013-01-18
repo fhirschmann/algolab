@@ -45,7 +45,7 @@ class Stations(object):
         :param id_: id of station
         """
         if id_ not in self._id_cache:
-            longitude, latitude = self._get_location(self._pad_id(id_))
+            longitude, latitude = self._get_location(id_)
             doc = self._collection.find_one({'loc': {'$near': [longitude, latitude]}})
             self._id_cache[id_] = doc['_id']
         return self._id_cache[id_]
@@ -84,9 +84,7 @@ class Stations(object):
 
     @staticmethod
     def _equal_ids(left, right):
-        # someone really fucked that file up ...
-        return left == right or (left[0] == '0' and
-                               left[1:] == right)
+        return left == right or left == Stations._pad_id(right)
 
 class StationUsage(Stations):
     """Abstraction for the station usage file.
