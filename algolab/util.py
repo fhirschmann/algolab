@@ -8,6 +8,7 @@ Miscellaneous utilities.
 from __future__ import division, print_function
 import sys
 import logging
+import time
 from math import sqrt, cos, sin, radians, atan2
 from contextlib import contextmanager
 from datetime import datetime
@@ -283,3 +284,13 @@ def die(msg):
     """
     print(msg, file=sys.stderr)
     sys.exit(1)
+
+@contextmanager
+def timing(name):
+    """
+    Context manager to measure execution time.
+    """
+    start = datetime.now()
+    yield
+    end = datetime.now()
+    print('Executing %s took %.2f seconds' % (name, (end - start).total_seconds()))
