@@ -31,11 +31,12 @@ class Stations(object):
 
     `id` is referenced within the routes file to describe route endpoints.
     """
-    def __init__(self, station_path, collection):
+    def __init__(self, station_path, collection, cache=True):
         """
 
         :param station_path: path to file describing stations
         :param collection: mongodb collection containing railway graph nodes
+        :param cache: fill cache before searching
         """
         self._station_path = station_path
         self._id_cache = {}
@@ -43,6 +44,8 @@ class Stations(object):
         self._reset_file()
         self._station_reader = csv.reader(self._station_file, delimiter='|')
         self._collection = collection
+        if cache:
+            self._fill_cache()
 
     def get_node_id(self, id_):
         """
@@ -81,6 +84,20 @@ class Stations(object):
         self._station_file.seek(0)
         next(self._station_file)
 
+    def _fill_cache(self):
+        """Fill the cache with every station in file."""
+        for entry in self._station_reader:
+            if len(entry) < 4:  # ignore malformed entries
+                continue
+            self._get_id(entry)
+            locations = entry[3].split()
+            longitude, latitude = float(locations[1]), float(locations[2])
+            if longitude == latitude == 0.0: # ignore malformed coordinates
+                continue
+            doc = self._collection.find_one({'loc':
+                                             {'$near': [longitude, latitude]}})
+            self._id_cache[id_] = doc['_id']
+
     @staticmethod
     def _get_id(entry):
         return entry[0].split('%')[-1]
@@ -111,15 +128,19 @@ class StationUsage(Stations):
     `id` is referenced within the routes file to describe route endpoints.
     """
 
-    def __init__(self, station_usage_path, collection):
+    def __init__(self, station_usage_path, collection, cache=True):
         """
-        :param station_usage_path:
-        :param collection:
+        :param station_usage_path: path to file describing stations and their
+                                   usage
+        :param collection: mongodb collection containing railway graph nodes
+        :param cache: fill cache before searching
         """
-        super(StationUsage, self).__init__(station_usage_path, collection)
+        super(StationUsage, self).__init__(station_usage_path, collection, False)
         # patch up reader, uses other delimiter
         self._station_reader = csv.reader(self._station_file, delimiter=';')
         self._value_cache = dict()
+        if cache:
+            self._fill_cache()
 
     def get_id_value(self, id_):
         """
@@ -134,6 +155,21 @@ class StationUsage(Stations):
             self._value_cache[id_] = self._value(successors, entry[5:9])
 
         return self._value_cache[id_]
+
+    def _fill_cache(self):
+        """Fill the caches with every station in file."""
+        for entry in self._station_reader:
+            if len(entry) < 4:  # ignore malformed entries
+                continue
+            id_ = self._get_id(entry)
+            longitude, latitude = float(entry[2]), float(entry[3])
+            if longitude == latitude == 0.0: # ignore malformed entries
+                continue
+
+            doc = self._collection.find_one({'loc':
+                                             {'$near': [longitude, latitude]}})
+            self._id_cache[id_] = doc['_id']
+            self._value_cache[id_] = self._value(doc['successors'], entry[5:9])
 
     @staticmethod
     def _value(successors, routes):
