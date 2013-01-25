@@ -92,8 +92,8 @@ def gcdist(a, b):
     :param b: second point
     :type b: sequence of two integers/floats; a coordinate
     """
-    lat1, lon1 = a
-    lat2, lon2 = b
+    lon1, lat1 = a
+    lon2, lat2 = b
 
     dLat = radians(lat2 - lat1)
     dLon = radians(lon2 - lon1)
