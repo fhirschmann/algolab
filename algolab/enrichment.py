@@ -7,7 +7,7 @@ Railway Graph enrichment
 import csv
 import logging
 
-from algolab.stations import StationUsage, StationNotFound
+from algolab.stations import StationUsage, StationNotFound, RailwayNodeNotFound
 
 def enrich_with_routes(collection, station_usage_path, routes_path):
     """
@@ -31,5 +31,9 @@ def enrich_with_routes(collection, station_usage_path, routes_path):
                                       {'$inc':
                                        {'value': stations.get_id_value(id_)}})
                 except StationNotFound:
-                    logging.debug('Station with ID %s not found in usage file %s',
+                    logging.debug('Station with EVA %s not found in usage file %s',
                                   id_, station_usage_path)
+                except RailwayNodeNotFound:
+                    logging.debug('Station with EVA %s has no appropriate'
+                                  'railway node in collection %s',
+                                  id_, collection.name)
