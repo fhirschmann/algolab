@@ -82,8 +82,11 @@ class Stations(object):
                              coordinate system)
         """
         return self._collection.find_one({'loc':
-                                          {'$near': [longitude, latitude],
-                                           '$maxDistance': max_distance}
+                                          {
+                                              # order is important
+                                              '$maxDistance': max_distance,
+                                              '$near': [longitude, latitude]
+                                          }
                                       })
 
     def _get_location(self, id_):
