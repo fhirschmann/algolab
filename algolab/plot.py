@@ -29,7 +29,7 @@ def plot_algo(algo, dataset_id, title, algo_args=[]):
     return pl
 
 
-def plot_datasets(dataset_ids, title=None):
+def plot_datasets(dataset_ids, title=None, legend=True, labels=True):
     """
     Plots one or more dataset.
 
@@ -37,13 +37,28 @@ def plot_datasets(dataset_ids, title=None):
     :type dataset_ids: list of integers
     :param title: title of the plot
     :type title: string
+    :param legend: whether or not to show legend
+    :type legend: boolean
+    :param labels: whether or not to plot point labels
+    :type labels: boolean
     """
     title = title if title else "Datasets " + ",".join(
         [str(d) for d in dataset_ids])
     pl.title(title)
 
-    for i in dataset_ids:
-        pl.plot(zip(*points[i])[0], zip(*points[i])[1], 'o-')
+    data = {k: v for k, v in npoints.items() if k in dataset_ids}
+
+    lines = [pl.plot(zip(*p)[0], zip(*p)[1], 'o-')[0] for p in data.values()]
+
+    if legend:
+        pl.legend(lines, data.keys())
+
+    if labels:
+        for x, y, l in [i for s in data.values() for i in s]:
+            pl.annotate(str(l), xy=(x, y), xytext=(x, y + 0.1))
+
+    pl.grid(True)
+
     return pl
 
 

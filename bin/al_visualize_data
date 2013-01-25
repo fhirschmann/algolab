@@ -8,22 +8,7 @@ import argparse
 sys.path.append(os.path.dirname(
     os.path.abspath(sys.argv[0])) + os.sep + os.pardir + os.sep + "algolab")
 
-import argparse
-from pylab import *
-
-
-def visualize(data):
-    subplots_adjust(left=0.15, bottom=0.25)
-
-    lines = [plot(zip(*p)[0], zip(*p)[1], 'o-')[0] for p in data.values()]
-    legend(lines, data.keys())
-    for x, y, l in [i for s in data.values() for i in s]:
-        annotate(str(l), xy=(x, y), xytext=(x, y + 0.1))
-
-    grid(True)
-    title("Data Visualization")
-
-    show()
+from algolab.plot import plot_datasets
 
 
 if __name__ == "__main__":
@@ -34,4 +19,4 @@ if __name__ == "__main__":
             dest="datasets", help="zoom levels to generate a RG for")
     args = parser.parse_args()
 
-    visualize({k: v for k, v in npoints.items() if k in args.datasets})
+    plot_datasets(args.datasets).show()
