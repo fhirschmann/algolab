@@ -89,7 +89,7 @@ class Stations(object):
         for entry in self._station_reader:
             if len(entry) < 4:  # ignore malformed entries
                 continue
-            self._get_id(entry)
+            id_ = self._get_id(entry)
             locations = entry[3].split()
             longitude, latitude = float(locations[1]), float(locations[2])
             if longitude == latitude == 0.0: # ignore malformed coordinates
