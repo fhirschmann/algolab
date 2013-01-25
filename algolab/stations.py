@@ -190,10 +190,10 @@ class StationUsage(Stations):
             if longitude == latitude == 0.0: # ignore malformed entries
                 continue
 
-            doc = self._collection.find_one({'loc':
-                                             {'$near': [longitude, latitude]}})
-            self._id_cache[id_] = doc['_id']
-            self._value_cache[id_] = self._value(doc['successors'], entry[5:9])
+            doc = self._select_node_near(longitude, latitude)
+            if doc:
+                self._id_cache[id_] = doc['_id']
+                self._value_cache[id_] = self._value(doc['successors'], entry[5:9])
 
     @staticmethod
     def _value(successors, routes):
