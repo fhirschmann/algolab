@@ -228,6 +228,7 @@ def build_rg_from_routes(base_collection, target_collection,
                 if node and successor['id'] not in set(s['id']
                                                 for s in node['successors']):
                     node['successors'].append(successor)
+                    target_collection.save(node)
                 else:
                     target_collection.insert({'_id': id_,
                                               'loc': loc,
