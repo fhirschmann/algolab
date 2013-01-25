@@ -17,7 +17,8 @@ def visualize(data):
 
     lines = [plot(zip(*p)[0], zip(*p)[1], 'o-')[0] for p in data.values()]
     legend(lines, data.keys())
-    draw()
+    for x, y, l in [i for s in data.values() for i in s]:
+        annotate(str(l), xy=(x, y), xytext=(x, y + 0.1))
 
     grid(True)
     title("Data Visualization")
@@ -26,11 +27,11 @@ def visualize(data):
 
 
 if __name__ == "__main__":
-    from data import points
+    from data import npoints
 
     parser = argparse.ArgumentParser(description="Dataset Visualization")
     parser.add_argument("--datasets", type=int, nargs="+", default=[2, 3, 4, 5],
             dest="datasets", help="zoom levels to generate a RG for")
     args = parser.parse_args()
 
-    visualize({k: v for k, v in points.items() if k in args.datasets})
+    visualize({k: v for k, v in npoints.items() if k in args.datasets})
