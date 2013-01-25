@@ -14,6 +14,11 @@ class StationNotFound(Exception):
     """
     pass
 
+class RailwayNodeNotFound(Exception):
+    """Indicates that a appropriate railway graph node could not be found.
+    """
+    pass
+
 class Stations(object):
     """
     Abstraction for the stations file.
@@ -54,9 +59,32 @@ class Stations(object):
         """
         if id_ not in self._id_cache:
             longitude, latitude = self._get_location(id_)
-            doc = self._collection.find_one({'loc': {'$near': [longitude, latitude]}})
-            self._id_cache[id_] = doc['_id']
-        return self._id_cache[id_]
+            doc = self._select_node_near(longitude, latitude)
+            if doc:
+                self._id_cache[id_] = doc['_id']
+            else:
+                raise RailwayNodeNotFound('There is no railway graph node'
+                                          'sufficiently near to EVA %s' % id_)
+
+        try:
+            return self._id_cache[id_]
+        except KeyError:
+            raise RailwayNodeNotFound('There is no railway graph node'
+                                      'sufficiently near to EVA %s' % id_)
+
+    def _select_node_near(self, longitude, latitude, max_distance=1000):
+        """Return the rg node that is nearest to longitude and latitude but
+        within max_distance.
+
+        :param longitude: target longitude
+        :param latitude: target latitude
+        :param max_distance: maximal distance (unit depends on document
+                             coordinate system)
+        """
+        return self._collection.find_one({'loc':
+                                          {'$near': [longitude, latitude],
+                                           '$maxDistance': max_distance}
+                                      })
 
     def _get_location(self, id_):
         """
@@ -93,9 +121,9 @@ class Stations(object):
             longitude, latitude = float(locations[1]), float(locations[2])
             if longitude == latitude == 0.0: # ignore malformed coordinates
                 continue
-            doc = self._collection.find_one({'loc':
-                                             {'$near': [longitude, latitude]}})
-            self._id_cache[id_] = doc['_id']
+            doc = self._select_node_near(longitude, latitude)
+            if doc:
+                self._id_cache[id_] = doc['_id']
 
     @staticmethod
     def _get_id(entry):
