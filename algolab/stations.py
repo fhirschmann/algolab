@@ -6,7 +6,6 @@ Provides utilities to work with station data.
 """
 import csv
 
-from algolab.db import node_for
 from algolab.util import gcdist
 
 class StationNotFound(Exception):
