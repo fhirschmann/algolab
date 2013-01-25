@@ -5,6 +5,7 @@ Provides utilities to work with station data.
 .. moduleauthor:: Michael Markert <markert.michael@googlemail.com>
 """
 import csv
+import logging
 
 from algolab.util import gcdist
 
@@ -264,3 +265,41 @@ def build_rg_from_routes(base_collection, target_collection,
                                               'loc': loc,
                                               'successors': [successor]
                                           })
+
+def build_station_collection(base_collection,
+                             target_collection,
+                             station_path, routes_path,
+                             filter=None):
+    """
+    :param base_collection: mongodb collection containing rg nodes to tune
+                            coordinates to
+    :param target_collection: mongodb collection to write the stations to
+    :param station_path: path to the stations file
+    :param routes_path: path to the routes file
+    :param filter: filtering function to include a node in the collection
+    :type filter: None or function (eva, longitude, latitude) -> bool
+    """
+    stations = Stations(station_path, base_collection)
+    if filter is None:
+        filter = lambda eva, lon, lat: True
+    with open(routes_path) as routes_file:
+        next(routes_file)
+        reader = csv.reader(routes_file, delimiter=';')
+        for line in reader:
+            esas = [x.strip() for x in line[:2]]
+            for esa in esas:
+                try:
+                    node = base_collection.find_one(stations.get_node_id(esa))
+                    if filter(esa, *node['loc']):
+                        target_collection.insert(
+                            {'_id': node['_id'],
+                             'loc': node['loc'],
+                             'successos': node['successors'],
+                             'esa': esa})
+                except StationNotFound:
+                    logging.debug('Station with EVA %s not found in station'
+                                  'file %s', esa, station_path)
+                except RailwayNodeNotFound:
+                    logging.debug('Station with EVA %s has no appropriate'
+                                  'railway node in collection %s',
+                                  esa, base_collection.name)
