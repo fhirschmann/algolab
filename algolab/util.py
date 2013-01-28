@@ -85,7 +85,17 @@ def edist(a, b):
 
 def gcdist(a, b):
     """
-    Calculates the great circle distance between `a` and `b`.
+    Calculates the great circle distance between `a` and `b`
+    in meters.
+
+    Longitude comes first.
+
+    Example: Calculate the distance between Frankfurt and Darmstadt:
+
+        >>> frankfurt = [8.6805059, 50.1115118]
+        >>> darmstadt = [8.6508574, 49.8724245]
+        >>> int(gcdist(darmstadt, frankfurt))
+        26699
 
     :param a: first point
     :type a: sequence of two integers/floats; a coordinate
