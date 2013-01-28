@@ -318,6 +318,9 @@ def create_rg(points, col, distance_function=gcdist):
     This method also calculates the distance between the newly created
     nodes in `col`.
 
+    This method is usually called for each segment that has been
+    simplified by :func:`~algolab.simplify.rdp` or similar algorithms.
+
     :param points: a curve that is approximated by a series of points
     :type points: list of 3-tuples (x, y, id)
     :param col: a collection cursor
