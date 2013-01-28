@@ -31,7 +31,7 @@ def simplify(algo, source_col, dest_col, args=[], segmenter=ESSegmenter,
     :type segmenter: `~algolab.segment.Segmenter`
     :param progress: show progress
     :type progress: boolean
-    :param projection: project points onto a map (useful coordinates are given)
+    :param projection: project points onto a map (useful if coordinates are given)
     :type projection: boolean
     """
     s = segmenter(source_col)
@@ -43,9 +43,14 @@ def simplify(algo, source_col, dest_col, args=[], segmenter=ESSegmenter,
                 algo.__name__, i, n))
 
         if projection:
-            proj = [list(ll2xy(*p[0:2])) + [p[2]] for p in seg]
+            # it is fair to assume all points in a segment are within
+            # the same utm zone
+            _, _, zone_number, zone_letter = ll2xy(*seg[0][0:2])
+
+            proj = [list(ll2xy(*p[0:2]))[0:2] + [p[2]] for p in seg]
             res = algo(proj, *args)
-            rev_proj = [list(xy2ll(*p[0:2])) + [p[2]] for p in res]
+
+            rev_proj = [list(xy2ll(p[0], p[1], zone_number, zone_letter)) + [p[2]] for p in res]
             create_rg(rev_proj, dest_col)
         else:
             create_rg(algo(seg, *args), dest_col)
