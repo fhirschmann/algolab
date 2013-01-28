@@ -2,7 +2,7 @@ import os
 import sys
 
 from algolab.db import create_rg
-from algolab.util import lonlat2xy, xy2lonlat
+from algolab.util import ll2xy, xy2ll
 from algolab.segment import ESSegmenter
 
 from algolab.simplify.rdp import rdp
@@ -43,9 +43,9 @@ def simplify(algo, source_col, dest_col, args=[], segmenter=ESSegmenter,
                 algo.__name__, i, n))
 
         if projection:
-            proj = [list(lonlat2xy(*p[0:2])) + [p[2]] for p in seg]
+            proj = [list(ll2xy(*p[0:2])) + [p[2]] for p in seg]
             res = algo(proj, *args)
-            rev_proj = [list(xy2lonlat(*p[0:2])) + [p[2]] for p in res]
+            rev_proj = [list(xy2ll(*p[0:2])) + [p[2]] for p in res]
             create_rg(rev_proj, dest_col)
         else:
             create_rg(algo(seg, *args), dest_col)

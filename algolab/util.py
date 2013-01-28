@@ -52,7 +52,7 @@ def memoized(f):
     return _memoized
 
 
-def lonlat2xy(lon, lat):
+def ll2xy(lon, lat):
     """
     Performs cartographic transformations (converts from
     longitude, latitude to native map projection x, y.
@@ -60,7 +60,7 @@ def lonlat2xy(lon, lat):
     return proj(lon, lat)
 
 
-def xy2lonlat(x, y):
+def xy2ll(x, y):
     """
     Performs cartographic transformations (converts from
     x, y to longitutde, latitude.
@@ -220,7 +220,7 @@ def angle_between_ll(ll1, ll2, ll3):
     Calculates the angle between the three given coordinates
     with `ll2` as vertex.
     """
-    return angle_between_points(lonlat2xy(*ll1), lonlat2xy(*ll2), lonlat2xy(*ll3))
+    return angle_between_points(ll2xy(*ll1), ll2xy(*ll2), ll2xy(*ll3))
 
 
 def default(value, replacement):
