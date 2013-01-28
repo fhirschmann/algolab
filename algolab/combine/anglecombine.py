@@ -21,13 +21,15 @@ def anglecombine(rg, epsilon, progress=True):
     :param epsilon: an angle (should be < 15°)
     :type epsilon: float
     """
+    # The stack: contains intersections to visit
     int_ids = list([n["_id"] for n in intersections(rg)])
 
     while int_ids:
+        # Receive intersection from stack
         int_ = rg.find_one(int_ids.pop(0))
         if not int_:
             continue
-        ix, iy = int_["loc"]
+        lon, lat = int_["loc"]
 
         if progress:
             sys.stdout.write("\rIntersections left: %d" % len(int_ids))
@@ -35,13 +37,13 @@ def anglecombine(rg, epsilon, progress=True):
         for n_id_1, n_id_2 in combinations(neighbors(int_), 2):
             # Neighbor 1
             n1 = rg.find_one(n_id_1)
-            n1x, n1y = n1["loc"]
+            lon_n1, lat_n1 = n1["loc"]
 
             # Neighbor 2
             n2 = rg.find_one(n_id_2)
-            n2x, n2y = n2["loc"]
+            lon_n2, lat_n2 = n2["loc"]
 
-            angle = angle_between([n1x - ix, n1y - iy], [n2x - ix, n2y - iy])
+            angle = angle_between([lon_n1 - lon, lat_n1 - lat], [lon_n2 - lon, lat_n2 - lat])
 
             if angle and angle < epsilon:
                 new_loc = midpoint(n1["loc"], n2["loc"])
@@ -49,7 +51,10 @@ def anglecombine(rg, epsilon, progress=True):
                 rg.save(n1)
                 merge_nodes(rg, n1["_id"], [n2["_id"]])
 
+                # Insert current intersection at the bottom of the stack
+                # so that it will be dealt with in the next step
                 int_ids.insert(0, int_["_id"])
+
                 int_ids.append(n1["_id"])
                 break
 
