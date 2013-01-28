@@ -39,7 +39,20 @@ The toolbox features several commands, including:
 - bin/al_visualize_data
 
   .. program-output:: al_visualize_data --help
-  
+
+- bin/al_inspect
+
+  .. program-output:: al_inspect --help
+
+- bin/al_cp
+
+  .. program-output:: al_cp --help
+
+- bin/al_rm
+
+  .. program-output:: al_rm --help
+
+
 
 Compiling the documentation
 ===========================
