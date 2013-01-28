@@ -62,6 +62,5 @@ And view it by pointing your browser to :file:`_build/html/index.html`.
 .. [#f1] http://www.python.org
 .. [#f2] http://www.numpy.org
 .. [#f3] http://www.scipy.org
-.. [#f4] http://code.google.com/p/pyproj
-.. [#f5] https://github.com/Turbo87/utm
+.. [#f4] https://github.com/Turbo87/utm
 .. [#f10] http://sphinx.pocoo.org
