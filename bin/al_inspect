@@ -6,15 +6,12 @@ import argparse
 from pymongo import Connection
 from prettytable import PrettyTable
 
+from algolab.cmdutil import defaultparser
+
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="AlgoLab Database Inspection")
-    parser.add_argument("--host", action="store", dest="host", default="127.0.0.1",
-            type=str, help="host of the mongo database")
-    parser.add_argument("--port", action="store", dest="port", default=27017,
-            type=int, help="port of the mongo database")
-    parser.add_argument("--db", action="store", dest="db", default="osm-data",
-            type=str, help="name of the database")
+    parser = argparse.ArgumentParser(description="AlgoLab Database Inspection",
+                                     parents=[defaultparser()])
     args = parser.parse_args()
 
     db = Connection(args.host, args.port)[args.db]

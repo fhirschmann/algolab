@@ -12,6 +12,7 @@ from pylab import *
 
 from algolab.segment import ESSegmenter
 from algolab.util import ll2xy
+from algolab.cmdutil import defaultparser
 
 
 def visualize(segments, ptitle, count, saveto=False):
@@ -36,13 +37,8 @@ def visualize(segments, ptitle, count, saveto=False):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Railway Graph Visualization")
-    parser.add_argument("--host", action="store", dest="host", default="127.0.0.1",
-            type=str, help="host of the mongo database")
-    parser.add_argument("--port", action="store", dest="port", default=27017,
-            type=int, help="port of the mongo database")
-    parser.add_argument("--db", action="store", dest="db", default="osm-data",
-            type=str, help="name of the database")
+    parser = argparse.ArgumentParser(description="Railway Graph Visualization",
+                                     parents=[defaultparser()])
     parser.add_argument("-c", "--collection", action="store", dest="rg", default="railway_graph",
             type=str, help="name of the collection")
     parser.add_argument("-t", "--title", action="store", dest="title", default="RG Visualization",
