@@ -6,12 +6,8 @@ Miscellaneous utilities.
 """
 
 from __future__ import division, print_function
-import sys
 import logging
-import time
 from math import sqrt, cos, sin, radians, atan2
-from contextlib import contextmanager
-from datetime import datetime
 from functools import wraps
 
 import numpy as np
@@ -300,40 +296,3 @@ def raise_or_return(obj, exception, msg):
     if obj is None:
         raise exception(msg)
     return obj
-
-
-@contextmanager
-def log_progress(name, log_function=log.info):
-    log_function("-" * 50)
-    log_function("=> Starting step '%s'" % name)
-    now = datetime.now()
-    yield
-    log_function("<= Step '%s' finished (took %s)." % (
-        name, datetime.now() - now))
-
-
-def log_change(u, v, log_function=log.info):
-    change = ((v - u) / v) * 100 if v is not 0 else 0
-    log_function("Reduced to %i nodes from %i nodes. "
-                 "Change: -%i (-%.3f%%)" % (u, v, v - u, change))
-
-
-def die(msg):
-    """
-    Print msg to stderr and exit with exit code 1.
-
-    :param msg: msg to print
-    :type msg: str
-    """
-    print(msg, file=sys.stderr)
-    sys.exit(1)
-
-@contextmanager
-def timing(name):
-    """
-    Context manager to measure execution time.
-    """
-    start = datetime.now()
-    yield
-    end = datetime.now()
-    print('Executing %s took %.2f seconds' % (name, (end - start).total_seconds()))

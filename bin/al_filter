@@ -11,12 +11,13 @@ sys.path.append(os.path.dirname(
     os.path.abspath(sys.argv[0])) + os.sep + os.pardir + os.sep + "algolab")
 
 import argparse
+
 from pymongo import Connection
 
 from algolab.simplify import anglereduce, rdp
 from algolab.combine import anglecombine
-from algolab.db import create_rg, empty, dedup, delonelynize, new
-from algolab.util import log_progress, log_change
+from algolab.db import create_rg, empty, dedup, delonelynize, new, copy
+from algolab.cmdutil import log_progress, log_change, require_col
 from algolab.simplify import simplify
 from algolab.log import FORMAT as LOGGING_FORMAT
 
@@ -28,61 +29,54 @@ def main(zls, db):
     # Collections for zoom level 8 - 16
     rgs = {i: db["railway_graph_%i" % i] for i in range(8, 17) + [0]}
 
-    @contextmanager
-    def on_zl(zl):
-        if zl not in zls:
-            yield False
-        else:
-            empty(rgs[zl])
-            yield True
+    require = lambda x: require_col(db, x)
 
-    with on_zl(0) as do:
-        if do:
-            with log_progress("Copying database to railway_graph_0"):
-                for node in rg_.find():
-                    rgs[0].insert(dict(node))
-                c0 = rgs[0].count()
-                logging.info("Copied %i nodes" % rgs[0].count())
+    if 0 in zls:
+        require("railway_graph")
+        empty(rgs[0])
 
-            # This is the general cleaning step
-            with log_progress("Removing lonely nodes from railway_graph_0"):
-                c1 = delonelynize(rgs[0])
-                log_change(rgs[0].count(), c0)
+        copy(rg_, rgs[0])
+        c0 = rgs[0].count()
 
-            with log_progress("Removing duplicates from railway_graph_0"):
-                c2 = dedup(rgs[0])
-                c3 = rgs[0].count()
-                log_change(c3, c0 - c1)
+        # This is the general cleaning step
+        with log_progress("Removing lonely nodes from railway_graph_0"):
+            delonelynize(rgs[0])
+            c1 = rgs[0].count()
+            log_change(c1, c0)
 
-    with on_zl(16) as do:
-        if do:
-            with log_progress("Removing unnecessary points (zoom=16)"):
-                simplify(rdp, rgs[0], rgs[16], [1])
-                zls.remove(16)
-                log_change(rgs[16].count(), rg_.count())
+        with log_progress("Removing duplicates from railway_graph_0"):
+            dedup(rgs[0])
+            c2 = rgs[0].count()
+            log_change(c2, c1)
 
-    with on_zl(15) as do:
-        if do:
-            with log_progress("Applying RDP"):
-                simplify(rdp, rgs[16], rgs[15], [5])
-                log_change(rgs[15].count(), rgs[16].count())
+    if 16 in zls:
+        require(0)
 
-    with on_zl(14) as do:
-        if do:
-            epsilon = Decimal((0, (1, ), - 4))
-            with log_progress("Copying database to railway_graph_14"):
-                for node in rgs[15].find():
-                    rgs[14].insert(dict(node))
-                logging.info("Copied %i nodes" % rgs[0].count())
+        with log_progress("Removing unnecessary points (zoom=16)"):
+            simplify(rdp, rgs[0], rgs[16], [0.5])
+            zls.remove(16)
+            log_change(rgs[16].count(), rg_.count())
 
-            with log_progress("Removing parallel tracks from railway_graph_14"):
-                anglecombine(rgs[14], 25)
-                c = rgs[14].count()
-                log_change(c, rgs[15].count())
+    if 15 in zls:
+        require(16)
+        epsilon = 5
+
+        with log_progress("Applying RDP with eps=%f" % epsilon):
+            simplify(rdp, rgs[16], rgs[15], [epsilon])
+            log_change(rgs[15].count(), rgs[16].count())
+
+    if 14 in zls:
+        require(15)
+        copy(rgs[15], rgs[14])
+
+        with log_progress("Removing parallel tracks from railway_graph_14"):
+            anglecombine(rgs[14], 25)
+            c = rgs[14].count()
+            log_change(c, rgs[15].count())
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Algorithm Visualization")
+    parser = argparse.ArgumentParser(description="Algorithm Filter Pipeline")
     parser.add_argument("zl", type=int, nargs="+",
             help="zoom levels to generate a RG for")
     parser.add_argument("--host", action="store", dest="host", default="127.0.0.1",
