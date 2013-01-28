@@ -15,7 +15,7 @@ __all__ = ['simplify', 'rdp', 'anglereduce', 'rminner']
 def simplify(algo, source_col, dest_col, args=[], segmenter=ESSegmenter,
              progress=True, projection=True):
     """
-    Segments a railway graph using `segmenter`, applies the segmentation
+    Segments a railway graph using `segmenter`, applies the simplification
     algorithm `algo` with arguments `args` to `source_col` and stores the
     result in `dest_col`.
 
