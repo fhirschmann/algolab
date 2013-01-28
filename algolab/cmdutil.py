@@ -60,3 +60,38 @@ def timing(name):
     yield
     end = datetime.now()
     print('Executing %s took %.2f seconds' % (name, (end - start).total_seconds()))
+
+
+def defaultparser():
+    """
+    Creates and returns a default command line parser with `description` and
+    the following arguments: --host, --port, --db, --debug, --quiet.
+
+    You can add this as your parent parser by passing `parents=[defaultparser]`
+    to your :class:`~argparse.ArgumentParser`.
+
+    :param description: description of the parser
+    :type description: string
+    """
+    import argparse
+    from algolab.log import FORMAT as LOGGING_FORMAT
+
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--host", action="store", dest="host", default="127.0.0.1",
+            type=str, help="host of the mongodb server")
+    parser.add_argument("--port", action="store", dest="port", default=27017,
+            type=int, help="port of the mongodb server")
+    parser.add_argument("--db", action="store", dest="db", default="osm-data",
+            type=str, help="name of the database")
+    log_group = parser.add_mutually_exclusive_group()
+    log_group.add_argument("-d", "--debug",
+            action="store_const", const=logging.DEBUG,
+            dest="loglevel", default=logging.INFO,
+            help="print debugging messages")
+    log_group.add_argument("-q", "--quiet",
+            action="store_const", const=logging.WARNING,
+            dest="loglevel", help="suppress most messages")
+    args, _ = parser.parse_known_args()
+    logging.basicConfig(level=args.loglevel, format=LOGGING_FORMAT)
+
+    return parser

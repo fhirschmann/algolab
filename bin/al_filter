@@ -11,15 +11,13 @@ sys.path.append(os.path.dirname(
     os.path.abspath(sys.argv[0])) + os.sep + os.pardir + os.sep + "algolab")
 
 import argparse
-
 from pymongo import Connection
 
 from algolab.simplify import anglereduce, rdp
 from algolab.combine import anglecombine
 from algolab.db import create_rg, empty, dedup, delonelynize, new, copy
-from algolab.cmdutil import log_progress, log_change, require_col
+from algolab.cmdutil import log_progress, log_change, require_col, defaultparser
 from algolab.simplify import simplify
-from algolab.log import FORMAT as LOGGING_FORMAT
 
 
 def main(zls, db):
@@ -51,6 +49,7 @@ def main(zls, db):
 
     if 16 in zls:
         require(0)
+        empty(rgs[16])
 
         with log_progress("Removing unnecessary points (zoom=16)"):
             simplify(rdp, rgs[0], rgs[16], [0.5])
@@ -59,6 +58,7 @@ def main(zls, db):
 
     if 15 in zls:
         require(16)
+        empty(rgs[15])
         epsilon = 5
 
         with log_progress("Applying RDP with eps=%f" % epsilon):
@@ -67,6 +67,7 @@ def main(zls, db):
 
     if 14 in zls:
         require(15)
+        empty(rgs[14])
         copy(rgs[15], rgs[14])
 
         with log_progress("Removing parallel tracks from railway_graph_14"):
@@ -76,27 +77,14 @@ def main(zls, db):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Algorithm Filter Pipeline")
+    parser = argparse.ArgumentParser(description="Algorithm Filter Pipeline",
+                                     parents=[defaultparser()])
     parser.add_argument("zl", type=int, nargs="+",
             help="zoom levels to generate a RG for")
-    parser.add_argument("--host", action="store", dest="host", default="127.0.0.1",
-            type=str, help="host of the mongo database")
-    parser.add_argument("--port", action="store", dest="port", default=27017,
-            type=int, help="port of the mongo database")
-    parser.add_argument("--db", action="store", dest="db", default="osm-data",
-            type=str, help="name of the database")
     parser.add_argument("--no-progress", action="store_true", dest="np", default=False,
             help="don't print the progress")
-    log_group = parser.add_mutually_exclusive_group()
-    log_group.add_argument("-d", "--debug",
-            action="store_const", const=logging.DEBUG,
-            dest="loglevel", default=logging.INFO,
-            help="print debugging messages")
-    log_group.add_argument("-q", "--quiet",
-            action="store_const", const=logging.WARNING,
-            dest="loglevel", help="suppress most messages")
     args = parser.parse_args()
-    logging.basicConfig(level=args.loglevel, format=LOGGING_FORMAT)
+    print args.loglevel
 
     db = Connection(args.host, args.port)[args.db]
 
