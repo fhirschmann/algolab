@@ -32,23 +32,11 @@ case "$1" in
 
     2)
         cd 2_shortest_routes_finder
-        $JAVA shortest_routes_finder.jar \
-            railway_graph 16 $ALGO_OSM_HOST $ALGO_OSM_PORT
-        ;;
-
-    2n)
-        cd 2_shortest_routes_finder
         for i in `seq 8 16`; do
             echo "Finding shortest routes for zoom level ${i}"
             $JAVA shortest_routes_finder.jar \
                 railway_graph_${i} ${i} $ALGO_OSM_HOST $ALGO_OSM_PORT
         done
-        ;;
-
-    3)
-        cd 3_simple_routes_filter
-        $JAVA simple_routes_filter.jar \
-            $ALGO_OSM_HOST $ALGO_OSM_PORT
         ;;
 
     4)
@@ -59,6 +47,7 @@ case "$1" in
         cd 4_railviz
         echo "Removing serialized data..."
         rm -rvf 4_railviz/data/november2/Optimized/serialized/
+        cd ..
         $0 4
         ;;
 
@@ -68,6 +57,6 @@ case "$1" in
         ;;
 
     *)
-        echo "Usage: tool {dropdb|1|2|3|4|4r|5}"
+        echo "Usage: tool {dropdb|1|2|4|4r|5}"
         ;;
 esac
