@@ -6,10 +6,13 @@ Angle-based combination algorithm.
 """
 import sys
 import os
+import logging
 from itertools import combinations
 
 from algolab.util import angle_between, midpoint
-from algolab.db import intersections, neighbors, merge_nodes, create_rg
+from algolab.db import intersections, neighbors, merge_nodes
+
+log = logging.getLogger(__name__)
 
 
 def anglecombine(rg, epsilon, progress=True):
@@ -26,8 +29,10 @@ def anglecombine(rg, epsilon, progress=True):
 
     while int_ids:
         # Receive intersection from stack
-        int_ = rg.find_one(int_ids.pop(0))
+        int_id = int_ids.pop(0)
+        int_ = rg.find_one(int_id)
         if not int_:
+            log.error("No such node: %i" % int_id)
             continue
         lon, lat = int_["loc"]
 
