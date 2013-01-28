@@ -13,12 +13,12 @@ help:
 tests:
 	cd algolab && nosetests algolab
 coverage: .coverage
-	coverage report -i --include='algolab/*'
+	coverage report -i --omit='algolab/tests/*' --include='algolab/*' --omit='algolab/tests'
 	coverage html
 	coverage erase
 
 full-coverage: .coverage
-	coverage html --include='algolab/*'
+	coverage html --omit='algolab/tests/*' --include='algolab/*'
 	coverage erase
 
 .DELETE_ON_ERROR:
