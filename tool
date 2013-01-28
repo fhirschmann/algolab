@@ -46,9 +46,8 @@ case "$1" in
     4r)
         cd 4_railviz
         echo "Removing serialized data..."
-        rm -rvf 4_railviz/data/november2/Optimized/serialized/
-        cd ..
-        $0 4
+        rm -rvf data/november2/Optimized/serialized/
+        java -Xmx${ALGO_MEM} -classpath railviz_2.0.jar railViz/RailViz -p conf/config.xml -s -dr
         ;;
 
     5)
