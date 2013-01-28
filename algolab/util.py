@@ -17,10 +17,7 @@ from functools import wraps
 import numpy as np
 from numpy.linalg import norm
 from scipy.spatial.distance import euclidean
-from pyproj import Proj
-
-# Use Mercator projection (like google maps)
-proj = Proj(proj='merc', ellps='WGS84')
+import utm
 
 EARTH_RADIUS = 6378137
 PRECISION = 10
@@ -56,16 +53,43 @@ def ll2xy(lon, lat):
     """
     Performs cartographic transformations (converts from
     longitude, latitude to native map projection x, y.
+
+    :param lon: the longitude
+    :param lat: the latitude
+    :returns: tuple of (x, y, zone number, zone letter)
+
+    For example:
+
+        >>> frankfurt = [8.6805059, 50.1115118]
+        >>> ll2xy(*frankfurt)
+        (477155, 5551078, 32, 'U')
+
+    :func:`xy2ll` does the opposite of this function:
+
+        >>> frankfurt = [8.6805059, 50.1115118]
+        >>> frankfurt2 = xy2ll(*ll2xy(*frankfurt))
+        >>> [round(frankfurt2[0], 7), round(frankfurt2[1], 7)]
+        [8.680494, 50.111583]
+
+
     """
-    return proj(lon, lat)
+    return utm.from_latlon(lat, lon)
 
 
-def xy2ll(x, y):
+def xy2ll(x, y, zone_number, zone_letter):
     """
     Performs cartographic transformations (converts from
     x, y to longitutde, latitude.
+
+    :param x: easting
+    :param y: northing
+    :param zone_number: the zone number
+    :param zone_letter: the zone letter
+    :returns: a 2-tuple (longitude, latitude)
+
+    This is the opposite of :func:`ll2xy`.
     """
-    return proj(x, y, inverse=True)
+    return list(reversed(utm.to_latlon(x, y, zone_number, zone_letter)))
 
 
 def edist(a, b):
@@ -74,6 +98,15 @@ def edist(a, b):
 
     >>> edist([3, 5], [3, 2])
     3.0
+
+    This can also be used to calculate the distance between two points
+    on earth using :func:`ll2xy`:
+
+        >>> frankfurt = [8.6805059, 50.1115118]
+        >>> darmstadt = [8.6508574, 49.8724245]
+        >>> int(edist(ll2xy(*darmstadt)[0:2], ll2xy(*frankfurt)[0:2]))
+        26668
+
 
     :param a: first point
     :type a: sequence of two integers/floats; a coordinate
@@ -230,7 +263,7 @@ def angle_between_ll(ll1, ll2, ll3):
     Calculates the angle between the three given coordinates
     with `ll2` as vertex.
     """
-    return angle_between_points(ll2xy(*ll1), ll2xy(*ll2), ll2xy(*ll3))
+    return angle_between_points(ll2xy(*ll1)[0:2], ll2xy(*ll2)[0:2], ll2xy(*ll3)[0:2])
 
 
 def default(value, replacement):

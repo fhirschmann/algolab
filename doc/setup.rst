@@ -11,7 +11,7 @@ Dependencies
 - Python 2.7 [#f1]_ or higher
 - numpy [#f2]_
 - scipy [#f3]_
-- pyproj [#f4]_ and proj [#f5]_
+- utm [#f4]_
 
 On debian-based distributions, the dependencies can be installed
 by executing::
@@ -62,5 +62,5 @@ And view it by pointing your browser to :file:`_build/html/index.html`.
 .. [#f2] http://www.numpy.org
 .. [#f3] http://www.scipy.org
 .. [#f4] http://code.google.com/p/pyproj
-.. [#f5] http://trac.osgeo.org/proj
+.. [#f5] https://github.com/Turbo87/utm
 .. [#f10] http://sphinx.pocoo.org
