@@ -122,3 +122,10 @@ class DBTest(unittest2.TestCase):
         self.assertEqual(self.col0.count(), count_before + 1)
         self.assertIn(self.col0.find_one(99)["successors"][0]["id"],
                       [npoints[2][1][2], 100])
+
+    def test_copy(self):
+        self.create_rg_for([2, 3, 4, 5])
+        copy(self.col0, self.col1)
+        self.assertEqual(self.col0.count(), self.col1.count())
+        self.assertItemsEqual([n["_id"] for n in self.col0.find()],
+                              [n["_id"] for n in self.col1.find()])
