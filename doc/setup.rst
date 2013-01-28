@@ -16,7 +16,8 @@ Dependencies
 On debian-based distributions, the dependencies can be installed
 by executing::
 
-    apt-get install python-numpy python-scipy python-pyproj python-prettytable
+    apt-get install python-numpy python-scipy python-prettytable python-pip
+    pip install utm
 
 Commands
 ========
