@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+import argparse
+from pymongo import Connection
+
+from algolab.cmdutil import defaultparser
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="AlgoLab Database Remove Tool",
+                                     parents=[defaultparser()])
+    parser.add_argument("col", type=str,
+                        help="collection to remove")
+    args = parser.parse_args()
+
+    db = Connection(args.host, args.port)[args.db]
+    db[args.col].drop()
