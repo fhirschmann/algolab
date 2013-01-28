@@ -11,7 +11,7 @@ from pymongo import Connection
 from pylab import *
 
 from algolab.segment import ESSegmenter
-from algolab.util import lonlat2xy
+from algolab.util import ll2xy
 
 
 def visualize(segments, ptitle, count, saveto=False):
@@ -21,7 +21,7 @@ def visualize(segments, ptitle, count, saveto=False):
     axes().get_yaxis().set_visible(False)
 
     for segment in segments:
-        projection = [lonlat2xy(*p) for p in segment]
+        projection = [ll2xy(*p) for p in segment]
         plot(zip(*projection)[0], zip(*projection)[1], 'r-')
 
     draw()
