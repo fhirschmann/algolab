@@ -30,6 +30,13 @@ case "$1" in
             $ALGO_OSM_DATA $ALGO_OSM_HOST $ALGO_OSM_PORT
         ;;
 
+    2x)
+        cd 2_shortest_routes_finder
+        echo "Finding shortest routes for zoom level ${2}"
+            $JAVA shortest_routes_finder.jar \
+                railway_graph_${2} ${2} $ALGO_OSM_HOST $ALGO_OSM_PORT
+        ;;
+
     2)
         cd 2_shortest_routes_finder
         for i in `seq 8 16`; do
