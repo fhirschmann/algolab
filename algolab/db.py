@@ -189,6 +189,25 @@ def copy(source_col, dest_col):
                  source_col.name, dest_col.name))
 
 
+def recalculate_distances(rg, distance_function=gcdist):
+    """
+    Recalculates the distance between nodes in a given
+    railway graph `rg`.
+
+    :param rg: a collection cursor to a railway graph
+    :type rg: a :class:`~pymongo.collection.Collection`
+    :param distance_function: function to calculate the distance with
+    :type distance_function: a function with signature
+        f((lon1, lat1), (lon2, lat2))
+    """
+    for node in rg.find():
+        for neighbor in node["successors"]:
+            neighbor_node = rg.find_one(neighbor["id"])
+            neighbor["distance"] = distance_function(
+                node["loc"], neighbor_node["loc"])
+        rg.save(node)
+
+
 def merge_nodes(rg, node_id, merge_with_ids, distance_function=gcdist):
     """
     Merges all nodes identified by their id (`merge_with_ids`) with
@@ -245,7 +264,7 @@ def dedup(rg, distance_function=gcdist):
     :type rg: a :class:`~pymongo.collection.Collection`
     :param distance_function: function to calculate the distance with
     :type distance_function: a function with signature
-        f((lon1, lat1), (lon2, lat2)) signature
+        f((lon1, lat1), (lon2, lat2))
     """
     num_dups = 0
     map_ = Code("""
