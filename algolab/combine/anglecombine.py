@@ -32,7 +32,6 @@ def anglecombine(rg, epsilon, progress=True):
         int_id = int_ids.pop(0)
         int_ = rg.find_one(int_id)
         if not int_:
-            log.error("No such node: %i" % int_id)
             continue
         lon, lat = int_["loc"]
 
