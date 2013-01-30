@@ -51,15 +51,20 @@ def main(zls, db):
         require(0)
         empty(rgs[16])
 
-        with log_progress("Removing unnecessary points (zoom=16)"):
-            simplify(rdp, rgs[0], rgs[16], [0.5])
+        # max tolerance in m
+        epsilon = 1.5
+
+        with log_progress("Applying RDP with eps=%f" % epsilon):
+            simplify(rdp, rgs[0], rgs[16], [epsilon])
             zls.remove(16)
             log_change(rgs[16].count(), rg_.count())
 
     if 15 in zls:
         require(16)
         empty(rgs[15])
-        epsilon = 5
+
+        # max tolerance in m
+        epsilon = 2.5
 
         with log_progress("Applying RDP with eps=%f" % epsilon):
             simplify(rdp, rgs[16], rgs[15], [epsilon])
@@ -68,10 +73,14 @@ def main(zls, db):
     if 14 in zls:
         require(15)
         empty(rgs[14])
+
+        # max angle in degrees
+        epsilon = 25
+
         copy(rgs[15], rgs[14])
 
         with log_progress("Removing parallel tracks from railway_graph_14"):
-            anglecombine(rgs[14], 25)
+            anglecombine(rgs[14], epsilon)
             c = rgs[14].count()
             log_change(c, rgs[15].count())
 
