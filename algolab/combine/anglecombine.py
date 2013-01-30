@@ -21,7 +21,7 @@ def anglecombine(rg, epsilon, progress=True):
 
     :param rg: the railway graph (collection) to work on
     :type rg: a :class:`~pymongo.collection.Collection`
-    :param epsilon: an angle (should be < 15°)
+    :param epsilon: an angle; should be rather small
     :type epsilon: float
     """
     # The stack: contains intersections to visit
