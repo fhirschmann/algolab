@@ -15,7 +15,7 @@ from pymongo import Connection
 
 from algolab.simplify import anglereduce, rdp
 from algolab.combine import anglecombine
-from algolab.db import create_rg, empty, dedup, delonelynize, new, copy
+from algolab.db import empty, dedup, delonelynize, new, copy, recalculate_distances
 from algolab.cmdutil import log_progress, log_change, require_col, defaultparser
 from algolab.simplify import simplify
 
@@ -29,33 +29,36 @@ def main(zls, db):
 
     require = lambda x: require_col(db, x)
 
-    if 0 in zls:
+    if 30 in zls:
         require("railway_graph")
-        empty(rgs[0])
+        empty(rgs[30])
 
-        copy(rg_, rgs[0])
-        c0 = rgs[0].count()
+        copy(rg_, rgs[30])
+        c0 = rgs[30].count()
 
         # This is the general cleaning step
-        with log_progress("Removing lonely nodes from railway_graph_0"):
-            delonelynize(rgs[0])
-            c1 = rgs[0].count()
+        with log_progress("Removing lonely nodes"):
+            delonelynize(rgs[30])
+            c1 = rgs[30].count()
             log_change(c1, c0)
 
-        with log_progress("Removing duplicates from railway_graph_0"):
-            dedup(rgs[0])
-            c2 = rgs[0].count()
+        with log_progress("Removing duplicates"):
+            dedup(rgs[30])
+            c2 = rgs[30].count()
             log_change(c2, c1)
 
+        with log_progress("Recalculating all distances"):
+            recalculate_distances(rgs[30])
+
     if 16 in zls:
-        require(0)
+        require(30)
         empty(rgs[16])
 
         # max tolerance in m
         epsilon = 1.5
 
         with log_progress("Applying RDP with eps=%f" % epsilon):
-            simplify(rdp, rgs[0], rgs[16], [epsilon])
+            simplify(rdp, rgs[30], rgs[16], [epsilon])
             zls.remove(16)
             log_change(rgs[16].count(), rg_.count())
 
@@ -75,7 +78,7 @@ def main(zls, db):
         empty(rgs[14])
 
         # max angle in degrees
-        epsilon = 25
+        epsilon = 15
 
         copy(rgs[15], rgs[14])
 
