@@ -21,7 +21,7 @@ This is the step were our project kicks in. It works on the railway
 graph and produces a generalized railway graph for each zoom level.
 
 The main entry point for producing generalized railway graphs is
-`al_filter`::
+`al_filter`:
 
   .. program-output:: al_filter --help
 
@@ -44,7 +44,7 @@ is our general cleaning step that does the following:
 
 - Recalculate all distances (great-circle distance)
 
-This step is executed by running::
+This step can be executed by running::
 
     al_filter 30
 
@@ -62,6 +62,11 @@ Zoom level 16
 -------------
 
 .. image:: img/step-16.png
+
+This step applies :func:`~algolab.simplify.rdp` with
+ε=1.5m to and can be executed via::
+
+    al_filter 16
 
 Zoom level 15
 -------------
