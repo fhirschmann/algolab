@@ -28,6 +28,10 @@ The main entry point for producing generalized railway graphs is
 The zoom levels indicate what collection will be produced. For example,
 running `al_filter 14` will produce the collection `railway_graph_14`.
 
+In the following sections, the images on the left-hand side represent
+the Frankfurt Main Station and the image on the right-hand side represent
+Germany.
+
 Zoom level 30
 -------------
 
