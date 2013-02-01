@@ -5,6 +5,8 @@ Database-related utilities.
 .. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
 """
 import logging
+import os
+import sys
 
 from pymongo import GEO2D
 from bson.code import Code
@@ -189,7 +191,7 @@ def copy(source_col, dest_col):
                  source_col.name, dest_col.name))
 
 
-def recalculate_distances(rg, distance_function=gcdist):
+def recalculate_distances(rg, distance_function=gcdist, progress=True):
     """
     Recalculates the distance between nodes in a given
     railway graph `rg`.
@@ -199,13 +201,22 @@ def recalculate_distances(rg, distance_function=gcdist):
     :param distance_function: function to calculate the distance with
     :type distance_function: a function with signature
         f((lon1, lat1), (lon2, lat2))
+    :param progress: whether or not to show progress
+    :type progress: boolean
     """
-    for node in rg.find():
+    count = rg.count()
+    for i, node in enumerate(rg.find()):
         for neighbor in node["successors"]:
             neighbor_node = rg.find_one(neighbor["id"])
             neighbor["distance"] = distance_function(
                 node["loc"], neighbor_node["loc"])
         rg.save(node)
+
+        if progress:
+            sys.stdout.write("\rProgress: %d of %d" % (i, count))
+
+    if progress:
+        print(os.linesep)
 
 
 def merge_nodes(rg, node_id, merge_with_ids, distance_function=gcdist):
