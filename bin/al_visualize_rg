@@ -15,7 +15,7 @@ from algolab.util import ll2xy
 from algolab.cmdutil import defaultparser
 
 
-def visualize(segments, ptitle, count, saveto=False):
+def visualize(segments, ptitle, count, dpi, tight, saveto=False):
     subplots_adjust(left=0.15, bottom=0.25)
 
     axes().get_xaxis().set_visible(False)
@@ -31,7 +31,10 @@ def visualize(segments, ptitle, count, saveto=False):
     title("%s (%s nodes)" % (ptitle, count))
 
     if saveto:
-        savefig(saveto, dpi=120)
+        if tight:
+            savefig(saveto, dpi=dpi, bbox_inches="tight")
+        else:
+            savefig(saveto, dpi=dpi)
     else:
         show()
 
@@ -39,15 +42,24 @@ def visualize(segments, ptitle, count, saveto=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Railway Graph Visualization",
                                      parents=[defaultparser()])
-    parser.add_argument("-c", "--collection", action="store", dest="rg", default="railway_graph",
-            type=str, help="name of the collection")
-    parser.add_argument("-t", "--title", action="store", dest="title", default="RG Visualization",
-            type=str, help="title of the image")
-    parser.add_argument("-s", "--save", action="store", dest="saveto", default=None,
-            type=str, help="save image to")
+    parser.add_argument("-c", "--collection", action="store", dest="rg",
+                        default="railway_graph", type=str,
+                        help="name of the collection")
+    parser.add_argument("-t", "--title", action="store", dest="title",
+                        default="RG Visualization", type=str,
+                        help="title of the image")
+    parser.add_argument("-s", "--save", action="store", dest="saveto",
+                        default=None, type=str,
+                        help="save image to")
+    parser.add_argument("--dpi", action="store", dest="dpi", default=100,
+                        type=int, help="dpi of the resulting image")
+    parser.add_argument("--tight", action="store_true", default=True,
+                        help="tight aligning")
+
     args = parser.parse_args()
 
     rg = Connection(args.host, args.port)[args.db][args.rg]
     segments = ESSegmenter(rg).segments_as_coordinates
 
-    visualize(segments, args.title + " [%s]" % args.rg, rg.count(), args.saveto)
+    visualize(segments, args.title + " [%s]" % args.rg, rg.count(), args.dpi,
+              args.tight, args.saveto)
