@@ -25,7 +25,7 @@ def main(zls, db):
     rg_ = db["railway_graph"]
 
     # Collections for zoom level 8 - 16
-    rgs = {i: db["railway_graph_%i" % i] for i in range(8, 17) + [0]}
+    rgs = {i: db["railway_graph_%i" % i] for i in range(8, 17) + [30]}
 
     require = lambda x: require_col(db, x)
 
