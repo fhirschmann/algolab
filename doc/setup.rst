@@ -19,40 +19,6 @@ by executing::
     apt-get install python-numpy python-scipy python-prettytable python-pip
     pip install utm
 
-Commands
-========
-
-The toolbox features several commands, including:
-
-- bin/al_filter
-
-  .. program-output:: al_filter --help
-
-- bin/al_visualize_algo
-
-  .. program-output:: al_visualize_algo --help
-
-- bin/al_visualize_rg
-
-  .. program-output:: al_visualize_rg --help
-
-- bin/al_visualize_data
-
-  .. program-output:: al_visualize_data --help
-
-- bin/al_inspect
-
-  .. program-output:: al_inspect --help
-
-- bin/al_cp
-
-  .. program-output:: al_cp --help
-
-- bin/al_rm
-
-  .. program-output:: al_rm --help
-
-
 
 Compiling the documentation
 ===========================

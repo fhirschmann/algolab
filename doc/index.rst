@@ -15,12 +15,14 @@ mentioned sections as well as documentation on how to set up our project.
    :maxdepth: 2
 
    setup
+   usage
    clean
    comb
    seg
    simp
    api
    data
+   final
 
 Indices and tables
 ==================
