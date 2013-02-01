@@ -10,7 +10,7 @@ was constructed and how well our algorithms did.
 Step 1: OSM Import
 ==================
 
-This step imports the railway graph from the osm data:
+This step imports the railway graph from the osm data::
 
     java -jar osm_railway_graph_import.jar germany.osm 127.0.0.1 27017
 
@@ -21,7 +21,7 @@ This is the step were our project kicks in. It works on the railway
 graph and produces a generalized railway graph for each zoom level.
 
 The main entry point for producing generalized railway graphs is
-`al_filter`:
+`al_filter`::
 
   .. program-output:: al_filter --help
 
