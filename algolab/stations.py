@@ -4,18 +4,21 @@ Provides utilities to work with station data.
 
 .. moduleauthor:: Michael Markert <markert.michael@googlemail.com>
 """
+from __future__ import division
+
 import csv
 import logging
 
 from pymongo import GEO2D
 
+from algolab.db import copy, merge_nodes
 from algolab.util import distance
+
+log = logging.getLogger(__name__)
 
 class StationNotFound(Exception):
     """Indicates that a station is not contained in a stations or station usage
     file.
-log = logging.getLogger(__name__)
-
     """
     pass
 
@@ -244,9 +247,9 @@ def build_rg_from_routes(base_collection, target_collection,
 
     """
     stations = Stations(station_path, base_collection)
+    target_collection.create_index([('loc', GEO2D)])
     with open(routes_path) as routes_file:
         next(routes_file)
-    target_collection.create_index([('loc', GEO2D)])
         reader = csv.reader(routes_file, delimiter=';')
         for line in reader:
             start, end, type_ = line[:3] # compensate for trailing space
@@ -285,9 +288,9 @@ def build_station_collection(base_collection,
     :type filter: None or function (eva, longitude, latitude) -> bool
     """
     stations = Stations(station_path, base_collection)
+    target_collection.create_index([('loc', GEO2D)])
     if filter is None:
         filter = lambda eva, lon, lat: True
-    target_collection.create_index([('loc', GEO2D)])
     with open(routes_path) as routes_file:
         next(routes_file)
         reader = csv.reader(routes_file, delimiter=';')
@@ -300,7 +303,7 @@ def build_station_collection(base_collection,
                         target_collection.insert(
                             {'_id': node['_id'],
                              'loc': node['loc'],
-                             'successos': node['successors'],
+                             'successors': node['successors'],
                              'esa': esa})
                 except StationNotFound:
                     log.debug('Station with EVA %s not found in station'
@@ -309,3 +312,64 @@ def build_station_collection(base_collection,
                     log.debug('Station with EVA %s has no appropriate'
                                   'railway node in collection %s',
                                   esa, base_collection.name)
+
+
+def cluster_stations(cluster_collection, station_collection, target_collection,
+                     min_value=None, max_distance=None):
+    """Cluster railway graph nodes to near station nodes.
+
+    All railway graph nodes (in ``cluster_collection``) will be subsumed by the
+    nearest station and successors will be updated accordingly.
+
+    If ``min_value`` is used, make sure ``cluster_collection`` is enriched, i.e.
+    contains nodes with a ``value`` attribute.
+
+    Stations will never be clustered to another station.
+
+    The clustered collection will be copied to the target collection emptying it
+    by that.
+
+    :param cluster_collection: railway graph collection to cluster
+    :param station_collection: collection containing stations
+    :param target_collection: collection for clustered railway graph
+    :param min_value: minimal valuation of node to accept as clustering endpoint
+    :type min_value: int or None
+    :param max_distance: maximal distance to subsume other nodes
+    :type max_distance: int or float or None
+
+    """
+    copy(cluster_collection, target_collection)
+    target_collection.ensure_index([('loc', GEO2D)])
+    for station in station_collection.find():
+        near_query = {'loc': {'$near': station['loc']}}
+        if max_distance is not None:
+            near_query['loc']['$maxDistance'] = max_distance
+        near_nodes = (n for n in station_collection.find(near_query)
+                      if n['_id'] != station['_id'])
+        if min_value is None:
+            nearest_node = next(near_nodes)
+        else:
+            for node in near_nodes:
+                cluster_node = cluster_collection.find_one(node['_id'])
+                if cluster_node and cluster_node['value'] >= min_value:
+                    nearest_node = cluster_node
+                    break
+            else:
+                log.warning('No valid cluster endpoints with a minimum value '
+                            'of %d for node %i (ESA %i) found. '
+                            'Make sure collection "%s" is enriched' %
+                (min_value,
+                 station['_id'],
+                 station['esa'],
+                 cluster_collection.name))
+                continue
+
+        radius = distance(station['loc'], nearest_node['loc']) / 2
+        candidates = target_collection.find({'loc':
+                                             { '$within':
+                                               { '$center':
+                                                 [station['loc'], radius]}}})
+        merge_ids = [c['_id'] for c in candidates if not
+                     # don't merge stations
+                     station_collection.find_one(c['_id'])]
+        merge_nodes(target_collection, station['_id'], merge_ids)
