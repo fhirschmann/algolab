@@ -14,6 +14,8 @@ from algolab.util import distance
 class StationNotFound(Exception):
     """Indicates that a station is not contained in a stations or station usage
     file.
+log = logging.getLogger(__name__)
+
     """
     pass
 
@@ -301,9 +303,9 @@ def build_station_collection(base_collection,
                              'successos': node['successors'],
                              'esa': esa})
                 except StationNotFound:
-                    logging.debug('Station with EVA %s not found in station'
+                    log.debug('Station with EVA %s not found in station'
                                   'file %s', esa, station_path)
                 except RailwayNodeNotFound:
-                    logging.debug('Station with EVA %s has no appropriate'
+                    log.debug('Station with EVA %s has no appropriate'
                                   'railway node in collection %s',
                                   esa, base_collection.name)
