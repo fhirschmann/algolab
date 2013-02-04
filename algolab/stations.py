@@ -9,6 +9,8 @@ import logging
 
 from algolab.util import gcdist
 
+from pymongo import GEO2D
+
 class StationNotFound(Exception):
     """Indicates that a station is not contained in a stations or station usage
     file.
@@ -242,6 +244,7 @@ def build_rg_from_routes(base_collection, target_collection,
     stations = Stations(station_path, base_collection)
     with open(routes_path) as routes_file:
         next(routes_file)
+    target_collection.create_index([('loc', GEO2D)])
         reader = csv.reader(routes_file, delimiter=';')
         for line in reader:
             start, end, type_ = line[:3] # compensate for trailing space
@@ -282,6 +285,7 @@ def build_station_collection(base_collection,
     stations = Stations(station_path, base_collection)
     if filter is None:
         filter = lambda eva, lon, lat: True
+    target_collection.create_index([('loc', GEO2D)])
     with open(routes_path) as routes_file:
         next(routes_file)
         reader = csv.reader(routes_file, delimiter=';')
