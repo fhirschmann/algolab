@@ -7,9 +7,9 @@ Provides utilities to work with station data.
 import csv
 import logging
 
-from algolab.util import gcdist
-
 from pymongo import GEO2D
+
+from algolab.util import distance
 
 class StationNotFound(Exception):
     """Indicates that a station is not contained in a stations or station usage
@@ -251,9 +251,9 @@ def build_rg_from_routes(base_collection, target_collection,
             start_node = base_collection.find_one(stations.get_node_id(start.strip()))
             end_node = base_collection.find_one(stations.get_node_id(end.strip()))
 
-            distance = gcdist(start_node['loc'], end_node['loc'])
-            successors = {'id': end_node['_id'], 'distance': distance}, \
-                         {'id': start_node['_id'], 'distance': distance}
+            dist = distance(start_node['loc'], end_node['loc'])
+            successors = {'id': end_node['_id'], 'distance': dist}, \
+                         {'id': start_node['_id'], 'distance': dist}
             nodes = target_collection.find_one(start_node['_id']), \
                     target_collection.find_one(end_node['_id'])
             ids = start_node['_id'], end_node['_id']

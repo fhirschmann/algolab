@@ -145,6 +145,9 @@ def gcdist(a, b):
     return EARTH_RADIUS * c
 
 
+distance = gcdist
+
+
 def pdist(p, a, b):
     """
     Calculate the perpendicular distance of `p` to the
