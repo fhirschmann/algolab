@@ -30,8 +30,8 @@ if __name__ == "__main__":
     base = db[args.base_collection]
     target = db[args.target_collection]
 
-    #empty(target)
-    #build_station_collection(base, target, args.stations_file, args.routes_file)
+    empty(target)
+    build_station_collection(base, target, args.stations_file, args.routes_file)
 
     inc = inconsistent_edges(target)
     for a, b in inc:
