@@ -355,7 +355,7 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
         else:
             for node in near_nodes:
                 cluster_node = cluster_collection.find_one(node['_id'])
-                if cluster_node and cluster_node['value'] >= min_value:
+                if cluster_node and getattr(cluster_node, 'value', 0) >= min_value:
                     nearest_node = cluster_node
                     break
             else:
