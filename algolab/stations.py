@@ -4,7 +4,7 @@ Provides utilities to work with station data.
 
 .. moduleauthor:: Michael Markert <markert.michael@googlemail.com>
 """
-from __future__ import division
+from __future__ import division, print_function
 
 import csv
 import logging
@@ -340,7 +340,10 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
     """
     copy(cluster_collection, target_collection)
     target_collection.ensure_index([('loc', GEO2D)])
-    for station in station_collection.find():
+    stations = station_collection.count()
+    for i, station in enumerate(station_collection.find(), 1):
+        print('\rClustering Station %d of %d (%.2f%%)' %
+              (i, stations, i / stations), end='')
         near_query = {'loc': {'$near': station['loc']}}
         if max_distance is not None:
             near_query['loc']['$maxDistance'] = max_distance
