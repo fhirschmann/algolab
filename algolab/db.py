@@ -11,7 +11,7 @@ import sys
 from pymongo import GEO2D
 from bson.code import Code
 
-from algolab.util import gcdist, raise_or_return
+from algolab.util import gcdist
 
 log = logging.getLogger(__name__)
 
@@ -28,8 +28,11 @@ def node_for(id_, col):
     :returns: a node
     :raise: :exc:`ValueError` if there is no such node
     """
-    return raise_or_return(col.find_one(id_),
-            ValueError, "There is no such node %s" % id_)
+    node = col.find_one(id_)
+    if node is None:
+        log.error("No such node: %s" % id_)
+
+    return node
 
 
 def loc_for(id_, col):
@@ -147,6 +150,7 @@ def inconsistent_edges(col):
 
     :param col: the collection to read from
     :type col: a :class:`~pymongo.collection.Collection`
+    :return: a list of tuples (a, b) where a -> b is an edge
     """
     result = set()
 
@@ -157,6 +161,20 @@ def inconsistent_edges(col):
                 result.add((node["_id"], succ["id"]))
 
     return result
+
+
+def remove_edge(col, node, neighbor_id):
+    """
+    Removes the edge from a `node` to a neighbor identified
+    by `neighbor_id`.
+
+    :param col: the collection to read from
+    :type col: a :class:`~pymongo.collection.Collection`
+    :param node: the node
+    :param neighbor_id: the id of the neighbor
+    """
+    node["successors"] = [s for s in node["successors"] if s["id"] != neighbor_id]
+    col.save(node)
 
 
 def empty(col):
