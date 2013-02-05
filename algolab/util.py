@@ -299,3 +299,22 @@ def raise_or_return(obj, exception, msg):
     if obj is None:
         raise exception(msg)
     return obj
+
+
+def radians2meter(dist):
+    """
+    :param dist: distance in radians
+    :type dist: float
+    :returns: distance in meters
+    :rtype: float
+    """
+    return dist * EARTH_RADIUS
+
+def meter2rad(dist):
+    """
+    :param dist: distance in meters
+    :type dist: float
+    :returns: distance in radians
+    :rtype: float
+    """
+    return dist / EARTH_RADIUS

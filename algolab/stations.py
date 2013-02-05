@@ -12,7 +12,7 @@ import logging
 from pymongo import GEO2D
 
 from algolab.db import copy, merge_nodes
-from algolab.util import distance
+from algolab.util import distance, meter2rad
 
 log = logging.getLogger(__name__)
 
@@ -89,12 +89,13 @@ class Stations(object):
         :param max_distance: maximal distance (unit depends on document
                              coordinate system)
         """
-        return self._collection.find_one({'loc':
-                                          {
+        return self._collection.find_one(
+            {'loc':
+             {
                                               # order is important
-                                              '$maxDistance': max_distance,
-                                              '$near': [longitude, latitude]
-                                          }
+                 '$maxDistance': meter2rad(max_distance),
+                 '$near': [longitude, latitude]
+             }
                                       })
 
     def _get_location(self, id_):
@@ -334,7 +335,7 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
     :param target_collection: collection for clustered railway graph
     :param min_value: minimal valuation of node to accept as clustering endpoint
     :type min_value: int or None
-    :param max_distance: maximal distance to subsume other nodes
+    :param max_distance: maximal distance to subsume other nodes (in meters)
     :type max_distance: int or float or None
 
     """
@@ -346,7 +347,7 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
               (i, stations, i / stations), end='')
         near_query = {'loc': {'$near': station['loc']}}
         if max_distance is not None:
-            near_query['loc']['$maxDistance'] = max_distance
+            near_query['loc']['$maxDistance'] = meter2rad(max_distance)
         near_nodes = (n for n in station_collection.find(near_query)
                       if n['_id'] != station['_id'])
         if min_value is None:
@@ -367,7 +368,7 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
                  cluster_collection.name))
                 continue
 
-        radius = distance(station['loc'], nearest_node['loc']) / 2
+        radius = meter2rad(distance(station['loc'], nearest_node['loc']) / 2)
         candidates = target_collection.find({'loc':
                                              { '$within':
                                                { '$center':
