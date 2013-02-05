@@ -85,6 +85,8 @@ def remove_neighbors(node, neighbor_ids):
     Removes the neighbors identified by `neighbor_ids`
     from a node.
 
+    You still NEED TO save the node afterwards.
+
     :param node: the node to remove the neighbors from
     :param neighbor_ids: the ids of the neighbors to remove
     :type neighbor_ids: list
