@@ -1,6 +1,12 @@
 #!/usr/bin/env python
+import os
+import sys
 import argparse
 from pymongo import Connection
+
+# Hack in case the python path is not set correctly
+sys.path.append(os.path.dirname(
+        os.path.abspath(sys.argv[0])) + os.sep + os.pardir + os.sep + "algolab")
 
 from algolab.cmdutil import defaultparser
 from algolab.db import empty, copy
