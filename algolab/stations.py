@@ -344,7 +344,7 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
     stations = station_collection.count()
     for i, station in enumerate(station_collection.find(), 1):
         print('\rClustering Station %d of %d (%.2f%%)' %
-              (i, stations, i / stations), end='')
+              (i, stations, i / stations * 100), end='')
         near_query = {'loc': {'$near': station['loc']}}
         if max_distance is not None:
             near_query['loc']['$maxDistance'] = meter2rad(max_distance)
