@@ -354,13 +354,13 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
             nearest_node = next(near_nodes)
         else:
             for node in near_nodes:
-                cluster_node = cluster_collection.find_one(node['_id'])
-                if cluster_node and getattr(cluster_node, 'value', 0) >= min_value:
+                cluster_node = target_collection.find_one(node['_id'])
+                if cluster_node and cluster_node.get('value', 0) >= min_value:
                     nearest_node = cluster_node
                     break
             else:
                 log.warning('No valid cluster endpoints with a minimum value '
-                            'of %d for node %i (ESA %i) found. '
+                            'of %d for node %d (ESA %s) found. '
                             'Make sure collection "%s" is enriched' %
                 (min_value,
                  station['_id'],
