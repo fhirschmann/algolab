@@ -248,7 +248,7 @@ def build_rg_from_routes(base_collection, target_collection,
 
     """
     stations = Stations(station_path, base_collection)
-    target_collection.create_index([('loc', GEO2D)])
+    target_collection.ensure_index([('loc', GEO2D)])
     with open(routes_path) as routes_file:
         next(routes_file)
         reader = csv.reader(routes_file, delimiter=';')
@@ -289,7 +289,7 @@ def build_station_collection(base_collection,
     :type filter: None or function (eva, longitude, latitude) -> bool
     """
     stations = Stations(station_path, base_collection)
-    target_collection.create_index([('loc', GEO2D)])
+    target_collection.ensure_index([('loc', GEO2D)])
     if filter is None:
         filter = lambda eva, lon, lat: True
     with open(routes_path) as routes_file:
