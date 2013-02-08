@@ -92,9 +92,9 @@ class Stations(object):
         return self._collection.find_one(
             {'loc':
              {
-                                              # order is important
+                 # order is important
                  '$maxDistance': meter2rad(max_distance),
-                 '$near': [longitude, latitude]
+                 '$nearSphere': [longitude, latitude]
              }
                                       })
 
@@ -345,7 +345,7 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
     for i, station in enumerate(station_collection.find(), 1):
         print('\rClustering Station %d of %d (%.2f%%)' %
               (i, stations, i / stations * 100), end='')
-        near_query = {'loc': {'$near': station['loc']}}
+        near_query = {'loc': {'$nearSphere': station['loc']}}
         if max_distance is not None:
             near_query['loc']['$maxDistance'] = meter2rad(max_distance)
         near_nodes = (n for n in station_collection.find(near_query)
@@ -371,7 +371,7 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
         radius = meter2rad(distance(station['loc'], nearest_node['loc']) / 2)
         candidates = target_collection.find({'loc':
                                              { '$within':
-                                               { '$center':
+                                               { '$centerSphere':
                                                  [station['loc'], radius]}}})
         merge_ids = [c['_id'] for c in candidates if not
                      # don't merge stations
