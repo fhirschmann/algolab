@@ -296,23 +296,23 @@ def build_station_collection(base_collection,
         next(routes_file)
         reader = csv.reader(routes_file, delimiter=';')
         for line in reader:
-            esas = [x.strip() for x in line[:2]]
-            for esa in esas:
+            evas = [x.strip() for x in line[:2]]
+            for eva in evas:
                 try:
-                    node = base_collection.find_one(stations.get_node_id(esa))
-                    if filter(esa, *node['loc']):
+                    node = base_collection.find_one(stations.get_node_id(eva))
+                    if filter(eva, *node['loc']):
                         target_collection.insert(
                             {'_id': node['_id'],
                              'loc': node['loc'],
                              'successors': node['successors'],
-                             'esa': esa})
+                             'eva': eva})
                 except StationNotFound:
-                    log.debug('Station with EVA %s not found in station'
-                                  'file %s', esa, station_path)
+                    log.debug('Station with EVA %s not found in station' +
+                              'file %s', eva, station_path)
                 except RailwayNodeNotFound:
-                    log.debug('Station with EVA %s has no appropriate'
-                                  'railway node in collection %s',
-                                  esa, base_collection.name)
+                    log.debug('Station with EVA %s has no appropriate' +
+                              'railway node in collection %s',
+                              eva, base_collection.name)
 
 
 def cluster_stations(cluster_collection, station_collection, target_collection,
