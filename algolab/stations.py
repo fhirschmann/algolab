@@ -11,7 +11,7 @@ import logging
 
 from pymongo import GEO2D
 
-from algolab.db import copy, merge_nodes
+from algolab.db import copy, merge_nodes, empty
 from algolab.util import distance, meter2rad
 
 log = logging.getLogger(__name__)
@@ -288,6 +288,7 @@ def build_station_collection(base_collection,
     :param filter: filtering function to include a node in the collection
     :type filter: None or function (eva, longitude, latitude) -> bool
     """
+    empty(target_collection)
     stations = Stations(station_path, base_collection)
     target_collection.ensure_index([('loc', GEO2D)])
     if filter is None:
