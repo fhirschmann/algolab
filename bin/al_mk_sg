@@ -10,7 +10,6 @@ sys.path.append(os.path.dirname(
 
 from algolab.cmdutil import defaultparser
 from algolab.stations import build_station_collection
-from algolab.db import inconsistent_edges, remove_neighbors, node_for, empty
 
 
 if __name__ == "__main__":
@@ -30,12 +29,4 @@ if __name__ == "__main__":
     base = db[args.base_collection]
     target = db[args.target_collection]
 
-    empty(target)
     build_station_collection(base, target, args.stations_file, args.routes_file)
-
-    inc = inconsistent_edges(target)
-    for a, b in inc:
-        node = node_for(a, target)
-        remove_neighbors(node, [b])
-        target.save(node)
-    print("Removed %i edges that lead to nowhere." % len(inc))
