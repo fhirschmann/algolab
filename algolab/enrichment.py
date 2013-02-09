@@ -44,22 +44,23 @@ def enrich_with_routes(collection, station_usage_path, routes_path):
                                   id_, collection.name)
 
 
-def rate_node(successors, routes):
+def rate_node(successors, route_info):
     """
-    :param successors:
-    :type successors:
-    :param routes:
-    :type routes:
+    :param successors: neighbors of node
+    :param route_info: information about quantity and quality of routes
+    :type route_info: :class:`algolab.stations.RouteInfo`
     :returns: the value of the node
     :rtype: int
     """
     value = 0
     if len(successors) == 1:
         value += 50
-    value += 10 * routes[0] # class0
-    value += 5 * routes[1]  # class1
-    value += 3 * routes[2]  # class2
-    value += routes[3]      # class3
+    value += 10 * route_info.class0
+    value += 7 * route_info.class1
+    value += 5 * route_info.class2
+    value += 3 * route_info.regional
+    value += 2 * route_info.s_bahn
+    value += route_info.tram
 
     return value
 

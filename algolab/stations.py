@@ -9,6 +9,8 @@ from __future__ import division, print_function
 import csv
 import logging
 
+from collections import namedtuple
+
 from pymongo import GEO2D
 
 from algolab.db import copy, merge_nodes, empty
@@ -26,6 +28,11 @@ class RailwayNodeNotFound(Exception):
     """Indicates that a appropriate railway graph node could not be found.
     """
     pass
+
+
+RoutesInfo = namedtuple('RoutesInfo', ['class1', 'class2', 'class3',
+                                       'regional', 's_bahn', 'tram'])
+
 
 class Stations(object):
     """
@@ -156,11 +163,11 @@ class StationUsage(Stations):
         head # describes the columns
         ...
 
-        ID;name;longitude;latitude;#events;#class0;#class1;#class2;#class3
+        ID;name;longitude;latitude;#events;#class0;#class1;#class2;#class3;#regional;#s-bahn;#tram
 
-    `id` is 7 digit number padded with zeroes
+    `eva` is 7 digit number padded with zeroes
     #events describes the amount of events occuring at the station
-    #classN describes the amount of events with class N (does not have to sum
+    #class describes the amount of events of the class (does not have to sum
     up with #events)
     """
     def __init__(self, station_usage_path, collection, cache=True):
@@ -201,7 +208,11 @@ class StationUsage(Stations):
             doc = self._select_node_near(longitude, latitude)
             if doc:
                 self._id_cache[eva] = doc['_id']
-                self._routes_cache[eva] = tuple([int(r) for r in entry[5:9]])
+                try:
+                    self._routes_cache[eva] = RoutesInfo([int(r) for r in entry[5:]])
+                except TypeError:
+                    log.error('"%s" seems to be no valid station usage file.',
+                              self._station_path)
 
     @staticmethod
     def _value(successors, routes):
