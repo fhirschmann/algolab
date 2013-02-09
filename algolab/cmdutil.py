@@ -45,10 +45,10 @@ def log_progress(name, log_function=log.info):
         name, datetime.now() - now))
 
 
-def log_change(u, v, log_function=log.info):
-    change = ((v - u) / v) * 100 if v is not 0 else 0
+def log_change(after, before, log_function=log.info):
+    change = ((before - after) / before) * 100 if before is not 0 else 0
     log_function("Reduced to %i nodes from %i nodes. "
-                 "Change: -%i (-%.3f%%)" % (u, v, v - u, change))
+                 "Change: -%i (-%.3f%%)" % (after, before, before - after, change))
 
 
 @contextmanager
