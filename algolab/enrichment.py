@@ -9,6 +9,8 @@ import logging
 
 from algolab.stations import StationUsage, StationNotFound, RailwayNodeNotFound
 
+VALUE_ATTRIBUTE = 'value'
+
 def enrich_with_routes(collection, station_usage_path, routes_path):
     """
     Enrich the collection by adding a routes count based on the information
@@ -24,12 +26,15 @@ def enrich_with_routes(collection, station_usage_path, routes_path):
         reader = csv.reader(routes_file, delimiter=';')
         for line in reader:
             start, end, type_ = line[:3] # compensate for trailing space
-            for node in start, end:
-                id_ = node.strip()
+            for id_ in start, end:
+                id_ = id_.strip()
                 try:
-                    collection.update({'_id': stations.get_node_id(id_)},
+                    node = collection.find(stations.get_node_id(id_))
+                    collection.update({'_id': node['_id']},
                                       {'$inc':
-                                       {'value': stations.get_id_value(id_)}})
+                                       {VALUE_ATTRIBUTE:
+                                        rate_node(node['successors'],
+                                                  stations.get_id_routes(id_))}})
                 except StationNotFound:
                     logging.debug('Station with EVA %s not found in usage file %s',
                                   id_, station_usage_path)
@@ -37,3 +42,23 @@ def enrich_with_routes(collection, station_usage_path, routes_path):
                     logging.debug('Station with EVA %s has no appropriate'
                                   'railway node in collection %s',
                                   id_, collection.name)
+
+
+def rate_node(successors, routes):
+    """
+    :param successors:
+    :type successors:
+    :param routes:
+    :type routes:
+    :returns: the value of the node
+    :rtype: int
+    """
+    value = 0
+    if len(successors) == 1:
+        value += 50
+    value += 10 * routes[0] # class0
+    value += 5 * routes[1]  # class1
+    value += 3 * routes[2]  # class2
+    value += routes[3]      # class3
+
+    return value

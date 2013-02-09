@@ -173,53 +173,41 @@ class StationUsage(Stations):
         super(StationUsage, self).__init__(station_usage_path, collection, False)
         # patch up reader, uses other delimiter
         self._station_reader = csv.reader(self._station_file, delimiter=';')
-        self._value_cache = dict()
+        self._routes_cache = dict()
         if cache:
             self._fill_cache()
 
-    def get_id_value(self, id_):
+    def get_id_routes(self, eva):
         """
-        :param id_: id of station
-        :returns: valuation of type
-        :rtype: int
+        :param eva: eva of station
+        :returns: routes of station
+        :rtype: tuple(int)
         """
-        if id_ not in self._value_cache:
-            node_id = self.get_node_id(id_)
-            successors = self._collection.find_one(node_id)['successors']
-            entry = self._search_entry(id_)
-            self._value_cache[id_] = self._value(successors, entry[5:9])
-
-        return self._value_cache[id_]
+        if eva not in self._routes_cache:
+            entry = self._search_entry(eva)
+            self._routes_cache[eva] = tuple([int(r) for r in entry[5:9]])
+        return self._routes_cache[eva]
 
     def _fill_cache(self):
         """Fill the caches with every station in file."""
         for entry in self._station_reader:
             if len(entry) < 4:  # ignore malformed entries
                 continue
-            id_ = self._get_id(entry)
+            eva = self._get_eva(entry)
             longitude, latitude = float(entry[2]), float(entry[3])
             if longitude == latitude == 0.0: # ignore malformed entries
                 continue
 
             doc = self._select_node_near(longitude, latitude)
             if doc:
-                self._id_cache[id_] = doc['_id']
-                self._value_cache[id_] = self._value(doc['successors'], entry[5:9])
+                self._id_cache[eva] = doc['_id']
+                self._routes_cache[eva] = tuple([int(r) for r in entry[5:9]])
 
     @staticmethod
     def _value(successors, routes):
         """Value a node based on the numbers of its successors and routes
         (according to their types).
         """
-        value = 0
-        if len(successors) == 1:
-            value += 50
-        value += 10 * int(routes[0]) # class0
-        value += 5 * int(routes[1]) # class1
-        value += 3 * int(routes[2]) # class2
-        value += int(routes[3])     # class3
-
-        return value
 
     def _get_location(self, id_):
         """
