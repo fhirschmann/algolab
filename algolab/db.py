@@ -270,8 +270,7 @@ def merge_nodes(rg, node_id, merge_with_ids):
     node_ids = set(merge_with_ids)
     node_ids.add(node_id)
     new_successors -= node_ids
-    node['successors'] = [s for s in node['successors']
-                          if s['id'] not in node_ids.union(new_successors)]
+    remove_neighbors(node['successors'], node_ids.union(new_successors))
 
     # remove backpointers of merged nodes
     for successor_id in new_successors:
@@ -280,8 +279,7 @@ def merge_nodes(rg, node_id, merge_with_ids):
             logging.error("%i's neighbor %i does not exist.",
                           node_id, successor_id)
             continue
-        successor['successors'] = [s for s in successor['successors']
-                                   if s['id'] not in node_ids]
+        remove_neighbors(successor['successors'], node_ids)
         distance_ = int(distance(node['loc'], successor['loc']))
         successor['successors'].append({'id': node_id, 'distance': distance_})
         node['successors'].append({'id': successor_id, 'distance': distance_})
