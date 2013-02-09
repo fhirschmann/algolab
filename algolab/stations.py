@@ -305,7 +305,6 @@ def build_station_collection(base_collection,
                         target_collection.insert(
                             {'_id': node['_id'],
                              'loc': node['loc'],
-                             'successors': node['successors'],
                              'eva': eva})
                 except StationNotFound:
                     log.debug('Station with EVA %s not found in station' +
