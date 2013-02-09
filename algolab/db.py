@@ -92,9 +92,8 @@ def remove_neighbors(node, neighbor_ids):
     :param neighbor_ids: the ids of the neighbors to remove
     :type neighbor_ids: list
     """
-    node["successors"] = filter(
-            lambda s: s["id"] not in neighbor_ids,
-            node["successors"])
+    node["successors"] = [s for s in node['successors']
+                          if s['id'] not in neighbor_ids]
 
 
 def nodes_with_num_neighbors_gt(col, num):
@@ -215,9 +214,9 @@ def copy(source_col, dest_col):
 def recalculate_distances(rg, progress=True):
     """Recalculates the distance between nodes and their neighbors in a given
     railway graph `rg`.
+
     If a node's neighbor is not contained in the railway graph, the edge is
     removed from the node.
-
 
     :param rg: a collection cursor to a railway graph
     :type rg: a :class:`~pymongo.collection.Collection`
@@ -225,8 +224,8 @@ def recalculate_distances(rg, progress=True):
     :type progress: boolean
     """
     count = rg.count()
-        invalid_ids = set()
     for i, node in enumerate(rg.find()):
+        invalid_ids = set()
         for neighbor in node["successors"]:
             neighbor_node = rg.find_one(neighbor["id"])
             if not neighbor_node:
