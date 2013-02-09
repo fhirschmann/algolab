@@ -361,11 +361,11 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
                     break
             else:
                 log.warning('No valid cluster endpoints with a minimum value '
-                            'of %d for node %d (ESA %s) found. '
+                            'of %d for node %d (EVA %s) found. '
                             'Make sure collection "%s" is enriched' %
                 (min_value,
                  station['_id'],
-                 station['esa'],
+                 station['eva'],
                  cluster_collection.name))
                 continue
 
