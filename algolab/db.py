@@ -213,9 +213,11 @@ def copy(source_col, dest_col):
 
 
 def recalculate_distances(rg, progress=True):
-    """
-    Recalculates the distance between nodes in a given
+    """Recalculates the distance between nodes and their neighbors in a given
     railway graph `rg`.
+    If a node's neighbor is not contained in the railway graph, the edge is
+    removed from the node.
+
 
     :param rg: a collection cursor to a railway graph
     :type rg: a :class:`~pymongo.collection.Collection`
@@ -223,11 +225,16 @@ def recalculate_distances(rg, progress=True):
     :type progress: boolean
     """
     count = rg.count()
+        invalid_ids = set()
     for i, node in enumerate(rg.find()):
         for neighbor in node["successors"]:
             neighbor_node = rg.find_one(neighbor["id"])
-            neighbor["distance"] = distance(
-                node["loc"], neighbor_node["loc"])
+            if not neighbor_node:
+                invalid_ids.add(neighbor['id'])
+                continue
+            neighbor["distance"] = distance(node["loc"], neighbor_node["loc"])
+        node['successors'] = [s for s in node['successors']
+                              if s['id'] not in invalid_ids]
         rg.save(node)
 
         if progress:
