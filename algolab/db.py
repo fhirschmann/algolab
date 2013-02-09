@@ -77,7 +77,7 @@ def extend_neighbors(node1, node2):
     :param node2: the node to extend `node1` with
     """
     for n in node2["successors"]:
-        if n["id"] not in [a["id"] for a in node1["successors"]]:
+        if n["id"] not in neighbors(node1):
             node1["successors"].append(n)
 
 
