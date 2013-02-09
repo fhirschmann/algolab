@@ -35,13 +35,13 @@ class Stations(object):
 
         head # number, will be ignored
         ...
-        station_number%id|name|shortcut|location numbers
+        station_number%eva|name|shortcut|location numbers
 
-    `id` is 7 digit number padded with zeroes
+    `eva` is 7 digit number padded with zeroes
     `location numbers` are several numbers, important are number 2 and 3:
                     longitude and latitude
 
-    `id` is referenced within the routes file to describe route endpoints.
+    `eva` is referenced within the routes file to describe route endpoints.
     """
     def __init__(self, station_path, collection, cache=True):
         """
@@ -59,26 +59,26 @@ class Stations(object):
         if cache:
             self._fill_cache()
 
-    def get_node_id(self, id_):
+    def get_node_id(self, eva):
         """
         Return the document id of the nearest railway graph node.
 
-        :param id_: id of station
+        :param eva: eva of station
         """
-        if id_ not in self._id_cache:
-            longitude, latitude = self._get_location(id_)
+        if eva not in self._id_cache:
+            longitude, latitude = self._get_location(eva)
             doc = self._select_node_near(longitude, latitude)
             if doc:
-                self._id_cache[id_] = doc['_id']
+                self._id_cache[eva] = doc['_id']
             else:
                 raise RailwayNodeNotFound('There is no railway graph node'
-                                          'sufficiently near to EVA %s' % id_)
+                                          'sufficiently near to EVA %s' % eva)
 
         try:
-            return self._id_cache[id_]
+            return self._id_cache[eva]
         except KeyError:
             raise RailwayNodeNotFound('There is no railway graph node'
-                                      'sufficiently near to EVA %s' % id_)
+                                      'sufficiently near to EVA %s' % eva)
 
     def _select_node_near(self, longitude, latitude, max_distance=1000):
         """Return the rg node that is nearest to longitude and latitude but
@@ -95,29 +95,28 @@ class Stations(object):
                  # order is important
                  '$maxDistance': meter2rad(max_distance),
                  '$nearSphere': [longitude, latitude]
-             }
-                                      })
+             }})
 
-    def _get_location(self, id_):
+    def _get_location(self, eva):
         """
-        :param id_: id of station
+        :param eva: eva of station
         :returns: longitude and latitude of station
         :rtype: tuple(float, float)
         """
-        entry = self._search_entry(id_)
+        entry = self._search_entry(eva)
         locations = entry[3].split()
         return float(locations[1]), float(locations[2])
 
-    def _search_entry(self, id_):
+    def _search_entry(self, eva):
         """
-        :param id_: station to look for
-        :returns: the entry for the station id_
+        :param eva: station eva to look for
+        :returns: the entry for the station
         """
         self._reset_file()
         for entry in self._station_reader:
-            if self._equal_ids(self._get_id(entry), id_):
+            if self._equal_evas(self._get_eva(entry), eva):
                 return entry
-        raise StationNotFound('Station ID (EVA) %s not found' % id_)
+        raise StationNotFound('Station ID (EVA) %s not found' % eva)
 
     def _reset_file(self):
         self._station_file.seek(0)
@@ -128,26 +127,26 @@ class Stations(object):
         for entry in self._station_reader:
             if len(entry) < 4:  # ignore malformed entries
                 continue
-            id_ = self._get_id(entry)
+            eva = self._get_eva(entry)
             locations = entry[3].split()
             longitude, latitude = float(locations[1]), float(locations[2])
             if longitude == latitude == 0.0: # ignore malformed coordinates
                 continue
             doc = self._select_node_near(longitude, latitude)
             if doc:
-                self._id_cache[id_] = doc['_id']
+                self._id_cache[eva] = doc['_id']
 
     @staticmethod
-    def _get_id(entry):
+    def _get_eva(entry):
         return entry[0].split('%')[-1]
 
     @staticmethod
-    def _pad_id(id_):
-        return '%07d' % int(id_)
+    def _pad_eva(eva):
+        return '%07d' % int(eva)
 
     @staticmethod
-    def _equal_ids(left, right):
-        return left == right or left == Stations._pad_id(right)
+    def _equal_evas(left, right):
+        return left == right or left == Stations._pad_eva(right)
 
 class StationUsage(Stations):
     """Abstraction for the station usage file.
