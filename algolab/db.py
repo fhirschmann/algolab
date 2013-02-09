@@ -248,35 +248,37 @@ def merge_nodes(rg, node_id, merge_with_ids):
     :type rg: a :class:`~pymongo.collection.Collection`
     :param node_id: the id of the node that survives
     :type node_id: integer
-    :param merge_with_ids: list of node ids to merge with
-    :type merge_with_ids: list of integers
+    :param merge_with_ids: iterable of node ids to merge with
+    :type merge_with_ids: iterable of integers
     """
     node = rg.find_one(node_id)
 
-    visit_ids = set()
+    new_successors = set()
 
     for merge_id in merge_with_ids:
         merge = rg.find_one(merge_id)
-        extend_neighbors(node, merge)
+        new_successors.update(neighbors(merge))
+        rg.remove(merge_id)
 
-        for s in merge["successors"]:
-            visit_ids.add(s["id"])
-        rg.remove(merge["_id"])
+    node_ids = set(merge_with_ids)
+    node_ids.add(node_id)
+    new_successors -= node_ids
+    node['successors'] = [s for s in node['successors']
+                          if s['id'] not in node_ids.union(new_successors)]
 
-    remove_neighbors(node, merge_with_ids + [node_id])
-
-    for visit_id in visit_ids:
-        # Visit all of the duplication's neighbors
-        visit = rg.find_one(visit_id)
-        if not visit:
-            logging.error("%i's neighbor %i does not exist.", node_id, visit_id)
+    # remove backpointers of merged nodes
+    for successor_id in new_successors:
+        successor = rg.find_one(successor_id)
+        if not successor:
+            logging.error("%i's neighbor %i does not exist.",
+                          node_id, successor_id)
             continue
-        visit["successors"] = filter(
-                lambda x: x["id"] not in merge_with_ids, visit["successors"])
-        visit["successors"].append({
-            "id": node_id,
-            "distance": int(distance(node["loc"], visit["loc"]))})
-        rg.save(visit)
+        successor['successors'] = [s for s in successor['successors']
+                                   if s['id'] not in node_ids]
+        distance_ = int(distance(node['loc'], successor['loc']))
+        successor['successors'].append({'id': node_id, 'distance': distance_})
+        node['successors'].append({'id': successor_id, 'distance': distance_})
+        rg.save(successor)
 
     rg.save(node)
 
