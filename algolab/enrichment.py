@@ -62,3 +62,14 @@ def rate_node(successors, routes):
     value += routes[3]      # class3
 
     return value
+
+
+def clear_valuation(rg):
+    """Clear the valuation of a railway graph.
+
+    :param rg: collection to remove valuation from
+    :type rg: :class:`~pymongo.collection.Collection`
+    """
+    for node in rg.find_node():
+        del node[VALUE_ATTRIBUTE]
+        rg.save(node)
