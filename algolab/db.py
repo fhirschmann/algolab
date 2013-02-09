@@ -65,6 +65,7 @@ def locs_for(ids_, col):
 
 
 def neighbors(node):
+    """Return the list of successor node ids of node."""
     return [s["id"] for s in node["successors"]]
 
 
