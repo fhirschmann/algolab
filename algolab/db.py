@@ -11,7 +11,7 @@ import sys
 from pymongo import GEO2D
 from bson.code import Code
 
-from algolab.util import distance
+from algolab.util import gcdist
 
 log = logging.getLogger(__name__)
 
@@ -211,8 +211,9 @@ def copy(source_col, dest_col):
                  source_col.name, dest_col.name))
 
 
-def recalculate_distances(rg, progress=True):
-    """Recalculates the distance between nodes and their neighbors in a given
+def recalculate_distances(rg, distance_function=gcdist, progress=True):
+    """
+    Recalculates the distance between nodes in a given
     railway graph `rg`.
 
     If a node's neighbor is not contained in the railway graph, the edge is
@@ -220,6 +221,9 @@ def recalculate_distances(rg, progress=True):
 
     :param rg: a collection cursor to a railway graph
     :type rg: a :class:`~pymongo.collection.Collection`
+    :param distance_function: function to calculate the distance with
+    :type distance_function: a function with signature
+        f((lon1, lat1), (lon2, lat2))
     :param progress: whether or not to show progress
     :type progress: boolean
     """
@@ -231,7 +235,8 @@ def recalculate_distances(rg, progress=True):
             if not neighbor_node:
                 invalid_ids.add(neighbor['id'])
                 continue
-            neighbor["distance"] = distance(node["loc"], neighbor_node["loc"])
+            neighbor["distance"] = distance_function(node["loc"],
+                                                     neighbor_node["loc"])
         node['successors'] = [s for s in node['successors']
                               if s['id'] not in invalid_ids]
         rg.save(node)
@@ -243,7 +248,7 @@ def recalculate_distances(rg, progress=True):
         print(os.linesep)
 
 
-def merge_nodes(rg, node_id, merge_with_ids):
+def merge_nodes(rg, node_id, merge_with_ids, distance_function=gcdist):
     """
     Merges all nodes identified by their id (`merge_with_ids`) with
     a node identified by `node_id`.
@@ -280,7 +285,7 @@ def merge_nodes(rg, node_id, merge_with_ids):
                           node_id, successor_id)
             continue
         remove_neighbors(successor, node_ids)
-        distance_ = int(distance(node['loc'], successor['loc']))
+        distance_ = int(distance_function(node['loc'], successor['loc']))
         successor['successors'].append({'id': node_id, 'distance': distance_})
         node['successors'].append({'id': successor_id, 'distance': distance_})
         rg.save(successor)
@@ -288,7 +293,7 @@ def merge_nodes(rg, node_id, merge_with_ids):
     rg.save(node)
 
 
-def dedup(rg):
+def dedup(rg, distance_function=gcdist):
     """
     Removes all duplicates from a railway graph `rg`.
 
@@ -297,6 +302,9 @@ def dedup(rg):
 
     :param rg: a collection cursor to a railway graph
     :type rg: a :class:`~pymongo.collection.Collection`
+    :param distance_function: function to calculate the distance with
+    :type distance_function: a function with signature
+        f((lon1, lat1), (lon2, lat2))
     """
     num_dups = 0
     map_ = Code("""
@@ -317,7 +325,7 @@ def dedup(rg):
 
         dups = [n["_id"] for n in list(rg.find({"loc": loc}))]
         this = dups.pop()
-        merge_nodes(rg, this, dups)
+        merge_nodes(rg, this, dups, distance_function)
 
     return int(num_dups)
 
@@ -356,7 +364,7 @@ def create_rg_from(node_ids, source_col, dest_col):
     return create_rg(points, dest_col)
 
 
-def create_rg(points, col):
+def create_rg(points, col, distance_function=gcdist):
     """
     Creates a railway graph from a given sequence of `points`
     and writes it to a collection `col`.
@@ -387,13 +395,13 @@ def create_rg(points, col):
         if i > 0:
             neighbors.append({
                 "id": points[i - 1][2],
-                "distance": int(distance(point[:2], points[i - 1][:2]))})
+                "distance": int(distance_function(point[:2], points[i - 1][:2]))})
 
         # node has a successor
         if i < len(points) - 1:
             neighbors.append({
                 "id": points[i + 1][2],
-                "distance": int(distance(point[:2], points[i + 1][:2]))})
+                "distance": int(distance_function(point[:2], points[i + 1][:2]))})
 
         existing_node = col.find_one(point[2])
         if existing_node:
