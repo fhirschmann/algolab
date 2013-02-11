@@ -3,7 +3,6 @@ import unittest2
 from pymongo import Connection
 
 from algolab.segment import ESSegmenter as S
-from algolab.segment import CESSegmenter as S2
 from algolab.data import *
 from algolab.util import *
 from algolab.db import create_rg, empty
@@ -52,13 +51,6 @@ class SegmentTest(unittest2.TestCase):
         self.assertItemsEqual(list(S(self.col0).segment_ids),
                 [[0, 1, 2], [3, 2], [4, 2], [2, 5],
                     [2, 6], [2, 8, 7], [2, 9, 10, 11]])
-
-    def test_switch_segment2_2(self):
-        self.create_rg_for([2, 3, 4, 5, 16, 17])
-        print list(S2(self.col0).segment_ids)
-        self.assertItemsEqual(list(S2(self.col0).segment_ids),
-                              [[0, 1, 2, 3, 16, 17, 11, 10, 9], [2, 4],
-                               [2, 5], [2, 6], [2, 8, 7], [9, 2]])
 
     def test_switch_segment3(self):
         self.create_rg_for([2, 3, 4, 5, 6, 7])
