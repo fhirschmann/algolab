@@ -39,7 +39,7 @@ def simplify(algo, source_col, dest_col, args=[], segmenter=ESSegmenter,
 
     for i, seg in enumerate(s.segments_as_triplets):
         if progress:
-            sys.stdout.write("\rApplying %s to segment %i of %i" % (
+            sys.stdout.write("\rApplying %s to segment %i of %i (estimated)" % (
                 algo.__name__, i, n))
 
         if projection:
