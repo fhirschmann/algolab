@@ -30,62 +30,66 @@ def main(zls, db):
     require = lambda x: require_col(db, x)
 
     if 30 in zls:
-        require("railway_graph")
-        empty(rgs[30])
+        with log_progress("Cleaning"):
+            require("railway_graph")
+            empty(rgs[30])
 
-        copy(rg_, rgs[30])
-        c0 = rgs[30].count()
+            copy(rg_, rgs[30])
+            c0 = rgs[30].count()
 
-        # This is the general cleaning step
-        with log_progress("Removing lonely nodes"):
-            delonelynize(rgs[30])
-            c1 = rgs[30].count()
-            log_change(c1, c0)
+            # This is the general cleaning step
+            with log_progress("Removing lonely nodes"):
+                delonelynize(rgs[30])
+                c1 = rgs[30].count()
+                log_change(c1, c0)
 
-        with log_progress("Removing duplicates"):
-            dedup(rgs[30])
-            c2 = rgs[30].count()
-            log_change(c2, c1)
+            with log_progress("Removing duplicates"):
+                dedup(rgs[30])
+                c2 = rgs[30].count()
+                log_change(c2, c1)
 
-        with log_progress("Recalculating all distances"):
-            recalculate_distances(rgs[30])
+            with log_progress("Recalculating all distances"):
+                recalculate_distances(rgs[30])
 
     if 16 in zls:
-        require(30)
-        empty(rgs[16])
+        with log_progress("Zoom Level 16"):
+            require(30)
+            empty(rgs[16])
 
-        # max tolerance in m
-        epsilon = 1.5
+            # max tolerance in m
+            epsilon = 1.5
 
-        with log_progress("Applying RDP with eps=%f" % epsilon):
-            simplify(rdp, rgs[30], rgs[16], [epsilon])
-            zls.remove(16)
-            log_change(rgs[16].count(), rg_.count())
+            with log_progress("Applying RDP with eps=%f" % epsilon):
+                simplify(rdp, rgs[30], rgs[16], [epsilon])
+                zls.remove(16)
+                log_change(rgs[16].count(), rg_.count())
 
     if 15 in zls:
-        require(16)
-        empty(rgs[15])
+        with log_progress("Zoom Level 15"):
+            require(16)
+            empty(rgs[15])
 
-        # max tolerance in m
-        epsilon = 2.5
+            # max tolerance in m
+            epsilon = 2.5
 
-        with log_progress("Applying RDP with eps=%f" % epsilon):
-            simplify(rdp, rgs[16], rgs[15], [epsilon])
-            log_change(rgs[15].count(), rgs[16].count())
+            with log_progress("Applying RDP with eps=%f" % epsilon):
+                simplify(rdp, rgs[16], rgs[15], [epsilon])
+                log_change(rgs[15].count(), rgs[16].count())
 
     if 14 in zls:
-        require(15)
-        empty(rgs[14])
+        with log_progress("Zoom Level 14"):
+            require(15)
+            empty(rgs[14])
 
-        # max angle in degrees
-        epsilon = 15
+            # max angle in degrees
+            epsilon = 15
 
-        copy(rgs[15], rgs[14])
+            copy(rgs[15], rgs[14])
 
-        with log_progress("Removing parallel tracks from railway_graph_14"):
-            anglecombine(rgs[14], epsilon)
-            c = rgs[14].count()
-            log_change(c, rgs[15].count())
+            with log_progress("Removing parallel tracks from railway_graph_14"):
+                anglecombine(rgs[14], epsilon)
+                c = rgs[14].count()
+                log_change(c, rgs[15].count())
 
 
 if __name__ == "__main__":
