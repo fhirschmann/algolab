@@ -242,7 +242,7 @@ def recalculate_distances(rg, distance_function=gcdist, progress=True):
         rg.save(node)
 
         if progress:
-            sys.stdout.write("\rProgress: %d of %d" % (i, count))
+            sys.stdout.write("\rProgress: %d of %d" % (i / 2, count))
 
     if progress:
         print(os.linesep)
