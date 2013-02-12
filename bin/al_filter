@@ -18,6 +18,7 @@ from algolab.combine import anglecombine
 from algolab.db import empty, dedup, delonelynize, new, copy, recalculate_distances
 from algolab.cmdutil import log_progress, log_change, require_col, defaultparser
 from algolab.simplify import simplify
+from algolab.stations import cluster_stations
 
 
 def main(zls, db):
@@ -91,6 +92,18 @@ def main(zls, db):
                 c = rgs[14].count()
                 log_change(c, rgs[15].count())
 
+    if 12 in zls:
+        require(30)
+        cluster_stations(rgs[30], db['stations'], db['clustered'])
+        log_change(db['clustered'].count(), rgs[30].count())
+
+        # max tolerance in m
+        epsilon = 1.5
+
+        with log_progress("Applying RDP with eps=%f" % epsilon):
+            simplify(rdp, db['clustered'], rgs[12], [epsilon])
+            zls.remove(12)
+            log_change(rgs[12].count(), db['clustered'].count())
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Algorithm Filter Pipeline",
