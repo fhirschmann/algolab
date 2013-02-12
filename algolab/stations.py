@@ -349,28 +349,39 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
         near_nodes = (n for n in station_collection.find(near_query)
                       if n['_id'] != station['_id'])
         if min_value is None:
-            nearest_node = next(near_nodes)
+            try:
+                nearest_node = next(near_nodes)
+                radius = distance(station['loc'], nearest_node['loc']) / 2
+            except StopIteration:
+                log.warning('No valid cluster endpoint for node %d (EVA %s) found.%s',
+                            station['_id'], station['eva'],
+                            '' if max_distance is None
+                            else 'Falling back to maximal distance: %d m')
+                if max_distance is not None:
+                    radius = max_distance
+                else:
+                    continue
         else:
             for node in near_nodes:
                 cluster_node = target_collection.find_one(node['_id'])
                 if cluster_node and cluster_node.get('value', 0) >= min_value:
                     nearest_node = cluster_node
+                    radius = distance(station['loc'], nearest_node['loc']) / 2
                     break
             else:
-                log.warning('No valid cluster endpoints with a minimum value '
-                            'of %d for node %d (EVA %s) found. '
-                            'Make sure collection "%s" is enriched' %
-                (min_value,
-                 station['_id'],
-                 station['eva'],
-                 cluster_collection.name))
+                log.warning('No valid cluster endpoints with a minimum value ' +
+                            'of %d for node %d (EVA %s) found. ' +
+                            'Make sure collection "%s" is enriched',
+                            min_value,
+                            station['_id'],
+                            station['eva'],
+                            cluster_collection.name)
                 continue
 
-        radius = meter2rad(distance(station['loc'], nearest_node['loc']) / 2)
         candidates = target_collection.find({'loc':
                                              { '$within':
                                                { '$centerSphere':
-                                                 [station['loc'], radius]}}})
+                                                 [station['loc'], meter2rad(radius)]}}})
         merge_ids = [c['_id'] for c in candidates if not
                      # don't merge stations
                      station_collection.find_one(c['_id'])]
