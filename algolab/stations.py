@@ -230,48 +230,6 @@ class StationUsage(Stations):
         longitude, latitude = float(entry[2]), float(entry[3])
         return longitude, latitude
 
-def build_rg_from_routes(base_collection, target_collection,
-                         station_path, routes_path):
-    """Construct a simplified rg from routes and station information based on the
-    rg contained in base_collection.
-
-    A node of the base collection is only included if its coordinates correspond
-    to a station that is included in the routes and stations files.
-
-    :param base_collection: mongodb collection containing rg nodes to base new
-                            rg on
-    :param target_collection: mongodb collection to write the simplified rg to
-    :param station_path: path to the stations file
-    :param routes_path: path to the routes file
-
-    """
-    stations = Stations(station_path, base_collection)
-    target_collection.ensure_index([('loc', GEO2D)])
-    with open(routes_path) as routes_file:
-        next(routes_file)
-        reader = csv.reader(routes_file, delimiter=';')
-        for line in reader:
-            start, end, type_ = line[:3] # compensate for trailing space
-            start_node = base_collection.find_one(stations.get_node_id(start.strip()))
-            end_node = base_collection.find_one(stations.get_node_id(end.strip()))
-
-            dist = distance(start_node['loc'], end_node['loc'])
-            successors = {'id': end_node['_id'], 'distance': dist}, \
-                         {'id': start_node['_id'], 'distance': dist}
-            nodes = target_collection.find_one(start_node['_id']), \
-                    target_collection.find_one(end_node['_id'])
-            ids = start_node['_id'], end_node['_id']
-            locs = start_node['loc'], end_node['loc']
-            for node, successor, id_, loc in zip(nodes, successors, ids, locs):
-                if node and successor['id'] not in set(s['id']
-                                                for s in node['successors']):
-                    node['successors'].append(successor)
-                    target_collection.save(node)
-                else:
-                    target_collection.insert({'_id': id_,
-                                              'loc': loc,
-                                              'successors': [successor]
-                                          })
 
 def build_station_collection(base_collection,
                              target_collection,
