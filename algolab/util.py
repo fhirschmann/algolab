@@ -71,6 +71,21 @@ def ll2xy(lon, lat):
 
     return (x, y)
 
+def xy2ll(x, y):
+    """
+    Convert linear coordinates back to longitude and latitude.
+
+    See :func:`ll2xy`.
+
+    :param x: the x coordinate
+    :param y: the y coordinate
+    :returns: longitude and latitude
+    :rtype: (float, float)
+    """
+    lon = math.degrees(x / EARTH_RADIUS)
+    lat = math.degrees(2 * math.atan(math.exp(y / EARTH_RADIUS)) - math.pi / 2)
+    return lon, lat + 51
+
 
 def edist(a, b):
     """
