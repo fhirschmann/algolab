@@ -344,3 +344,4 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
                      # don't merge stations
                      station_collection.find_one(c['_id'])]
         merge_nodes(target_collection, station['_id'], merge_ids)
+    print() # stop with clean newline
