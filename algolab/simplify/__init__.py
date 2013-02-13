@@ -2,7 +2,7 @@ import os
 import sys
 
 from algolab.db import create_rg
-from algolab.util import ll2xy, xy2ll
+from algolab.util import ll2xy
 from algolab.segment import ESSegmenter
 
 from algolab.simplify.rdp import rdp
@@ -43,14 +43,11 @@ def simplify(algo, source_col, dest_col, args=[], segmenter=ESSegmenter,
                 algo.__name__, i, n))
 
         if projection:
-            # it is fair to assume all points in a segment are within
-            # the same utm zone
-            _, _, zone_number, zone_letter = ll2xy(*seg[0][0:2])
-
-            proj = [list(ll2xy(*p[0:2]))[0:2] + [p[2]] for p in seg]
+            proj = [list(ll2xy(*p[0:2])) + [p[2]] for p in seg]
             res = algo(proj, *args)
+            keep_ids = [p[2] for p in res]
 
-            rev_proj = [list(xy2ll(p[0], p[1], zone_number, zone_letter)) + [p[2]] for p in res]
+            rev_proj = [p for p in seg if p[2] in keep_ids]
             create_rg(rev_proj, dest_col)
         else:
             create_rg(algo(seg, *args), dest_col)

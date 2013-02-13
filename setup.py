@@ -11,6 +11,5 @@ setup(name="algolab",
         install_requires=[
             "numpy",
             "scipy",
-            "utm",
         ]
         )
