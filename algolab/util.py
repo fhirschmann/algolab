@@ -62,7 +62,8 @@ def ll2xy(lon, lat):
 
     :param lon: the longitude
     :param lat: the latitude
-    :returns: tuple of (x, y, zone number, zone letter)
+    :returns: x and y
+    :rtype: (float, float)
     """
     lat = lat - 51
 
