@@ -7,6 +7,20 @@ Final Report (Draft)
 This document describes how the complete graphs for all zoom levels
 were constructed and how well our algorithms did.
 
+Foreword
+========
+
+We used a combination of multiple algorithms, namely the Ramer-Douglas-Peucker Algorithm
+(:func:`~algolab.simplify.rdp`), an angle-based Line Combination Algorithm
+(:func:`~algolab.combine.anglecombine`), and a Clustering Algorithm
+(:func:`~algolab.stations.cluster_stations`).
+
+Where appropriate, our algorithms operate on a spherical mercator projections adapted
+to the points being used. Because the global mercator projection was too inaccurate
+(distance between Darmstadt and Frankfurt being 41km instead of 27km), we chose to use
+a transverse mercator projection with a meridian lying near the center of the region
+of interest (51°N).
+
 Step 1: OSM Import
 ==================
 
@@ -121,7 +135,9 @@ and the result thereof.
 +============+==============================+==================+====================+
 |            |                              | 870136           | 7710               |
 +------------+------------------------------+------------------+--------------------+
-| 30         | dedup, delonelynize          | 870102           | 7710               |
+| 30         | dedup, delonelynize          | 870102           |                    |
 +------------+------------------------------+------------------+--------------------+
-| 16         | rdp(ε=1.5m)                  |                  | 3896               |
+| 16         | rdp(ε=1.5m)                  | 502150           |                    |
++------------+------------------------------+------------------+--------------------+
+| 15         | rdp(ε=2.5m)                  | 416559           |                    |
 +------------+------------------------------+------------------+--------------------+
