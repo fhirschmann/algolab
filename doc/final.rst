@@ -96,7 +96,7 @@ Zoom level 16
 .. image:: img/step-16.png
 
 This step applies :func:`~algolab.simplify.rdp` with
-ε=1.5m to and can be executed via::
+ε=1.5m and can be executed via::
 
     al_filter 16
 
