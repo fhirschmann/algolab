@@ -20,6 +20,7 @@ mentioned sections as well as documentation on how to set up our project.
    comb
    seg
    simp
+   cluster
    api
    data
    final
