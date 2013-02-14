@@ -1,4 +1,4 @@
-.PHONY: tests help hooks coverage full-coverage dev latex-doc doc static-analysis abgabe
+.PHONY: tests help hooks coverage full-coverage dev latex-doc doc doc-clean doc-latex static-analysis abgabe
 
 help:
 	@echo "Please use \`make <target>', targets:"
@@ -26,14 +26,19 @@ full-coverage: .coverage
 	coverage run -m unittest2 discover -p '*.py' -s algolab/tests -t .
 
 doc:
-	PYTHONPATH=${PYTHONPATH}:`pwd` make -C doc html
+	PATH=${PATH}:`pwd`/bin PYTHONPATH=${PYTHONPATH}:`pwd` make -C doc html
 
 doc-upload:
 	rsync -avz doc/_build/html/* 0x0b.de:/var/www/algolab.0x0b.de/htdocs
 
-latex-doc:
-	PYTHONPATH=${PYTHONPATH}:`pwd` make -C docs latex
-	make -C docs/_build/latex
+doc-clean:
+	make -C doc clean
+
+doc-latex:
+	PATH=${PATH}:`pwd`/bin PYTHONPATH=${PYTHONPATH}:`pwd` make -C doc latex
+	make -C doc/_build/latex
+
+latex-doc: doc-latex
 
 clean:
 	find . -type f -name '*.pyc' -delete
