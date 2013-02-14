@@ -55,17 +55,6 @@ def log_change(after, before, log_function=log.info):
                  "Change: -%i (-%.3f%%)" % (after, before, before - after, change))
 
 
-@contextmanager
-def timing(name):
-    """
-    Context manager to measure execution time.
-    """
-    start = datetime.now()
-    yield
-    end = datetime.now()
-    print('Executing %s took %.2f seconds' % (name, (end - start).total_seconds()))
-
-
 def defaultparser():
     """
     Creates and returns a default command line parser with `description` and
