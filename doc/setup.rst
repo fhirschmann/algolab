@@ -29,8 +29,8 @@ Compiling the documentation
 If you need to recompile the documentation, you'll need
 [#f10]_ sphinx. Again, on debian-based distributions, it is::
 
-    apt-get install python-sphinx python-pip
-    pip install sphinxcontrib-programoutput
+    apt-get install python-pip python-matplotlib
+    pip install sphinx sphinxcontrib-programoutput
 
 You can then compile the documentation by executing::
 
