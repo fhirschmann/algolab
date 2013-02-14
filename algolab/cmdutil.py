@@ -9,19 +9,23 @@ log = logging.getLogger(__name__)
 
 
 def require_col(db, zls):
-    if type(zls) == int:
+    """
+    Make sure all collections `zls` are present in `db` and abort the program if
+    not.
+
+    :param db: connection that should contain required collections
+    :type db: :class:`pymongo.Connection`
+    :param zls: required collections
+    :type zls: int, str or sequence of int or str
+    """
+    if isinstance(zls, (int, str)):
         zls = [zls]
 
-    if type(zls) == str:
-        zls = [zls]
-
-    for zl in zls:
-        if type(zl) == int:
-            if db["railway_graph_" + str(zl)].count() == 0:
-                die("This step requires railway_graph_%i to be present." % zl)
-        else:
-            if db[zl].count == 0:
-                die("This step requires %s to be present." % zl)
+    zls = [('railway_graph_%d' % zl) if isinstance(zl, int) else zl for zl in zls]
+    empty_collections = [zl for zl in zls if db[zl].count() == 0]
+    if empty_collections:
+        die('This step requires the collections %s to be present'
+            % ', '.join(empty_collections))
 
 
 def die(msg):
