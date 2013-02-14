@@ -112,6 +112,11 @@ Zoom level 13
 Zoom level 12
 -------------
 
+This step applies :func:`~algolab.simplify.rdp` with ε=1.5m after
+:func:`~algolab.stations.cluster_stations` to and can be executed via::
+
+    al_filter 12
+
 Zoom level 11
 -------------
 
