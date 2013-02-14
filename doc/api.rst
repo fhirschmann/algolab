@@ -14,6 +14,12 @@ Database Utilities
 .. automodule:: algolab.db
    :members:
 
+Station Utilities
+-----------------
+
+.. automodule:: algolab.stations
+   :members:
+
 Segmentation
 ------------
 
@@ -32,6 +38,13 @@ Combination
 -----------
 
 .. automodule:: algolab.combine
+   :noindex:
+   :members:
+
+Railway Graph Enrichment
+------------------------
+
+.. automodule:: algolab.enrichment
    :noindex:
    :members:
 
