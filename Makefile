@@ -26,7 +26,7 @@ full-coverage: .coverage
 	coverage run -m unittest2 discover -p '*.py' -s algolab/tests -t .
 
 doc:
-	PYTHONPATH=${PYTHONPATH}:`pwd` make -C docs html
+	PYTHONPATH=${PYTHONPATH}:`pwd` make -C doc html
 
 doc-upload:
 	rsync -avz doc/_build/html/* 0x0b.de:/var/www/algolab.0x0b.de/htdocs
