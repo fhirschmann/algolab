@@ -3,6 +3,7 @@
 Database-related utilities.
 
 .. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
+.. moduleauthor:: Michael Markert <markert.michael@googlemail.com>
 """
 import logging
 import os

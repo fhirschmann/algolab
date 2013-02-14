@@ -3,6 +3,7 @@
 Miscellaneous utilities.
 
 .. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
+.. moduleauthor:: Michael Markert <markert.michael@googlemail.com>
 """
 
 from __future__ import division, print_function
