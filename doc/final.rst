@@ -16,7 +16,7 @@ We used a combination of multiple algorithms, namely the Ramer-Douglas-Peucker A
 (:func:`~algolab.stations.cluster_stations`).
 
 Where appropriate, our algorithms operate on a spherical mercator projections adapted
-to the points being used. Because the global mercator projection was too inaccurate
+to the region of interest. Because the global mercator projection was too inaccurate
 (distance between Darmstadt and Frankfurt being 41km instead of 27km), we chose to use
 a transverse mercator projection with a meridian lying near the center of the region
 of interest (51°N).
@@ -41,7 +41,7 @@ The main entry point for producing generalized railway graphs is
 
 The zoom levels indicate what collection will be produced. For example,
 running `al_filter 14` will produce the collection `railway_graph_14`.
-Multiple zoom levels can be speciefied (e.g. `al_filter 30 16 15 15`), but
+Multiple zoom levels can be specified (e.g. `al_filter 30 16 15 14`), but
 keep in mind that a zoom level usually depends on its predecessor level.
 
 In the following sections, the images on the left-hand side represent
@@ -51,7 +51,7 @@ Germany.
 Zoom level 30
 -------------
 
-This is no zoom level that is used by google maps. Instead, this
+This is no zoom level that is used by Google maps. Instead, this
 is our general cleaning step that does the following:
 
 - Remove nodes that have no neighbors
