@@ -21,7 +21,7 @@ if __name__ == "__main__":
                         help="path to routes file (sgrv.csv)")
     parser.add_argument("--base-collection", type=str, default="railway_graph",
                         dest="base_collection", help="base collection")
-    parser.add_argument("--target-collection", type=str, default="station_graph",
+    parser.add_argument("--target-collection", type=str, default="stations",
                         dest="target_collection", help="target collection")
     args = parser.parse_args()
 
