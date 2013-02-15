@@ -95,7 +95,7 @@ def main(zls, db):
     if 12 in zls:
         with log_progress("Zoom Level 12"):
             require(30)
-            empty(rgs[30])
+            empty(rgs[12])
 
             cluster_stations(rgs[30], db['stations'], db['clustered'])
             log_change(db['clustered'].count(), rgs[30].count())
