@@ -283,8 +283,11 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
 
     Stations will never be clustered to another station.
 
-    The clustered collection will be copied to the target collection emptying it
+    The `cluster_collection` will be copied to the target collection emptying it
     by that.
+
+    `cluster_collection` should contain all nodes present in the
+    `station_collection`.
 
     :param cluster_collection: railway graph collection to cluster
     :param station_collection: collection containing stations
@@ -301,6 +304,8 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
     for i, station in enumerate(station_collection.find(), 1):
         print('\rClustering Station %d of %d (%.2f%%)' %
               (i, stations, i / stations * 100), end='')
+        if not cluster_collection.find(station['_id']):
+            log.error('Railway graph does not contain ID %s', station['_id'])
         near_query = {'loc': {'$nearSphere': station['loc']}}
         if max_distance is not None:
             near_query['loc']['$maxDistance'] = meter2rad(max_distance)
