@@ -304,8 +304,10 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
     for i, station in enumerate(station_collection.find(), 1):
         print('\rClustering Station %d of %d (%.2f%%)' %
               (i, stations, i / stations * 100), end='')
-        if not cluster_collection.find(station['_id']):
-            log.error('Railway graph does not contain ID %s', station['_id'])
+        if not cluster_collection.find_one(station['_id']):
+            log.error('Railway graph does not contain ID %s, will ignore it',
+                      station['_id'])
+            continue
         near_query = {'loc': {'$nearSphere': station['loc']}}
         if max_distance is not None:
             near_query['loc']['$maxDistance'] = meter2rad(max_distance)
