@@ -5,6 +5,7 @@ Database-related utilities.
 .. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
 .. moduleauthor:: Michael Markert <markert.michael@googlemail.com>
 """
+from __future__ import print_function, division
 import logging
 import os
 import sys
@@ -243,10 +244,11 @@ def recalculate_distances(rg, distance_function=gcdist, progress=True):
         rg.save(node)
 
         if progress:
-            sys.stdout.write("\rProgress: %d of %d" % (i / 2, count))
+            print("\rProgress: %d of %d (%.2f%%)" %
+                  (i / 2, count, ((i / 2) / count) * 100), end="")
 
     if progress:
-        print(os.linesep)
+        print()
 
 
 def merge_nodes(rg, node_id, merge_with_ids, distance_function=gcdist):

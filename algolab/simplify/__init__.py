@@ -1,5 +1,5 @@
+from __future__ import print_function, division
 import os
-import sys
 
 from algolab.db import create_rg
 from algolab.util import ll2xy
@@ -39,8 +39,8 @@ def simplify(algo, source_col, dest_col, args=[], segmenter=ESSegmenter,
 
     for i, seg in enumerate(s.segments_as_triplets):
         if progress:
-            sys.stdout.write("\rApplying %s to segment %i of %i (estimated)" % (
-                algo.__name__, i, n))
+            print("\rApplying %s to segment %i of %i (estimated) (%.2f%%)" %
+                  (algo.__name__, i, n, (i / n) * 100), end="")
 
         if projection:
             proj = [list(ll2xy(*p[0:2])) + [p[2]] for p in seg]
@@ -53,4 +53,4 @@ def simplify(algo, source_col, dest_col, args=[], segmenter=ESSegmenter,
             create_rg(algo(seg, *args), dest_col)
 
     if progress:
-        print(os.linesep)
+        print()

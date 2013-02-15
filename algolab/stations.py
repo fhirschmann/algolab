@@ -250,9 +250,13 @@ def build_station_collection(base_collection,
     if filter is None:
         filter = lambda eva, lon, lat: True
     with open(routes_path) as routes_file:
+        size = sum(1 for line in routes_file) - 1
+    with open(routes_path) as routes_file:
         next(routes_file)
         reader = csv.reader(routes_file, delimiter=';')
-        for line in reader:
+        for i, line in enumerate(reader, 1):
+            print ('\rProcessing route %d of %d (%.2f%%)' %
+                   (i, size, (i / size) * 100), end='')
             evas = [x.strip() for x in line[:2]]
             for eva in evas:
                 try:
