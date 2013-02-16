@@ -26,44 +26,45 @@ def main(zls, db):
     rg_ = db["railway_graph"]
 
     # Collections for zoom level 8 - 16
-    rgs = {i: db["railway_graph_%i" % i] for i in range(8, 17) + [30]}
+    rgs = {i: db["railway_graph_%i" % i] for i in range(8, 18)}
 
     require = lambda x: require_col(db, x)
 
-    if 30 in zls:
+    if 17 in zls:
         with log_progress("Cleaning"):
             require("railway_graph")
-            empty(rgs[30])
+            empty(rgs[17])
 
-            copy(rg_, rgs[30])
-            c0 = rgs[30].count()
+            copy(rg_, rgs[17])
+            c0 = rgs[17].count()
 
             # This is the general cleaning step
             with log_progress("Removing lonely nodes"):
-                delonelynize(rgs[30])
-                c1 = rgs[30].count()
+                delonelynize(rgs[17])
+                c1 = rgs[17].count()
                 log_change(c1, c0)
 
             with log_progress("Removing duplicates"):
-                dedup(rgs[30])
-                c2 = rgs[30].count()
+                dedup(rgs[17])
+                c2 = rgs[17].count()
                 log_change(c2, c1)
 
             with log_progress("Recalculating all distances"):
-                recalculate_distances(rgs[30])
+                recalculate_distances(rgs[17])
 
-    if 16 in zls:
-        with log_progress("Zoom Level 16"):
-            require(30)
-            empty(rgs[16])
+    for zli, zl in enumerate([16, 15, 14, 13], start=1):
+        if zl in zls:
+            with log_progress("Zoom Level %s" % zl):
+                require(zl + 1)
+                empty(rgs[zl])
 
-            # max tolerance in m
-            epsilon = 20
+                # max tolerance in m
+                epsilon = zli * 1.5
 
-            with log_progress("Applying RDP with eps=%f" % epsilon):
-                simplify(rdp, rgs[30], rgs[16], [epsilon])
-                zls.remove(16)
-                log_change(rgs[16].count(), rg_.count())
+                with log_progress("Applying RDP with eps=%f" % epsilon):
+                    simplify(rdp, rgs[zl + 1], rgs[zl], [epsilon])
+                    zls.remove(zl)
+                    log_change(rgs[zl].count(), rg_.count())
 
     if 15 in zls:
         with log_progress("Zoom Level 15"):
@@ -94,11 +95,11 @@ def main(zls, db):
 
     if 12 in zls:
         with log_progress("Zoom Level 12"):
-            require(30)
+            require(17)
             empty(rgs[12])
 
             cluster_stations(rgs[30], db['stations'], db['clustered'])
-            log_change(db['clustered'].count(), rgs[30].count())
+            log_change(db['clustered'].count(), rgs[17].count())
 
             # max tolerance in m
             epsilon = 1.5
