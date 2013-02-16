@@ -128,6 +128,8 @@ This step applies :func:`~algolab.simplify.rdp` with ε=1.5m after
 Zoom level 11
 -------------
 
+.. image:: img/ffm/rg-zl-11.png
+
 Zoom level 10
 -------------
 
