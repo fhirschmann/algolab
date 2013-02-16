@@ -83,12 +83,14 @@ def main(zls, db):
 
     if 11 in zls:
         with log_progress("Removing parallel tracks"):
+            empty(db["parallel"])
             copy(rgs[12], db["parallel"])
             anglecombine(db["parallel"], 20)
             log_change(db["parallel"].count(), rgs[12].count())
 
         epsilon = 6
         with log_progress("Applying RDP with eps=%f" % epsilon):
+            empty(rgs[11])
             simplify(rdp, db["parallel"], rgs[11], [epsilon])
             log_change(rgs[11].count(), db["parallel"].count())
 
