@@ -92,6 +92,19 @@ def main(zls, db):
             simplify(rdp, db["parallel"], rgs[11], [epsilon])
             log_change(rgs[11].count(), db["parallel"].count())
 
+    for zli, zl in enumerate([10, 9, 8], start=1):
+        if zl in zls:
+            with log_progress("Zoom Level %s" % zl):
+                require(zl + 1)
+                empty(rgs[zl])
+
+                # max tolerance in m
+                epsilon = zli * 10
+
+                with log_progress("Applying RDP with eps=%f" % epsilon):
+                    simplify(rdp, rgs[zl + 1], rgs[zl], [epsilon])
+                    log_change(rgs[zl].count(), rgs[zl + 1].count())
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Algorithm Filter Pipeline",
                                      parents=[defaultparser()])
