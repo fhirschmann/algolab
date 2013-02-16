@@ -63,14 +63,7 @@ def main(zls, db):
 
                 with log_progress("Applying RDP with eps=%f" % epsilon):
                     simplify(rdp, rgs[zl + 1], rgs[zl], [epsilon])
-                    zls.remove(zl)
                     log_change(rgs[zl].count(), rgs[zl + 1].count())
-
-    # Find a place to put this... if it works
-    #with log_progress("Removing parallel tracks from railway_graph_14"):
-    #    anglecombine(rgs[14], epsilon)
-    #    c = rgs[14].count()
-    #    log_change(c, rgs[15].count())
 
     if 12 in zls:
         with log_progress("Zoom Level 12"):
@@ -87,6 +80,17 @@ def main(zls, db):
                 simplify(rdp, db['clustered'], rgs[12], [epsilon])
                 zls.remove(12)
                 log_change(rgs[12].count(), db['clustered'].count())
+
+    if 11 in zls:
+        with log_progress("Removing parallel tracks"):
+            copy(rgs[12], db["parallel"])
+            anglecombine(db["parallel"], 20)
+            log_change(db["parallel"].count(), rgs[12].count())
+
+        epsilon = 6
+        with log_progress("Applying RDP with eps=%f" % epsilon):
+            simplify(rdp, db["parallel"], rgs[11], [epsilon])
+            log_change(rgs[11].count(), db["parallel"].count())
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Algorithm Filter Pipeline",
