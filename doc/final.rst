@@ -133,11 +133,17 @@ Zoom level 11
 Zoom level 10
 -------------
 
+.. image:: img/ffm/rg-zl-10.png
+
 Zoom level 9
 ------------
 
+.. image:: img/ffm/rg-zl-9.png
+
 Zoom level 8
 ------------
+
+.. image:: img/ffm/rg-zl-8.png
 
 Node Quantity Results
 ---------------------
