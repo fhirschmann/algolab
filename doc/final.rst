@@ -87,13 +87,13 @@ This yields an output similar to this::
 Initial Situation
 -----------------
 
-.. image:: img/step-initial.png
+.. image:: img/ffm/rg-zl-17.png
 
 
 Zoom level 16
 -------------
 
-.. image:: img/step-16.png
+.. image:: img/ffm/rg-zl-16.png
 
 This step applies :func:`~algolab.simplify.rdp` with
 ε=1.5m and can be executed via::
@@ -103,14 +103,22 @@ This step applies :func:`~algolab.simplify.rdp` with
 Zoom level 15
 -------------
 
+.. image:: img/ffm/rg-zl-15.png
+
 Zoom level 14
 -------------
+
+.. image:: img/ffm/rg-zl-14.png
 
 Zoom level 13
 -------------
 
+.. image:: img/ffm/rg-zl-13.png
+
 Zoom level 12
 -------------
+
+.. image:: img/ffm/rg-zl-12.png
 
 This step applies :func:`~algolab.simplify.rdp` with ε=1.5m after
 :func:`~algolab.stations.cluster_stations` to and can be executed via::
