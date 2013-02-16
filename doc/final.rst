@@ -48,7 +48,7 @@ In the following sections, the images on the left-hand side represent
 the Frankfurt Main Station and the image on the right-hand side represent
 Germany.
 
-Zoom level 30
+Zoom level 17
 -------------
 
 This is no zoom level that is used by Google maps. Instead, this
@@ -62,7 +62,7 @@ is our general cleaning step that does the following:
 
 This step can be executed by running::
 
-    al_filter 30
+    al_filter 17
 
 This yields an output similar to this::
 
@@ -140,7 +140,7 @@ and the result thereof.
 +============+==================================+==================+====================+
 |            |                                  |           870136 |               7710 |
 +------------+----------------------------------+------------------+--------------------+
-|         30 | dedup, delonelynize              |           870102 |                    |
+|         17 | dedup, delonelynize              |           870102 |                    |
 +------------+----------------------------------+------------------+--------------------+
 |         16 | rdp(ε=1.5m)                      |           502150 |                    |
 +------------+----------------------------------+------------------+--------------------+
