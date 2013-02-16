@@ -305,6 +305,8 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
     copy(cluster_collection, target_collection)
     target_collection.ensure_index([('loc', GEO2D)])
     stations = station_collection.count()
+    if stations == 0:
+        raise ValueError("Station collection is empty!")
     for i, station in enumerate(station_collection.find(), 1):
         print('\rClustering Station %d of %d (%.2f%%)' %
               (i, stations, i / stations * 100), end='')
