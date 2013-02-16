@@ -64,7 +64,7 @@ def main(zls, db):
                 with log_progress("Applying RDP with eps=%f" % epsilon):
                     simplify(rdp, rgs[zl + 1], rgs[zl], [epsilon])
                     zls.remove(zl)
-                    log_change(rgs[zl].count(), rg_.count())
+                    log_change(rgs[zl].count(), rgs[zl + 1].count())
 
     if 15 in zls:
         with log_progress("Zoom Level 15"):
