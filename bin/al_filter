@@ -81,7 +81,7 @@ def main(zls, db):
             log_change(db['clustered'].count(), rgs[17].count())
 
             # max tolerance in m
-            epsilon = 1.5
+            epsilon = 10
 
             with log_progress("Applying RDP with eps=%f" % epsilon):
                 simplify(rdp, db['clustered'], rgs[12], [epsilon])
@@ -96,7 +96,6 @@ if __name__ == "__main__":
     parser.add_argument("--no-progress", action="store_true", dest="np", default=False,
             help="don't print the progress")
     args = parser.parse_args()
-    print args.loglevel
 
     db = Connection(args.host, args.port)[args.db]
 
