@@ -27,9 +27,9 @@ def main(zls, db):
 
     # Collections for zoom level 8 - 16
     rgs = {i: db["railway_graph_%i" % i] for i in range(8, 18)}
-
     require = lambda x: require_col(db, x)
 
+    ## Zoom Level 17 (Cleaning Step)
     if 17 in zls:
         with log_progress("Cleaning"):
             require("railway_graph")
@@ -52,49 +52,60 @@ def main(zls, db):
             with log_progress("Recalculating all distances"):
                 recalculate_distances(rgs[17])
 
-    for zli, zl in enumerate([16, 15, 14, 13], start=1):
+    ## Zoom Level 16-12 (RDP)
+    for zli, zl in enumerate([16, 15, 14, 13, 12], start=1):
         if zl in zls:
             with log_progress("Zoom Level %s" % zl):
                 require(zl + 1)
                 empty(rgs[zl])
 
                 # max tolerance in m
-                epsilon = zli * 1.5
+                epsilon = zli * 1.3
 
                 with log_progress("Applying RDP with eps=%f" % epsilon):
                     simplify(rdp, rgs[zl + 1], rgs[zl], [epsilon])
                     log_change(rgs[zl].count(), rgs[zl + 1].count())
 
-    if 12 in zls:
-        with log_progress("Zoom Level 12"):
-            require(17)
-            empty(rgs[12])
+    ## Zoom Level 11 (Clustering + RDP)
+    if 11 in zls:
+        with log_progress("Zoom Level 11"):
+            require(12)
+            empty(rgs[11])
 
-            cluster_stations(rgs[17], db['stations'], db['clustered'])
-            log_change(db['clustered'].count(), rgs[17].count())
+            cluster_stations(rgs[12], db['stations'], db['clustered'])
+            log_change(db['clustered'].count(), rgs[12].count())
 
             # max tolerance in m
-            epsilon = 10
+            epsilon = 6
 
             with log_progress("Applying RDP with eps=%f" % epsilon):
-                simplify(rdp, db['clustered'], rgs[12], [epsilon])
-                zls.remove(12)
-                log_change(rgs[12].count(), db['clustered'].count())
+                simplify(rdp, db['clustered'], rgs[11], [epsilon])
+                zls.remove(11)
+                log_change(rgs[11].count(), db['clustered'].count())
 
-    if 11 in zls:
-        with log_progress("Removing parallel tracks"):
+    ## Zoom Level 10 (Anglecombine + RDP)
+    if 10 in zls:
+        with log_progress("Zoom Level 10"):
+            require(11)
             empty(db["parallel"])
-            copy(rgs[12], db["parallel"])
-            anglecombine(db["parallel"], 20)
-            log_change(db["parallel"].count(), rgs[12].count())
+            empty(rgs[10])
 
-        epsilon = 6
-        with log_progress("Applying RDP with eps=%f" % epsilon):
-            empty(rgs[11])
-            simplify(rdp, db["parallel"], rgs[11], [epsilon])
-            log_change(rgs[11].count(), db["parallel"].count())
+            # max tolerance in degrees
+            epsilon = 10
 
-    for zli, zl in enumerate([10, 9, 8], start=1):
+            with log_progress("Applying Anglecombine with eps=%f" % epsilon):
+                copy(rgs[11], db["parallel"])
+
+                anglecombine(db["parallel"], epsilon)
+                log_change(db["parallel"].count(), rgs[11].count())
+
+            epsilon = 6
+            with log_progress("Applying RDP with eps=%f" % epsilon):
+                simplify(rdp, db["parallel"], rgs[10], [epsilon])
+                log_change(rgs[10].count(), db["parallel"].count())
+
+    ## Zoom Level 9-8 (RDP)
+    for zli, zl in enumerate([9, 8], start=1):
         if zl in zls:
             with log_progress("Zoom Level %s" % zl):
                 require(zl + 1)
