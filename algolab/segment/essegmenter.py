@@ -140,14 +140,15 @@ class StationESSegmenter(ESSegmenter):
     @property
     def segments(self):
         for seg in super(StationESSegmenter, self).segments:
-            if set([n["_id"] for n in seg]).intersection(self.station_ids):
-                seg2 = []
-                for n in seg:
-                    seg2.append(n)
-                    if n["_id"] in self.station_ids and len(seg2) > 1:
-                        yield seg2
+
+            seg2 = []
+
+            for node in seg:
+                seg2.append(node)
+
+                if node["_id"] in self.station_ids:
+                    if len(seg2) > 1:
+                        yield seg
                         seg2 = []
-                if len(seg2) > 1:
-                    yield seg2
-            else:
-                yield seg
+            if len(seg2) > 1:
+                yield seg2
