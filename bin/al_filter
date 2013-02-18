@@ -3,6 +3,7 @@ import sys
 import os
 import logging
 from contextlib import contextmanager
+from functools import partial
 from decimal import Decimal, getcontext
 getcontext().prec = 80
 
@@ -17,17 +18,26 @@ from algolab.simplify import anglereduce, rdp
 from algolab.combine import anglecombine
 from algolab.db import empty, dedup, delonelynize, new, copy, recalculate_distances
 from algolab.cmdutil import log_progress, log_change, require_col, defaultparser
-from algolab.simplify import simplify
+from algolab.segment import StationESSegmenter
+from algolab.simplify import simplify as simplify2
 from algolab.stations import cluster_stations
 
 
 def main(zls, db):
+    require = lambda x: require_col(db, x)
+
     # The source collection
     rg_ = db["railway_graph"]
 
+    # The station collection
+    stations = db["stations"]
+
+    # the segmenter
+    segmenter = partial(StationESSegmenter, stations)
+    simplify = partial(simplify2, segmenter=segmenter)
+
     # Collections for zoom level 8 - 16
     rgs = {i: db["railway_graph_%i" % i] for i in range(8, 18)}
-    require = lambda x: require_col(db, x)
 
     ## Zoom Level 17 (Cleaning Step)
     if 17 in zls:
@@ -72,7 +82,7 @@ def main(zls, db):
             require(12)
             empty(rgs[11])
 
-            cluster_stations(rgs[12], db['stations'], db['clustered'])
+            cluster_stations(rgs[12], stations, db['clustered'])
             log_change(db['clustered'].count(), rgs[12].count())
 
             # max tolerance in m

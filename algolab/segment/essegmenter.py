@@ -126,3 +126,28 @@ class ESSegmenter(Segmenter):
                 segment = self._walk_from(neighbor, [node])
                 self._visit(segment)
                 yield segment
+
+
+class StationESSegmenter(ESSegmenter):
+    """
+    Just like :class:`~algolab.segment.ESSegmenter`, except that segments
+    will be divided into sub-segments if they contain stations.
+    """
+    def __init__(self, station_collection, *args, **kwargs):
+        self.station_ids = set([s["_id"] for s in station_collection.find()])
+        super(StationESSegmenter, self).__init__(*args, **kwargs)
+
+    @property
+    def segments(self):
+        for seg in super(StationESSegmenter, self).segments:
+            if set([n["_id"] for n in seg]).intersection(self.station_ids):
+                seg2 = []
+                for n in seg:
+                    seg2.append(n)
+                    if n["_id"] in self.station_ids and len(seg2) > 1:
+                        yield seg2
+                        seg2 = []
+                if len(seg2) > 1:
+                    yield seg2
+            else:
+                yield seg
