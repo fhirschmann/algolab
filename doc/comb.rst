@@ -26,8 +26,11 @@ The following images illustrate the initial problem:
 
 .. plot::
 
-    from algolab.plot import plot_datasets
-    plot_datasets([12, 13, 14, 15], "Initial Situation")
+    from algolab.plot import plot_rg
+    from algolab.test import rg_from_datasets
+    from algolab.combine import anglecombine
+    rg = rg_from_datasets([12, 13, 14, 15])
+    plot_rg(rg, "Initial Situation")
 
 Applying the algorithm with ε = 30 gives:
 
