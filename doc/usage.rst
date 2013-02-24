@@ -38,3 +38,11 @@ Command List
 
   .. program-output:: al_rm --help
 
+
+- bin/al_mk_sg
+
+  .. program-output:: al_mk_sg --help
+
+- bin/al_crop_stations
+
+  .. program-output:: al_crop_stations --help
