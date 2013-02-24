@@ -18,6 +18,9 @@ from algolab.util import distance, meter2rad
 
 log = logging.getLogger(__name__)
 
+
+PARAMETER_DISTANCE = 300
+
 class StationNotFound(Exception):
     """Indicates that a station is not contained in a stations or station usage
     file.
@@ -235,15 +238,20 @@ class StationUsage(Stations):
 
 def build_station_collection(base_collection,
                              target_collection,
+                             perimeter_collection,
                              station_path, routes_path,
                              filter=None):
     """
     Build a station collection from a station file but only include stations
     that are as mentioned endpoints in the routes file.
 
+    Additionally build a perimenter collection of nodes that are near the
+    station nodes.
+
     :param base_collection: mongodb collection containing rg nodes to tune
                             coordinates to
     :param target_collection: mongodb collection to write the stations to
+    :param perimeter_collection: mongodb collection to write the perimeter nodes to
     :param station_path: path to the stations file
     :param routes_path: path to the routes file
     :param filter: filtering function to include a node in the collection
@@ -271,6 +279,16 @@ def build_station_collection(base_collection,
                             {'_id': node['_id'],
                              'loc': node['loc'],
                              'eva': eva})
+                        for pnode in base_collection.find(
+                                {'loc':
+                                 {'$nearSphere':
+                                  meter2rad(PARAMETER_DISTANCE)}}):
+                            perimeter_collection.insert({
+                                '_id' : pnode['_id'],
+                                'loc': pnode['loc'],
+                                'p_id' : node['_id'],
+                                'p_eva' : eva
+                            })
                 except StationNotFound:
                     log.debug('Station with EVA %s not found in station' +
                               'file %s', eva, station_path)
@@ -280,13 +298,18 @@ def build_station_collection(base_collection,
                               eva, base_collection.name)
 
 def build_station_collection_from_stations(base_collection, target_collection,
+                                           perimeter_collection,
                                            station_path, filter=None):
     """
     Build a station collection from a station file.
 
+    Additionally build a perimenter collection of nodes that are near the
+    station nodes.
+
     :param base_collection: mongodb collection containing rg nodes to tune
                             coordinates to
     :param target_collection: mongodb collection to write the stations to
+    :param perimeter_collection: mongodb collection to write the perimeter nodes to
     :param station_path: path to the stations file
     :param filter: filtering function to include a node in the collection
     :type filter: None or function (eva, longitude, latitude) -> bool
@@ -308,6 +331,16 @@ def build_station_collection_from_stations(base_collection, target_collection,
                     {'_id': node['_id'],
                      'loc': node['loc'],
                      'eva': eva})
+                pnodes = base_collection.find(
+                    {'loc': {'$nearSphere': node['loc'],
+                             '$maxDistance': meter2rad(PARAMETER_DISTANCE)}})
+                for pnode in pnodes:
+                    perimeter_collection.insert({
+                        '_id' : pnode['_id'],
+                        'loc': pnode['loc'],
+                        'p_id' : node['_id'],
+                        'p_eva' : eva
+                    })
         except RailwayNodeNotFound:
             log.debug('Station with EVA %s has no appropriate' +
                       'railway node in collection %s',

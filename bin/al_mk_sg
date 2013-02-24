@@ -20,19 +20,24 @@ if __name__ == "__main__":
                         help="path to station file (Stations.txt)")
     parser.add_argument("-r", "--routes-file", type=str, default="data/sgrv.csv",
                         help="path to routes file (sgrv.csv)")
-    parser.add_argument("--base-collection", type=str, default="railway_graph",
-                        dest="base_collection", help="base collection")
-    parser.add_argument("--target-collection", type=str, default="stations",
-                        dest="target_collection", help="target collection")
+    parser.add_argument("--base-collection", default="railway_graph",
+                        dest="base", help="base collection")
+    parser.add_argument("--target-collection", default="stations",
+                        dest="target", help="target collection")
+    parser.add_argument("--perimeter-collection", default="stations",
+                        dest="perimeter", help="target collection")
     parser.add_argument("--sync-with-routes", action="store_true", dest="sync",
                         help="only include stations that are mentioned in routes file")
     args = parser.parse_args()
 
     db = Connection(args.host, args.port)[args.db]
-    base = db[args.base_collection]
-    target = db[args.target_collection]
+    base = db[args.base]
+    target = db[args.target]
+    perimeter = db[args.perimeter]
 
     if args.sync:
-        build_station_collection(base, target, args.stations_file, args.routes_file)
+        build_station_collection(base, target, perimeter,
+                                 args.stations_file, args.routes_file)
     else:
-        build_station_collection_from_stations(base, target, args.stations_file)
+        build_station_collection_from_stations(base, target, perimeter,
+                                               args.stations_file)

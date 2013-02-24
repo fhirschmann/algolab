@@ -29,11 +29,12 @@ def main(zls, db):
     # The source collection
     rg_ = db["railway_graph"]
 
-    # The station collection
+    # The station collections
     stations = db["stations"]
+    stations_perimeter = db["stations_perimeter"]
 
     # the segmenter
-    segmenter = partial(StationESSegmenter, stations)
+    segmenter = partial(StationESSegmenter, stations, stations_perimeter)
     simplify = partial(simplify2, segmenter=segmenter)
 
     # Collections for zoom level 8 - 16
