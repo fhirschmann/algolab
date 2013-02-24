@@ -238,6 +238,9 @@ def build_station_collection(base_collection,
                              station_path, routes_path,
                              filter=None):
     """
+    Build a station collection from a station file but only include stations
+    that are as mentioned endpoints in the routes file.
+
     :param base_collection: mongodb collection containing rg nodes to tune
                             coordinates to
     :param target_collection: mongodb collection to write the stations to
