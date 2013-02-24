@@ -46,7 +46,7 @@ keep in mind that a zoom level usually depends on its predecessor level.
 
 In the following sections, the images on the left-hand side represent
 the Frankfurt Main Station and the image on the right-hand side represent
-Germany.
+the Rhine-Main-Area (Frankfurt, Mainz, Darmstadt).
 
 Zoom level 17
 -------------
@@ -88,12 +88,14 @@ Initial Situation
 -----------------
 
 .. image:: img/ffm/rg-zl-17.png
+.. image:: img/fma/rg-zl-17.png
 
 
 Zoom level 16
 -------------
 
 .. image:: img/ffm/rg-zl-16.png
+.. image:: img/fma/rg-zl-16.png
 
 This step applies :func:`~algolab.simplify.rdp` with
 ε=1.5m and can be executed via::
@@ -104,23 +106,27 @@ Zoom level 15
 -------------
 
 .. image:: img/ffm/rg-zl-15.png
+.. image:: img/fma/rg-zl-17.png
 
 Zoom level 14
 -------------
 
 .. image:: img/ffm/rg-zl-14.png
+.. image:: img/fma/rg-zl-14.png
 
 Zoom level 13
 -------------
 
 .. image:: img/ffm/rg-zl-13.png
+.. image:: img/fma/rg-zl-13.png
 
 Zoom level 12
 -------------
 
 .. image:: img/ffm/rg-zl-12.png
+.. image:: img/fma/rg-zl-12.png
 
-This step applies :func:`~algolab.simplify.rdp` with ε=1.5m after
+This step applies :func:`~algolab.simplify.rdp` with ε=6m after
 :func:`~algolab.stations.cluster_stations` to and can be executed via::
 
     al_filter 12
@@ -129,21 +135,30 @@ Zoom level 11
 -------------
 
 .. image:: img/ffm/rg-zl-11.png
+.. image:: img/fma/rg-zl-11.png
+
+This step applies :func:`~algolab.simplify.rdp` with ε=6m after
+:func:`~algolab.combine.anglecombine` with ε=20° to and can be executed via::
+
+    al_filter 11
 
 Zoom level 10
 -------------
 
 .. image:: img/ffm/rg-zl-10.png
+.. image:: img/fma/rg-zl-10.png
 
 Zoom level 9
 ------------
 
 .. image:: img/ffm/rg-zl-9.png
+.. image:: img/fma/rg-zl-9.png
 
 Zoom level 8
 ------------
 
 .. image:: img/ffm/rg-zl-8.png
+.. image:: img/fma/rg-zl-8.png
 
 Node Quantity Results
 ---------------------
