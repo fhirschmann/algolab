@@ -15,7 +15,7 @@ from algolab.db import intersections, neighbors, merge_nodes
 log = logging.getLogger(__name__)
 
 
-def anglecombine(rg, epsilon, progress=True):
+def anglecombine(rg, station_collection, stations_perimeter, epsilon, progress=True):
     """
     Combines (nearly) parallel train tracks in a railway graph.
 
@@ -26,6 +26,8 @@ def anglecombine(rg, epsilon, progress=True):
     """
     # The stack: contains intersections to visit
     int_ids = list([n["_id"] for n in intersections(rg)])
+    station_ids = set(s["_id"] for s in station_collection.find())
+    station_ids.update(s["_id"] for s in stations_perimeter.find())
 
     while int_ids:
         # Receive intersection from stack
@@ -39,6 +41,8 @@ def anglecombine(rg, epsilon, progress=True):
             sys.stdout.write("\rIntersections left: %d" % len(int_ids))
 
         for n_id_1, n_id_2 in combinations(neighbors(int_), 2):
+            if n_id_1 in station_ids or n_id_2 in station_ids:
+                continue
             # Neighbor 1
             n1 = rg.find_one(n_id_1)
             lon_n1, lat_n1 = n1["loc"]

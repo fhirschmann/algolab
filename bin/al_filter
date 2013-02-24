@@ -107,7 +107,7 @@ def main(zls, db):
             with log_progress("Applying Anglecombine with eps=%f" % epsilon):
                 copy(rgs[11], db["parallel"])
 
-                anglecombine(db["parallel"], epsilon)
+                anglecombine(db["parallel"], stations, stations_perimeter, epsilon)
                 log_change(db["parallel"].count(), rgs[11].count())
 
             epsilon = 6
