@@ -19,7 +19,7 @@ from algolab.util import distance, meter2rad
 log = logging.getLogger(__name__)
 
 
-PARAMETER_DISTANCE = 300
+PARAMETER_DISTANCE = 200
 
 class StationNotFound(Exception):
     """Indicates that a station is not contained in a stations or station usage
