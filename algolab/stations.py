@@ -358,3 +358,30 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
                      station_collection.find_one(c['_id'])]
         merge_nodes(target_collection, station['_id'], merge_ids)
     print() # stop with clean newline
+
+
+def crop_station_file(station_path, destination,
+                      north, south, west, east):
+    """Crop a station file (station or station usage) so that it only contains
+    coordinates within the supplied bounding box.
+
+    :param station_path: path to the station file
+    :param destination: path of the cropped stations
+    :param north: northern boundary
+    :param south: southern boundary
+    :param west: west boundary
+    :param east: east boundary
+    """
+    with open(station_path) as in_, open(destination, 'w') as out:
+        head = next(in_)
+        out.write(head)
+        if head.count(';') > 0:
+            extract = lambda line: [float(coord) for coord
+                               in line.split(';')[2:4]]
+        else:
+            extract = lambda line: [float(coord) for coord
+                               in (line.split('|')[-1]).split()[1:3]]
+        for line in in_:
+            x, y = extract(line)
+            if west <= x <= east and south <= y <= north:
+                out.write(line)
