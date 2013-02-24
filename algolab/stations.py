@@ -258,6 +258,7 @@ def build_station_collection(base_collection,
     :type filter: None or function (eva, longitude, latitude) -> bool
     """
     empty(target_collection)
+    empty(perimeter_collection)
     stations = Stations(station_path, base_collection)
     target_collection.ensure_index([('loc', GEO2D)])
     if filter is None:
@@ -315,6 +316,7 @@ def build_station_collection_from_stations(base_collection, target_collection,
     :type filter: None or function (eva, longitude, latitude) -> bool
     """
     empty(target_collection)
+    empty(perimeter_collection)
     stations = Stations(station_path, base_collection)
     target_collection.ensure_index([('loc', GEO2D)])
     if filter is None:
