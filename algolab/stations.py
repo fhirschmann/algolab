@@ -142,6 +142,8 @@ class Stations(object):
             doc = self._select_node_near(longitude, latitude)
             if doc:
                 self._id_cache[eva] = doc['_id']
+            else:
+                log.debug("EVA '%s' could not be assigned to a node.", eva)
 
     @staticmethod
     def _get_eva(entry):
