@@ -10,3 +10,6 @@ Segmenter
 
 .. autoclass:: algolab.segment.ESSegmenter
    :members:
+
+.. autoclass:: algolab.segment.StationESSegmenter
+   :members:
