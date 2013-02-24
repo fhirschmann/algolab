@@ -87,7 +87,7 @@ class Stations(object):
             raise RailwayNodeNotFound('There is no railway graph node'
                                       'sufficiently near to EVA %s' % eva)
 
-    def _select_node_near(self, longitude, latitude, max_distance=1000):
+    def _select_node_near(self, longitude, latitude, max_distance=500):
         """Return the rg node that is nearest to longitude and latitude but
         within max_distance.
 
