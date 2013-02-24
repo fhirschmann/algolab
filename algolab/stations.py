@@ -279,6 +279,41 @@ def build_station_collection(base_collection,
                               'railway node in collection %s',
                               eva, base_collection.name)
 
+def build_station_collection_from_stations(base_collection, target_collection,
+                                           station_path, filter=None):
+    """
+    Build a station collection from a station file.
+
+    :param base_collection: mongodb collection containing rg nodes to tune
+                            coordinates to
+    :param target_collection: mongodb collection to write the stations to
+    :param station_path: path to the stations file
+    :param filter: filtering function to include a node in the collection
+    :type filter: None or function (eva, longitude, latitude) -> bool
+    """
+    empty(target_collection)
+    stations = Stations(station_path, base_collection)
+    target_collection.ensure_index([('loc', GEO2D)])
+    if filter is None:
+        filter = lambda eva, lon, lat: True
+    size = len(stations._id_cache)
+    for i, entry in enumerate(stations._id_cache.iteritems(), 1):
+        print ('\rProcessing station %d of %d (%.2f%%)' %
+               (i, size, (i / size) * 100), end='')
+        eva, id_ = entry
+        try:
+            node = base_collection.find_one(id_)
+            if filter(eva, *node['loc']):
+                target_collection.insert(
+                    {'_id': node['_id'],
+                     'loc': node['loc'],
+                     'eva': eva})
+        except RailwayNodeNotFound:
+            log.debug('Station with EVA %s has no appropriate' +
+                      'railway node in collection %s',
+                      eva, base_collection.name)
+    print()
+
 
 def cluster_stations(cluster_collection, station_collection, target_collection,
                      min_value=None, max_distance=None):

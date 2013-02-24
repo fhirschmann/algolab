@@ -9,7 +9,8 @@ sys.path.append(os.path.dirname(
         os.path.abspath(sys.argv[0])) + os.sep + os.pardir + os.sep + "algolab")
 
 from algolab.cmdutil import defaultparser
-from algolab.stations import build_station_collection
+from algolab.stations import build_station_collection, \
+                             build_station_collection_from_stations
 
 
 if __name__ == "__main__":
@@ -23,10 +24,15 @@ if __name__ == "__main__":
                         dest="base_collection", help="base collection")
     parser.add_argument("--target-collection", type=str, default="stations",
                         dest="target_collection", help="target collection")
+    parser.add_argument("--sync-with-routes", action="store_true", dest="sync",
+                        help="only include stations that are mentioned in routes file")
     args = parser.parse_args()
 
     db = Connection(args.host, args.port)[args.db]
     base = db[args.base_collection]
     target = db[args.target_collection]
 
-    build_station_collection(base, target, args.stations_file, args.routes_file)
+    if args.sync:
+        build_station_collection(base, target, args.stations_file, args.routes_file)
+    else:
+        build_station_collection_from_stations(base, target, args.stations_file)
