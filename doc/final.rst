@@ -43,13 +43,13 @@ This is the step were our project kicks in. It works on the railway
 graph and produces a generalized railway graph for each zoom level.
 
 The main entry point for producing generalized railway graphs is
-`al_filter`:
+``al_filter``:
 
   .. program-output:: al_filter --help
 
 The zoom levels indicate what collection will be produced. For example,
-running `al_filter 14` will produce the collection `railway_graph_14`.
-Multiple zoom levels can be specified (e.g. `al_filter 30 16 15 14`), but
+running ``al_filter 14`` will produce the collection ``railway_graph_14``.
+Multiple zoom levels can be specified (e.g. ``al_filter 30 16 15 14``), but
 keep in mind that a zoom level usually depends on its predecessor level.
 
 In the following sections, the images on the left-hand side represent
@@ -64,7 +64,7 @@ is our general cleaning step that does the following:
 
 - Remove nodes that have no neighbors
 
-- Remove duplicates (nodes with the same `loc` attribute)
+- Remove duplicates (nodes with the same ``loc`` attribute)
 
 - Recalculate all distances (great-circle distance)
 
