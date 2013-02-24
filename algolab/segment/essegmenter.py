@@ -149,7 +149,7 @@ class StationESSegmenter(ESSegmenter):
 
                 if node["_id"] in self.station_ids:
                     if len(seg2) > 1:
-                        yield seg
-                        seg2 = []
+                        yield seg2
+                        seg2 = [node]
             if len(seg2) > 1:
                 yield seg2
