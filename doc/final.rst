@@ -28,6 +28,14 @@ This step imports the railway graph from the osm data::
 
     java -jar osm_railway_graph_import.jar germany.osm 127.0.0.1 27017
 
+Additionally we need a collection of station nodes (and a collection of railway
+graph nodes in their vicinity), you can generate them using ``al_mk_sg``:
+
+    .. program-output:: al_mk_sg --help
+
+which requires a station file (like the supplied ``Stations.txt``) and a routes
+file (like the supplied ``sgrv.csv``).
+
 Step 2: Our Algorithms
 ======================
 
