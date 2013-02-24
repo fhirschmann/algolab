@@ -131,11 +131,17 @@ def main(zls, db):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Algorithm Filter Pipeline",
                                      parents=[defaultparser()])
-    parser.add_argument("zl", type=int, nargs="+",
+    parser.add_argument("zl", type=int, nargs="*",
             help="zoom levels to generate a RG for")
     parser.add_argument("--no-progress", action="store_true", dest="np", default=False,
             help="don't print the progress")
+    parser.add_argument("--all-zoomlevels", action="store_true", dest="all",
+                        help="Generate for all zoomlevels(8-17)")
     args = parser.parse_args()
+    if args.all:
+        args.zl = range(8, 18)
+    else:
+        assert len(args.zl) > 0, "Specify at least one zoomlevel or use '--all' parameter"
 
     db = Connection(args.host, args.port)[args.db]
 
