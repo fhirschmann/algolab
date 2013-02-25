@@ -280,10 +280,11 @@ def build_station_collection(base_collection,
                             {'_id': node['_id'],
                              'loc': node['loc'],
                              'eva': eva})
-                        for pnode in base_collection.find(
-                                {'loc':
-                                 {'$nearSphere':
-                                  meter2rad(PARAMETER_DISTANCE)}}):
+                        pnodes = base_collection.find(
+                            {'loc': {'$nearSphere': node['loc'],
+                                     '$maxDistance':
+                                     meter2rad(PARAMETER_DISTANCE)}})
+                        for pnode in pnodes:
                             perimeter_collection.insert({
                                 '_id' : pnode['_id'],
                                 'loc': pnode['loc'],
