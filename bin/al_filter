@@ -32,9 +32,11 @@ def main(zls, db):
     # The station collections
     stations = db["stations"]
     stations_perimeter = db["stations_perimeter"]
+    station_ids = set(s["_id"] for s in stations.find())
+    station_ids.update(s["_id"] for s in stations_perimeter.find())
 
     # the segmenter
-    segmenter = partial(StationESSegmenter, stations, stations_perimeter)
+    segmenter = partial(StationESSegmenter, station_ids)
     simplify = partial(simplify2, segmenter=segmenter)
 
     # Collections for zoom level 8 - 16
@@ -107,7 +109,7 @@ def main(zls, db):
             with log_progress("Applying Anglecombine with eps=%f" % epsilon):
                 copy(rgs[11], db["parallel"])
 
-                anglecombine(db["parallel"], stations, stations_perimeter, epsilon)
+                anglecombine(db["parallel"], epsilon, keep_ids=station_ids)
                 log_change(db["parallel"].count(), rgs[11].count())
 
             epsilon = 6

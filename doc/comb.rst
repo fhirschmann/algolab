@@ -39,7 +39,6 @@ Applying the algorithm with ε = 30 gives:
     from algolab.plot import plot_rg
     from algolab.test import rg_from_datasets
     from algolab.combine import anglecombine
-    from algolab.test import db
     rg = rg_from_datasets([12, 13, 14, 15])
-    anglecombine(rg, db.xx, db.xy, 30)
+    anglecombine(rg, 30)
     plot_rg(rg, "After anglecombine with epsilon=30")

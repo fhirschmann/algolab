@@ -132,10 +132,12 @@ class StationESSegmenter(ESSegmenter):
     """
     Just like :class:`~algolab.segment.ESSegmenter`, except that segments
     will be divided into sub-segments if they contain stations.
+
+    :param keep_ids: list of ids that always mark the start/end of a segment
+    :type keep_ids: list of integers
     """
-    def __init__(self, station_collection, stations_perimeter, *args, **kwargs):
-        self.station_ids = set(s["_id"] for s in station_collection.find())
-        self.station_ids.update(s["_id"] for s in stations_perimeter.find())
+    def __init__(self, keep_ids, *args, **kwargs):
+        self.station_ids = keep_ids
         super(StationESSegmenter, self).__init__(*args, **kwargs)
 
     @property
