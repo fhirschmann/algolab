@@ -141,7 +141,7 @@ if __name__ == "__main__":
     parser.add_argument("--no-progress", action="store_true", dest="np", default=False,
             help="don't print the progress")
     parser.add_argument("--all-zoomlevels", action="store_true", dest="all",
-                        help="Generate for all zoomlevels (8-17)")
+                        help="generate for all zoomlevels (8-17)")
     args = parser.parse_args()
     if args.all:
         args.zl = range(8, 18)
