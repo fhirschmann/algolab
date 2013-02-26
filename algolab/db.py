@@ -106,7 +106,8 @@ def nodes_with_num_neighbors_gt(col, num):
     :type col: a :class:`~pymongo.collection.Collection`
     :returns: a collection cursor
     """
-    return col.find({"$where": "this.successors.length > %s" % num})
+    return col.find({"$where": "this.successors.length > %s" % num},
+                    timeout=False)
 
 
 def intersections(col):
@@ -121,7 +122,7 @@ def intersections(col):
 
 
 def nodes_with_num_neighbors(col, num):
-    return col.find({"successors": {"$size": num}})
+    return col.find({"successors": {"$size": num}}, timeout=False)
 
 
 def nodes_with_num_neighbors_ne(col, num):
@@ -135,7 +136,8 @@ def nodes_with_num_neighbors_ne(col, num):
     :returns: a collection cursor
     """
     # TODO: Maybe this can be made faster by not using JavaScript
-    return col.find({"$where": "this.successors.length != %s" % num})
+    return col.find({"$where": "this.successors.length != %s" % num},
+                    timeout=False)
 
 
 def endpoints(col):
