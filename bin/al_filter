@@ -32,10 +32,7 @@ def main(zls, db):
     # The station collections
     require("stations")
     stations = db["stations"]
-    require("station_perimeter")
-    stations_perimeter = db["station_perimeter"]
     station_ids = set(s["_id"] for s in stations.find())
-    station_ids.update(s["_id"] for s in stations_perimeter.find())
 
     # the segmenter
     segmenter = partial(StationESSegmenter, station_ids)

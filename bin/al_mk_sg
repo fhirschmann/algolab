@@ -24,8 +24,6 @@ if __name__ == "__main__":
                         dest="base", help="base collection")
     parser.add_argument("--target-collection", default="stations",
                         dest="target", help="target collection")
-    parser.add_argument("--perimeter-collection", default="station_perimeter",
-                        dest="perimeter", help="perimeter collection")
     parser.add_argument("--sync-with-routes", action="store_true", dest="sync",
                         help="only include stations that are mentioned in routes file")
     args = parser.parse_args()
@@ -33,11 +31,8 @@ if __name__ == "__main__":
     db = Connection(args.host, args.port)[args.db]
     base = db[args.base]
     target = db[args.target]
-    perimeter = db[args.perimeter]
 
     if args.sync:
-        build_station_collection(base, target, perimeter,
-                                 args.stations_file, args.routes_file)
+        build_station_collection(base, target, args.stations_file, args.routes_file)
     else:
-        build_station_collection_from_stations(base, target, perimeter,
-                                               args.stations_file)
+        build_station_collection_from_stations(base, target, args.stations_file)
