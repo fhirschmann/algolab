@@ -17,15 +17,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Station Graph Generation Tool",
                                      parents=[defaultparser()])
     parser.add_argument("-s", "--stations-file", type=str, default="data/Stations.txt",
-                        help="path to station file (Stations.txt)")
+                        help="path to station file [defaults to data/Stations.txt]")
     parser.add_argument("-r", "--routes-file", type=str, default="data/sgrv.csv",
-                        help="path to routes file (sgrv.csv)")
+                        help="path to routes file [defaults to sgrv.csv]")
     parser.add_argument("--base-collection", default="railway_graph",
-                        dest="base", help="base collection")
+                        dest="base", help="base collection [defaults to railway_graph]")
     parser.add_argument("--target-collection", default="stations",
-                        dest="target", help="target collection")
+                        dest="target", help="target collection [defaults to stations]")
     parser.add_argument("--sync-with-routes", action="store_true", dest="sync",
-                        help="only include stations that are mentioned in routes file")
+                        help="only include stations that are mentioned in routes file "
+                        "[defaults to false]")
     args = parser.parse_args()
 
     db = Connection(args.host, args.port)[args.db]

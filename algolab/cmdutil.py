@@ -71,11 +71,11 @@ def defaultparser():
 
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument("--host", action="store", dest="host", default="127.0.0.1",
-            type=str, help="host of the mongodb server")
+            type=str, help="host of the mongodb server [defaults to 127.0.0.1]")
     parser.add_argument("--port", action="store", dest="port", default=27017,
-            type=int, help="port of the mongodb server")
+            type=int, help="port of the mongodb server [defaults to 27017]")
     parser.add_argument("--db", action="store", dest="db", default="osm-data",
-            type=str, help="name of the database")
+            type=str, help="name of the database [defaults to osm-data]")
     log_group = parser.add_mutually_exclusive_group()
     log_group.add_argument("-d", "--debug",
             action="store_const", const=logging.DEBUG,
