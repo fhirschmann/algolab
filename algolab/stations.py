@@ -191,11 +191,11 @@ class StationUsage(Stations):
         """
         :param eva: eva of station
         :returns: routes of station
-        :rtype: tuple(int)
+        :rtype: :class:`algolab.stations.RoutesInfo`
         """
         if eva not in self._routes_cache:
             entry = self._search_entry(eva)
-            self._routes_cache[eva] = tuple([int(r) for r in entry[5:9]])
+            self._routes_cache[eva] = RoutesInfo([int(r) for r in entry[5:]])
         return self._routes_cache[eva]
 
     def _fill_cache(self):
