@@ -10,41 +10,32 @@ import logging
 from algolab.stations import StationUsage, StationNotFound, RailwayNodeNotFound
 
 VALUE_ATTRIBUTE = 'value'
+CONNECTION_ATTRIBUTE = 'connections'
 
-def enrich_with_routes(collection, station_usage_path, routes_path):
-    """
-    Enrich the collection by adding a routes count based on the information
-    found in the station and routes files.
+def enrich_with_usage(stations, station_usage_path):
+    """Enrich the stations based on how they are used so that their importance
+    for a given zoom level can be assessed.
 
-    :param collection: mongodb collection that contains a railway graph
+    :param stations: mongodb collection that contains a station collection
     :param station_usage_path: path to the stations usage file
-    :param routes_path: path to the routes file
     """
-    stations = StationUsage(station_usage_path, collection)
-    with open(routes_path) as routes_file:
-        next(routes_file)
-        reader = csv.reader(routes_file, delimiter=';')
-        for line in reader:
-            start, end, type_ = line[:3] # compensate for trailing space
-            for id_ in start, end:
-                id_ = id_.strip()
-                try:
-                    node = collection.find(stations.get_node_id(id_))
-                    collection.update({'_id': node['_id']},
-                                      {'$inc':
-                                       {VALUE_ATTRIBUTE:
-                                        rate_node(node['successors'],
-                                                  stations.get_id_routes(id_))}})
-                except StationNotFound:
-                    logging.debug('Station with EVA %s not found in usage file %s',
-                                  id_, station_usage_path)
-                except RailwayNodeNotFound:
-                    logging.debug('Station with EVA %s has no appropriate'
-                                  'railway node in collection %s',
-                                  id_, collection.name)
+    usage = StationUsage(station_usage_path, stations)
+    for eva, info in usage._routes_cache.iteritems():
+        try:
+            station = usage.get_node_id(eva)
+            station[VALUE_ATTRIBUTE] = rate_node(info)
+            station[CONNECTION_ATTRIBUTE] = connections(info)
+            stations.save(station)
+        except StationNotFound:
+            logging.debug('Station with EVA %s not found in usage file %s',
+                          id_, station_usage_path)
+        except RailwayNodeNotFound:
+            logging.debug('Station with EVA %s has no appropriate'
+                          'railway node in collection %s',
+                          id_, collection.name)
 
 
-def rate_node(successors, route_info):
+def rate_node(route_info):
     """
     :param successors: neighbors of node
     :param route_info: information about quantity and quality of routes
@@ -53,16 +44,31 @@ def rate_node(successors, route_info):
     :rtype: int
     """
     value = 0
-    if len(successors) == 1:
-        value += 50
-    value += 10 * route_info.class0
-    value += 7 * route_info.class1
-    value += 5 * route_info.class2
-    value += 3 * route_info.regional
-    value += 2 * route_info.s_bahn
-    value += route_info.tram
+    value += 100 * route_info.class0
+    value += 70 * route_info.class1
+    value += 50 * route_info.class2
+    value += 25 * route_info.regional
+    value += 15 * route_info.s_bahn
+    value += 5 * route_info.tram
 
     return value
+
+def connections(route_info):
+    """Return a dictionary describing which connections a node with
+    ``routes_info`` has.
+
+    :param route_info: information about quantity and quality of routes
+    :type route_info: :class:`algolab.stations.RouteInfo`
+    :returns: the connections
+    :rtype: dict
+    """
+    return {'class0': route_info.class0 > 0,
+            'class1': route_info.class1 > 0,
+            'class2': route_info.class2 > 0,
+            'regional': route_info.regional > 0,
+            's_bahn': route_info.s_bahn > 0,
+            'tram': route_info.tram > 0,
+        }
 
 
 def clear_valuation(rg):
