@@ -24,7 +24,7 @@ def require_col(db, zls):
     zls = [('railway_graph_%d' % zl) if isinstance(zl, int) else zl for zl in zls]
     empty_collections = [zl for zl in zls if db[zl].count() == 0]
     if empty_collections:
-        die('This step requires the collections %s to be present'
+        die('This step requires the collection \'%s\' to be present'
             % ', '.join(empty_collections))
 
 
