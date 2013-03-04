@@ -80,23 +80,21 @@ def generate_railviz_station_file(station_usage_path, path):
     for eva, value, connections in enrich_stations(station_usage_path):
         if connections['class0']:
             partition[8].add(eva)
-        if connections['class1']:
+        if connections['class1'] or connections['class2']:
             partition[9].add(eva)
-        if connections['class2']:
-            partition[10].add(eva)
-        if connections['regional']:
-            partition[12].add(eva)
-        if connections['s_bahn']:
-            partition[13].add(eva)
+        if connections['regional'] or connections['s_bahn']:
+            partition[11].add(eva)
 
-        partition[14].add(eva)
-    partition[11] = set(sorted(partition[12], key=itemgetter(1))[:500])
+        partition[12].add(eva)
+    partition[10] = set(sorted(partition[11], key=itemgetter(1))[:1000])
 
     # disjoin the zoom levels
     for level, evas in sorted(partition.iteritems()):
         other_levels = [partition[l] for l in partition if l != level]
         for l in other_levels:
             l = l - evas
+
+    del partition[8]            # always show ICE
 
     with open(path, 'w') as out:
         for level, evas in partition.iteritems():
