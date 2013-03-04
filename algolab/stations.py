@@ -78,10 +78,6 @@ class Stations(object):
             doc = self._select_node_near(longitude, latitude)
             if doc:
                 self._id_cache[eva] = doc['_id']
-            else:
-                raise RailwayNodeNotFound('There is no railway graph node'
-                                          'sufficiently near to EVA %s' % eva)
-
         try:
             return self._id_cache[eva]
         except KeyError:
