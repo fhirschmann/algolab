@@ -9,23 +9,24 @@ import logging
 
 from algolab.stations import StationUsage, StationNotFound, RailwayNodeNotFound
 
-VALUE_ATTRIBUTE = 'value'
-CONNECTION_ATTRIBUTE = 'connections'
 
-def enrich_with_usage(stations, station_usage_path):
-    """Enrich the stations based on how they are used so that their importance
-    for a given zoom level can be assessed.
+def enriched_stations(stations, station_usage_path):
+    """Return enriched station nodes based on how they are used so that their
+    importance for a given zoom level can be assessed.
 
     :param stations: mongodb collection that contains a station collection
     :param station_usage_path: path to the stations usage file
+    :returns: enriched stations
+    :rtype: list(dict)
     """
     usage = StationUsage(station_usage_path, stations)
+    enriched = []
     for eva, info in usage._routes_cache.iteritems():
         try:
             station = usage.get_node_id(eva)
-            station[VALUE_ATTRIBUTE] = rate_node(info)
-            station[CONNECTION_ATTRIBUTE] = connections(info)
-            stations.save(station)
+            station['value'] = rate_node(info)
+            station['connections'] = connections(info)
+            enriched.append(station)
         except StationNotFound:
             logging.debug('Station with EVA %s not found in usage file %s',
                           id_, station_usage_path)
@@ -33,6 +34,7 @@ def enrich_with_usage(stations, station_usage_path):
             logging.debug('Station with EVA %s has no appropriate'
                           'railway node in collection %s',
                           id_, collection.name)
+    return enriched
 
 
 def rate_node(route_info):
@@ -53,6 +55,7 @@ def rate_node(route_info):
 
     return value
 
+
 def connections(route_info):
     """Return a dictionary describing which connections a node with
     ``routes_info`` has.
@@ -69,14 +72,3 @@ def connections(route_info):
             's_bahn': route_info.s_bahn > 0,
             'tram': route_info.tram > 0,
         }
-
-
-def clear_valuation(rg):
-    """Clear the valuation of a railway graph.
-
-    :param rg: collection to remove valuation from
-    :type rg: :class:`~pymongo.collection.Collection`
-    """
-    for node in rg.find_node():
-        del node[VALUE_ATTRIBUTE]
-        rg.save(node)
