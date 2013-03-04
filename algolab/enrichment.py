@@ -4,13 +4,13 @@ Railway Graph enrichment
 
 .. moduleauthor:: Michael Markert <markert.michael@googlemail.com>
 """
+from __future__ import print_function
+
 import csv
 import logging
 
-from collections import namedtuple
-
-from algolab.stations import StationUsage, StationNotFound, RailwayNodeNotFound
-
+from collections import defaultdict, namedtuple
+from operator import itemgetter
 
 RoutesInfo = namedtuple('RoutesInfo', ['class0', 'class1', 'class2', 'class3',
                                        'regional', 's_bahn', 'tram'])
@@ -67,3 +67,38 @@ def connections(route_info):
             's_bahn': route_info.s_bahn > 0,
             'tram': route_info.tram > 0,
         }
+
+
+def generate_railviz_station_file(station_usage_path, path):
+    """Generate a station file for railviz which lists the minimal zoomlevel on
+    which the station should be displayed.
+
+    :param station_usage_path: path to the stations usage file
+    :param path: where to write the file to
+    """
+    partition = defaultdict(set)
+    for eva, value, connections in enrich_stations(station_usage_path):
+        if connections['class0']:
+            partition[8].add(eva)
+        if connections['class1']:
+            partition[9].add(eva)
+        if connections['class2']:
+            partition[10].add(eva)
+        if connections['regional']:
+            partition[12].add(eva)
+        if connections['s_bahn']:
+            partition[13].add(eva)
+
+        partition[14].add(eva)
+    partition[11] = set(sorted(partition[12], key=itemgetter(1))[:500])
+
+    # disjoin the zoom levels
+    for level, evas in sorted(partition.iteritems()):
+        other_levels = [partition[l] for l in partition if l != level]
+        for l in other_levels:
+            l = l - evas
+
+    with open(path, 'w') as out:
+        for level, evas in partition.iteritems():
+            for eva in evas:
+                print(eva, level, file=out)
