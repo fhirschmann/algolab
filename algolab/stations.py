@@ -9,8 +9,6 @@ from __future__ import division, print_function
 import csv
 import logging
 
-from collections import namedtuple
-
 from pymongo import GEO2D
 
 from algolab.db import copy, merge_nodes, empty
@@ -29,10 +27,6 @@ class RailwayNodeNotFound(Exception):
     """Indicates that a appropriate railway graph node could not be found.
     """
     pass
-
-
-RoutesInfo = namedtuple('RoutesInfo', ['class1', 'class2', 'class3',
-                                       'regional', 's_bahn', 'tram'])
 
 
 class Stations(object):
@@ -153,81 +147,6 @@ class Stations(object):
     @staticmethod
     def _equal_evas(left, right):
         return left == right or left == Stations._pad_eva(right)
-
-class StationUsage(Stations):
-    """Abstraction for the station usage file.
-
-    A station usage file has the following structure::
-
-        head # describes the columns
-        ...
-
-        ID;name;longitude;latitude;#events;#class0;#class1;#class2;#class3;#regional;#s-bahn;#tram
-
-    `eva` is 7 digit number padded with zeroes
-    #events describes the amount of events occuring at the station
-    #class describes the amount of events of the class (does not have to sum
-    up with #events)
-    """
-    def __init__(self, station_usage_path, collection, cache=True):
-        """
-        :param station_usage_path: path to file describing stations and their
-                                   usage
-        :param collection: mongodb collection containing railway graph nodes
-        :param cache: fill cache before searching
-        """
-        super(StationUsage, self).__init__(station_usage_path, collection, False)
-        # patch up reader, uses other delimiter
-        self._station_reader = csv.reader(self._station_file, delimiter=';')
-        self._routes_cache = dict()
-        if cache:
-            self._fill_cache()
-
-    def get_id_routes(self, eva):
-        """
-        :param eva: eva of station
-        :returns: routes of station
-        :rtype: :class:`algolab.stations.RoutesInfo`
-        """
-        if eva not in self._routes_cache:
-            entry = self._search_entry(eva)
-            self._routes_cache[eva] = RoutesInfo([int(r) for r in entry[5:]])
-        return self._routes_cache[eva]
-
-    def _fill_cache(self):
-        """Fill the caches with every station in file."""
-        for entry in self._station_reader:
-            if len(entry) < 4:  # ignore malformed entries
-                continue
-            eva = self._get_eva(entry)
-            longitude, latitude = float(entry[2]), float(entry[3])
-            if longitude == latitude == 0.0: # ignore malformed entries
-                continue
-
-            doc = self._select_node_near(longitude, latitude)
-            if doc:
-                self._id_cache[eva] = doc['_id']
-                try:
-                    self._routes_cache[eva] = RoutesInfo([int(r) for r in entry[5:]])
-                except TypeError:
-                    log.error('"%s" seems to be no valid station usage file.',
-                              self._station_path)
-
-    @staticmethod
-    def _value(successors, routes):
-        """Value a node based on the numbers of its successors and routes
-        (according to their types).
-        """
-
-    def _get_location(self, id_):
-        """
-        :param id_: id of station
-        :returns: longitude and latitude of station
-        :rtype: tuple(float, float)
-        """
-        entry = self._search_entry(id_)
-        longitude, latitude = float(entry[2]), float(entry[3])
-        return longitude, latitude
 
 
 def build_station_collection(base_collection,

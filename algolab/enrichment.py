@@ -7,34 +7,29 @@ Railway Graph enrichment
 import csv
 import logging
 
+from collections import namedtuple
+
 from algolab.stations import StationUsage, StationNotFound, RailwayNodeNotFound
 
 
-def enriched_stations(stations, station_usage_path):
-    """Return enriched station nodes based on how they are used so that their
+RoutesInfo = namedtuple('RoutesInfo', ['class0', 'class1', 'class2', 'class3',
+                                       'regional', 's_bahn', 'tram'])
+
+
+def enrich_stations(station_usage_path):
+    """Return enriched stations based on how they are used so that their
     importance for a given zoom level can be assessed.
 
-    :param stations: mongodb collection that contains a station collection
     :param station_usage_path: path to the stations usage file
-    :returns: enriched stations
-    :rtype: list(dict)
+    :returns: enriched stations (eva, value, connections)
+    :rtype: generator of 3-tuple
     """
-    usage = StationUsage(station_usage_path, stations)
-    enriched = []
-    for eva, info in usage._routes_cache.iteritems():
-        try:
-            station = usage.get_node_id(eva)
-            station['value'] = rate_node(info)
-            station['connections'] = connections(info)
-            enriched.append(station)
-        except StationNotFound:
-            logging.debug('Station with EVA %s not found in usage file %s',
-                          id_, station_usage_path)
-        except RailwayNodeNotFound:
-            logging.debug('Station with EVA %s has no appropriate'
-                          'railway node in collection %s',
-                          id_, collection.name)
-    return enriched
+    with open(station_usage_path) as f:
+        reader = csv.reader(f, delimiter=';')
+        next(reader)
+        for line in reader:
+            info = RoutesInfo(*[int(r) if r else 0 for r in line[5:-1]])
+            yield line[0], rate_node(info), connections(info)
 
 
 def rate_node(route_info):
