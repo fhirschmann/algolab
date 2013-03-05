@@ -86,7 +86,7 @@ def generate_railviz_station_file(station_usage_path, path):
             partition[11].add(eva)
 
         partition[12].add(eva)
-    partition[10] = set(sorted(partition[11], key=itemgetter(1))[:1000])
+    partition[10] = set(sorted(partition[11], key=itemgetter(1))[:2000])
 
     # disjoin the zoom levels
     for level, evas in sorted(partition.iteritems()):
