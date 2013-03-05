@@ -8,8 +8,7 @@ from decimal import Decimal, getcontext
 getcontext().prec = 80
 
 # Hack in order to avoid making this a python package
-sys.path.append(os.path.dirname(
-    os.path.abspath(sys.argv[0])) + os.sep + os.pardir + os.sep + "algolab")
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), os.pardir))
 
 import argparse
 from pymongo import Connection

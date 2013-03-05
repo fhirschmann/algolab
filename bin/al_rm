@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 import argparse
+import sys
+
 from pymongo import Connection
 
 from algolab.cmdutil import defaultparser
 
+# Hack in case the python path is not set correctly
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), os.pardir))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AlgoLab Database Remove Tool",

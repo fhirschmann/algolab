@@ -3,8 +3,14 @@
 
 
 if __name__ == '__main__':
+    import sys
     import argparse
+
     from algolab.stations import crop_station_file
+
+    # Hack in case the python path is not set correctly
+    sys.path.append(os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), os.pardir))
+
     parser = argparse.ArgumentParser(description='AlgoLab Station cropper')
     parser.add_argument('station_file',help='path to station file')
     parser.add_argument('destination', help='path to write to',
