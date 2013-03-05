@@ -46,6 +46,11 @@ The main entry point for producing generalized railway graphs is
 
   .. program-output:: al_filter --help
 
+The scripts in ``bin/`` assume that the ``algolab`` code tree is in its parent
+directory. If you want to change the provided directory structure add the
+directory that contains ``algolab`` to the ``PYTHONPATH`` or place ``algolab``
+into a directory that is already in it.
+
 The zoom levels indicate what collection will be produced. For example,
 running ``al_filter 14`` will produce the collection ``railway_graph_14``.
 Multiple zoom levels can be specified (e.g. ``al_filter 30 16 15 14``), but
