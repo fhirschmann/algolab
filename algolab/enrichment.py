@@ -92,7 +92,7 @@ def generate_railviz_station_file(station_usage_path, path):
     for level, evas in sorted(partition.iteritems()):
         other_levels = [partition[l] for l in partition if l != level]
         for l in other_levels:
-            l = l - evas
+            l.difference_update(evas)
 
     del partition[8]            # always show ICE
 
