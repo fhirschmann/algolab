@@ -5,7 +5,6 @@ Angle-based combination algorithm.
 .. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
 """
 import sys
-import os
 import logging
 from itertools import combinations
 
@@ -67,4 +66,4 @@ def anglecombine(rg, epsilon, progress=True, keep_ids=[]):
                 break
 
     if progress:
-        print(os.linesep)
+        print()
