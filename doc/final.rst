@@ -27,13 +27,6 @@ This step imports the railway graph from the osm data::
 
     java -jar osm_railway_graph_import.jar germany.osm 127.0.0.1 27017
 
-Additionally we need a collection of station nodes (and a collection of railway
-graph nodes in their vicinity), you can generate them using ``al_mk_sg``:
-
-    .. program-output:: al_mk_sg --help
-
-which requires a station file (like the supplied ``Stations.txt``) and a routes
-file (like the supplied ``sgrv.csv``).
 
 Step 2: Our Algorithms
 ======================
@@ -42,23 +35,39 @@ This is the step were our project kicks in. It works on the railway
 graph and produces a generalized railway graph for each zoom level.
 
 The main entry point for producing generalized railway graphs is
-``al_filter``:
+``al_tool``:
 
-  .. program-output:: al_filter --help
+  .. program-output:: al_tool --help
 
-The scripts in ``bin/`` assume that the ``algolab`` code tree is in its parent
-directory. If you want to change the provided directory structure add the
-directory that contains ``algolab`` to the ``PYTHONPATH`` or place ``algolab``
-into a directory that is already in it.
+It has three subcommands: ``al_tool prepare``, ``al_tool stations`` and
+``al_tool filter``. Each subcommand has its own ``--help`` option.
 
-The zoom levels indicate what collection will be produced. For example,
-running ``al_filter 14`` will produce the collection ``railway_graph_14``.
-Multiple zoom levels can be specified (e.g. ``al_filter 16 15 14``), but
-keep in mind that a zoom level usually depends on its predecessor level.
+.. note::
+
+   The scripts in ``bin/`` assume that the ``algolab`` code tree is in its
+   parent directory. If you want to change the provided directory structure add the
+   directory that contains ``algolab`` to the ``PYTHONPATH`` or place ``algolab``
+   into a directory that is already in it.
+
+The zoom levels indicate what collection will be produced. For example, running
+``al_tool filter 14`` will produce the collection ``railway_graph_14``. Multiple
+zoom levels can be specified (e.g. ``al_tool filter 16 15 14``), but keep in
+mind that a zoom level usually depends on its predecessor level. Additionally,
+you can create all zoomlevels using ``al_tool filter --all-zoomlevels``.
 
 In the following sections, the images on the left-hand side represent
 the Frankfurt Main Station and the image on the right-hand side represent
 the Rhine-Main-Area (Frankfurt, Mainz, Darmstadt).
+
+After importing OSM data you need to execute these steps:
+
+  #. ``al_tool prepare``
+  #. ``al_tool stations``
+  #. ``al_tool filter``
+
+Of course each with appropriate arguments. Furthermore, ``al_tool stations``
+generates a ``ZoomLevelStations.txt`` (you can influence where this is written
+using the ``-f`` option).
 
 Zoom level 17
 -------------
@@ -74,7 +83,7 @@ is our general cleaning step that does the following:
 
 This step can be executed by running::
 
-    al_filter 17
+    al_tool prepare
 
 This yields an output similar to this::
 
