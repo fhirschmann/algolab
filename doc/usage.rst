@@ -10,9 +10,21 @@ to generate the final graphs.
 Command List
 ============
 
-- bin/al_filter
+- bin/al_tool
 
-  .. program-output:: al_filter --help
+  .. program-output:: al_tool --help
+
+- bin/al_tool prepare
+
+  .. program-output:: al_tool prepare --help
+
+- bin/al_tool stations
+
+  .. program-output:: al_tool stations --help
+
+- bin/al_tool filter
+
+  .. program-output:: al_tool filter --help
 
 - bin/al_visualize_algo
 
@@ -37,11 +49,6 @@ Command List
 - bin/al_rm
 
   .. program-output:: al_rm --help
-
-
-- bin/al_mk_sg
-
-  .. program-output:: al_mk_sg --help
 
 - bin/al_crop_stations
 
