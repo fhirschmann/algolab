@@ -53,7 +53,7 @@ into a directory that is already in it.
 
 The zoom levels indicate what collection will be produced. For example,
 running ``al_filter 14`` will produce the collection ``railway_graph_14``.
-Multiple zoom levels can be specified (e.g. ``al_filter 30 16 15 14``), but
+Multiple zoom levels can be specified (e.g. ``al_filter 16 15 14``), but
 keep in mind that a zoom level usually depends on its predecessor level.
 
 In the following sections, the images on the left-hand side represent
