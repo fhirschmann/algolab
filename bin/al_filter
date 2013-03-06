@@ -19,18 +19,69 @@ from algolab.db import empty, dedup, delonelynize, new, copy, recalculate_distan
 from algolab.cmdutil import log_progress, log_change, require_col, defaultparser
 from algolab.segment import StationESSegmenter
 from algolab.simplify import simplify as simplify2
-from algolab.stations import cluster_stations
+from algolab.stations import (cluster_stations, build_station_collection,
+                              build_station_collection_from_stations)
+from algolab.enrichment import generate_railviz_station_file
 
 
-def main(zls, db):
-    require = lambda x: require_col(db, x)
+STATION_COLLECTION = 'stations'
+RAILWAY_GRAPH_COLLECTION = 'railway_graph'
 
-    # The source collection
-    rg_ = db["railway_graph"]
 
-    # The station collections
-    require("stations")
-    stations = db["stations"]
+def prepare_stations(args):
+    db = Connection(args.host, args.port)[args.db]
+    require_col(db, 17)
+    with log_progress("Building Station Collection"):
+        if args.sync:
+            build_station_collection(db['railway_graph_17'], db[STATION_COLLECTION],
+                                     args.stations_file, args.routes_file)
+        else:
+            build_station_collection_from_stations(db['railway_graph_17'],
+                                                   db[STATION_COLLECTION],
+                                                   args.stations_file)
+
+    with log_progress("Generating Station Filter File (%s)" % args.station_filter_file):
+        generate_railviz_station_file(args.station_usage_file,
+                                      args.station_filter_file)
+
+
+def prepare_railway_graph(args):
+    db = Connection(args.host, args.port)[args.db]
+    rg = db["railway_graph_17"]
+    with log_progress("Cleaning"):
+        require_col(db, RAILWAY_GRAPH_COLLECTION)
+        empty(rg)
+
+        copy(db[RAILWAY_GRAPH_COLLECTION], rg)
+        c0 = rg.count()
+
+        # This is the general cleaning step
+        with log_progress("Removing lonely nodes"):
+            delonelynize(rg)
+            c1 = rg.count()
+            log_change(c1, c0)
+
+        with log_progress("Removing duplicates"):
+            dedup(rg)
+            c2 = rg.count()
+            log_change(c2, c1)
+
+        with log_progress("Recalculating all distances"):
+            recalculate_distances(rg)
+
+
+def filter_rg(args):
+    if args.all:
+        zls = range(8, 17)
+    else:
+        assert len(args.zl) > 0, \
+            "Specify at least one zoomlevel or use '--all-zoomlevels parameter"
+    db = Connection(args.host, args.port)[args.db]
+
+    require = lambda *x: require_col(db, x)
+
+    require(STATION_COLLECTION)
+    stations = db[STATION_COLLECTION]
     station_ids = set(s["_id"] for s in stations.find())
 
     # the segmenter
@@ -39,29 +90,6 @@ def main(zls, db):
 
     # Collections for zoom level 8 - 16
     rgs = {i: db["railway_graph_%i" % i] for i in range(8, 18)}
-
-    ## Zoom Level 17 (Cleaning Step)
-    if 17 in zls:
-        with log_progress("Cleaning"):
-            require("railway_graph")
-            empty(rgs[17])
-
-            copy(rg_, rgs[17])
-            c0 = rgs[17].count()
-
-            # This is the general cleaning step
-            with log_progress("Removing lonely nodes"):
-                delonelynize(rgs[17])
-                c1 = rgs[17].count()
-                log_change(c1, c0)
-
-            with log_progress("Removing duplicates"):
-                dedup(rgs[17])
-                c2 = rgs[17].count()
-                log_change(c2, c1)
-
-            with log_progress("Recalculating all distances"):
-                recalculate_distances(rgs[17])
 
     ## Zoom Level 16-12 (RDP)
     for zli, zl in enumerate([16, 15, 14, 13, 12], start=1):
@@ -130,21 +158,38 @@ def main(zls, db):
                     log_change(rgs[zl].count(), rgs[zl + 1].count())
 
 if __name__ == "__main__":
+    dparser = defaultparser()
+    dparser.add_argument("--no-progress", action="store_true", dest="np",
+                         default=False, help="don't print the progress")
     parser = argparse.ArgumentParser(description="Algorithm Filter Pipeline",
-                                     parents=[defaultparser()])
-    parser.add_argument("zl", type=int, nargs="*",
-            help="zoom levels to generate a RG for")
-    parser.add_argument("--no-progress", action="store_true", dest="np", default=False,
-            help="don't print the progress")
-    parser.add_argument("--all-zoomlevels", action="store_true", dest="all",
-                        help="generate for all zoomlevels (8-17)")
-    args = parser.parse_args()
-    if args.all:
-        args.zl = range(8, 18)
-    else:
-        assert len(args.zl) > 0, "Specify at least one zoomlevel or use '--all' parameter"
+                                     parents=[dparser])
+    subs = parser.add_subparsers()
+    station_parser = subs.add_parser('stations', help='Prepare Stations', parents=[dparser])
+    station_parser.add_argument("-s", "--stations-file", type=str, default="data/Stations.txt",
+                        help="path to station file [defaults to data/Stations.txt]")
+    station_parser.add_argument("-u", "--station-usage-file", default="data/stationUsage.txt",
+                        help="path to station file [defaults to data/Stations.txt]")
+    station_parser.add_argument("-r", "--routes-file", type=str, default="data/sgrv.csv",
+                        help="path to routes file [defaults to data/sgrv.csv]")
+    station_parser.add_argument("-f", "--station-filter-file", type=str, default="ZoomLevelStations.txt",
+                                help="where to write the railviz filter file"
+                                " [defaults to ZoomLevelStations.txt]")
+    station_parser.add_argument("--sync-with-routes", action="store_true", dest="sync",
+                                help="only include stations that are mentioned in routes file "
+                                "[defaults to false]")
+    station_parser.set_defaults(function=prepare_stations)
 
-    db = Connection(args.host, args.port)[args.db]
+    rg_parser = subs.add_parser('prepare', help='prepare railway graph for filtering', parents=[dparser])
+    rg_parser.set_defaults(function=prepare_railway_graph)
+
+    filter_parser = subs.add_parser('filter', help='Filter the railway graph', parents=[dparser])
+    filter_parser.add_argument("zl", type=int, nargs="*",
+                               help="zoom levels to generate a RG for")
+    filter_parser.add_argument("--all-zoomlevels", action="store_true", dest="all",
+                               help="generate for all zoomlevels (8-16)")
+    filter_parser.set_defaults(function=filter_rg)
+
+    args = parser.parse_args()
 
     with log_progress("Overall process"):
-        main(args.zl, db)
+        args.function(args)
