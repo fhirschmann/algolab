@@ -164,6 +164,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Algorithm Filter Pipeline",
                                      parents=[dparser])
     subs = parser.add_subparsers()
+
+    rg_parser = subs.add_parser('prepare', help='prepare railway graph for filtering', parents=[dparser])
+    rg_parser.set_defaults(function=prepare_railway_graph)
+
     station_parser = subs.add_parser('stations', help='Prepare Stations', parents=[dparser])
     station_parser.add_argument("-s", "--stations-file", type=str, default="data/Stations.txt",
                         help="path to station file [defaults to data/Stations.txt]")
@@ -178,9 +182,6 @@ if __name__ == "__main__":
                                 help="only include stations that are mentioned in routes file "
                                 "[defaults to false]")
     station_parser.set_defaults(function=prepare_stations)
-
-    rg_parser = subs.add_parser('prepare', help='prepare railway graph for filtering', parents=[dparser])
-    rg_parser.set_defaults(function=prepare_railway_graph)
 
     filter_parser = subs.add_parser('filter', help='Filter the railway graph', parents=[dparser])
     filter_parser.add_argument("zl", type=int, nargs="*",
