@@ -231,14 +231,11 @@ def build_station_collection_from_stations(base_collection, target_collection,
 
 
 def cluster_stations(cluster_collection, station_collection, target_collection,
-                     min_value=None, max_distance=None):
+                     max_distance=None):
     """Cluster railway graph nodes to near station nodes.
 
     All railway graph nodes (in ``cluster_collection``) will be subsumed by the
     nearest station and successors will be updated accordingly.
-
-    If ``min_value`` is used, make sure ``cluster_collection`` is enriched, i.e.
-    contains nodes with a ``value`` attribute.
 
     Stations will never be clustered to another station.
 
@@ -251,8 +248,6 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
     :param cluster_collection: railway graph collection to cluster
     :param station_collection: collection containing stations
     :param target_collection: collection for clustered railway graph
-    :param min_value: minimal valuation of node to accept as clustering endpoint
-    :type min_value: int or None
     :param max_distance: maximal distance to subsume other nodes (in meters)
     :type max_distance: int or float or None
 
@@ -274,34 +269,17 @@ def cluster_stations(cluster_collection, station_collection, target_collection,
             near_query['loc']['$maxDistance'] = meter2rad(max_distance)
         near_nodes = (n for n in station_collection.find(near_query)
                       if n['_id'] != station['_id'])
-        if min_value is None:
-            try:
-                nearest_node = next(near_nodes)
-                radius = distance(station['loc'], nearest_node['loc']) / 2
-            except StopIteration:
-                log.warning('No valid cluster endpoint for node %d (EVA %s) found.%s',
-                            station['_id'], station['eva'],
-                            '' if max_distance is None
-                            else 'Falling back to maximal distance: %d m')
-                if max_distance is not None:
-                    radius = max_distance
-                else:
-                    continue
-        else:
-            for node in near_nodes:
-                cluster_node = target_collection.find_one(node['_id'])
-                if cluster_node and cluster_node.get('value', 0) >= min_value:
-                    nearest_node = cluster_node
-                    radius = distance(station['loc'], nearest_node['loc']) / 2
-                    break
+        try:
+            nearest_node = next(near_nodes)
+            radius = distance(station['loc'], nearest_node['loc']) / 2
+        except StopIteration:
+            log.warning('No valid cluster endpoint for node %d (EVA %s) found.%s',
+                        station['_id'], station['eva'],
+                        '' if max_distance is None
+                        else 'Falling back to maximal distance: %d m')
+            if max_distance is not None:
+                radius = max_distance
             else:
-                log.warning('No valid cluster endpoints with a minimum value ' +
-                            'of %d for node %d (EVA %s) found. ' +
-                            'Make sure collection "%s" is enriched',
-                            min_value,
-                            station['_id'],
-                            station['eva'],
-                            cluster_collection.name)
                 continue
 
         candidates = target_collection.find({'loc':
