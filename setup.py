@@ -7,7 +7,7 @@ setup(name="algolab",
         scripts=[
             "bin/al_cp",
             "bin/al_crop_stations",
-            "bin/al_filter",
+            "bin/al_tool",
             "bin/al_inspect",
             "bin/al_mk_sg",
             "bin/al_rm",
