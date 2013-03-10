@@ -20,8 +20,8 @@ from algolab.cmdutil import log_progress, log_change, require_col, defaultparser
 from algolab.segment import StationESSegmenter
 from algolab.simplify import simplify as simplify2
 from algolab.stations import (cluster_stations, build_station_collection,
-                              build_station_collection_from_stations)
-from algolab.enrichment import generate_railviz_station_file
+                              build_station_collection_from_stations,
+                              generate_railviz_station_file)
 
 
 STATION_COLLECTION = 'stations'
