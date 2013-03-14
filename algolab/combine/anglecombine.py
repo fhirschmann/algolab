@@ -4,6 +4,7 @@ Angle-based combination algorithm.
 
 .. moduleauthor:: Fabian Hirschmann <fabian@hirschm.net>
 """
+from __future__ import print_function
 import sys
 import logging
 from itertools import combinations
