@@ -2,6 +2,8 @@
 Line Simplifaction Algorithms
 =============================
 
+.. _simp_angle:
+
 Angle-based Reduction
 ----------------------
 
@@ -29,6 +31,8 @@ And applying the algorithm with ε = 150 gives:
     from algolab.plot import plot_algo
     from algolab.simplify import anglereduce
     plot_algo(anglereduce, 0, "After Anglereduce with epsilon=150", [150])
+
+.. _simp_rdp:
 
 Ramer-Douglas-Peucker
 ---------------------
