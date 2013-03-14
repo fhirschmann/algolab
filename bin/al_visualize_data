@@ -11,7 +11,7 @@ from algolab.plot import plot_datasets
 
 
 if __name__ == "__main__":
-    from data import npoints
+    from algolab.data import npoints
 
     parser = argparse.ArgumentParser(description="Dataset Visualization")
     parser.add_argument("--datasets", type=int, nargs="+", default=[2, 3, 4, 5],
