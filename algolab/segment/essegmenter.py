@@ -125,6 +125,11 @@ class ESSegmenter(Segmenter):
                                   node["_id"], neighbor_id)
                 segment = self._walk_from(neighbor, [node])
                 self._visit(segment)
+
+                # close cycles
+                if node["_id"] in neighbors(segment[-1]):
+                    yield [node, segment[-1]]
+
                 yield segment
 
 
