@@ -1,0 +1,85 @@
+Feeding our software the data of Frankfurt set yields the following result::
+
+    [2013-03-14 12:07:02,490] --------------------------------------------------
+    [2013-03-14 12:07:02,490] => Starting step 'Overall process'
+    [2013-03-14 12:07:02,502] --------------------------------------------------
+    [2013-03-14 12:07:02,502] => Starting step 'Zoom Level 16'
+    [2013-03-14 12:07:02,508] --------------------------------------------------
+    [2013-03-14 12:07:02,508] => Starting step 'Applying RDP with eps=1.600000'
+    Applying rdp to segment 2176 of 1818 (estimated) (119.69%)
+    [2013-03-14 12:07:09,764] Reduced to 4090 nodes from 7710 nodes. Change: -3620 (-46.952%)
+    [2013-03-14 12:07:09,765] <= Step 'Applying RDP with eps=1.600000' finished (took 0:00:07.256236).
+    [2013-03-14 12:07:09,765] <= Step 'Zoom Level 16' finished (took 0:00:07.262707).
+    [2013-03-14 12:07:09,765] --------------------------------------------------
+    [2013-03-14 12:07:09,765] => Starting step 'Zoom Level 15'
+    [2013-03-14 12:07:09,770] --------------------------------------------------
+    [2013-03-14 12:07:09,771] => Starting step 'Applying RDP with eps=3.200000'
+    Applying rdp to segment 2176 of 1818 (estimated) (119.69%)
+    [2013-03-14 12:07:15,247] Reduced to 3352 nodes from 4090 nodes. Change: -738 (-18.044%)
+    [2013-03-14 12:07:15,247] <= Step 'Applying RDP with eps=3.200000' finished (took 0:00:05.476115).
+    [2013-03-14 12:07:15,247] <= Step 'Zoom Level 15' finished (took 0:00:05.481593).
+    [2013-03-14 12:07:15,247] --------------------------------------------------
+    [2013-03-14 12:07:15,247] => Starting step 'Zoom Level 14'
+    [2013-03-14 12:07:15,251] --------------------------------------------------
+    [2013-03-14 12:07:15,252] => Starting step 'Applying RDP with eps=4.800000'
+    Applying rdp to segment 2170 of 1810 (estimated) (119.89%)
+    [2013-03-14 12:07:20,117] Reduced to 2898 nodes from 3352 nodes. Change: -454 (-13.544%)
+    [2013-03-14 12:07:20,117] <= Step 'Applying RDP with eps=4.800000' finished (took 0:00:04.865725).
+    [2013-03-14 12:07:20,118] <= Step 'Zoom Level 14' finished (took 0:00:04.870367).
+    [2013-03-14 12:07:20,118] --------------------------------------------------
+    [2013-03-14 12:07:20,118] => Starting step 'Zoom Level 13'
+    [2013-03-14 12:07:20,125] --------------------------------------------------
+    [2013-03-14 12:07:20,125] => Starting step 'Applying RDP with eps=6.400000'
+    Applying rdp to segment 2167 of 1808 (estimated) (119.86%)
+    [2013-03-14 12:07:24,737] Reduced to 2660 nodes from 2898 nodes. Change: -238 (-8.213%)
+    [2013-03-14 12:07:24,737] <= Step 'Applying RDP with eps=6.400000' finished (took 0:00:04.612006).
+    [2013-03-14 12:07:24,737] <= Step 'Zoom Level 13' finished (took 0:00:04.618989).
+    [2013-03-14 12:07:24,737] --------------------------------------------------
+    [2013-03-14 12:07:24,737] => Starting step 'Zoom Level 12'
+    [2013-03-14 12:07:24,739] --------------------------------------------------
+    [2013-03-14 12:07:24,739] => Starting step 'Applying RDP with eps=8.000000'
+    Applying rdp to segment 2159 of 1799 (estimated) (120.01%)
+    [2013-03-14 12:07:29,423] Reduced to 2516 nodes from 2660 nodes. Change: -144 (-5.414%)
+    [2013-03-14 12:07:29,423] <= Step 'Applying RDP with eps=8.000000' finished (took 0:00:04.683485).
+    [2013-03-14 12:07:29,423] <= Step 'Zoom Level 12' finished (took 0:00:04.685875).
+    [2013-03-14 12:07:29,424] --------------------------------------------------
+    [2013-03-14 12:07:29,424] => Starting step 'Zoom Level 11'
+    Clustering Station 364 of 364 (100.00%)
+    [2013-03-14 12:07:32,634] Reduced to 1583 nodes from 2516 nodes. Change: -933 (-37.083%)
+    [2013-03-14 12:07:32,634] --------------------------------------------------
+    [2013-03-14 12:07:32,634] => Starting step 'Applying RDP with eps=6.000000'
+    Applying rdp to segment 1489 of 1034 (estimated) (144.00%)
+    [2013-03-14 12:07:35,699] Reduced to 1541 nodes from 1583 nodes. Change: -42 (-2.653%)
+    [2013-03-14 12:07:35,699] <= Step 'Applying RDP with eps=6.000000' finished (took 0:00:03.065059).
+    [2013-03-14 12:07:35,699] <= Step 'Zoom Level 11' finished (took 0:00:06.275492).
+    [2013-03-14 12:07:35,700] --------------------------------------------------
+    [2013-03-14 12:07:35,700] => Starting step 'Zoom Level 10'
+    [2013-03-14 12:07:35,703] --------------------------------------------------
+    [2013-03-14 12:07:35,703] => Starting step 'Applying Anglecombine with eps=10.000000'
+    Intersections left: 0()
+    [2013-03-14 12:07:42,687] Reduced to 794 nodes from 1541 nodes. Change: -747 (-48.475%)
+    [2013-03-14 12:07:42,687] <= Step 'Applying Anglecombine with eps=10.000000' finished (took 0:00:06.983972).
+    [2013-03-14 12:07:42,687] --------------------------------------------------
+    [2013-03-14 12:07:42,687] => Starting step 'Applying RDP with eps=6.000000'
+    Applying rdp to segment 732 of 442 (estimated) (165.61%)
+    [2013-03-14 12:07:44,089] Reduced to 773 nodes from 794 nodes. Change: -21 (-2.645%)
+    [2013-03-14 12:07:44,090] <= Step 'Applying RDP with eps=6.000000' finished (took 0:00:01.402307).
+    [2013-03-14 12:07:44,090] <= Step 'Zoom Level 10' finished (took 0:00:08.390171).
+    [2013-03-14 12:07:44,090] --------------------------------------------------
+    [2013-03-14 12:07:44,090] => Starting step 'Zoom Level 9'
+    [2013-03-14 12:07:44,096] --------------------------------------------------
+    [2013-03-14 12:07:44,096] => Starting step 'Applying RDP with eps=10.000000'
+    Applying rdp to segment 733 of 443 (estimated) (165.46%)
+    [2013-03-14 12:07:45,596] Reduced to 744 nodes from 773 nodes. Change: -29 (-3.752%)
+    [2013-03-14 12:07:45,597] <= Step 'Applying RDP with eps=10.000000' finished (took 0:00:01.500097).
+    [2013-03-14 12:07:45,597] <= Step 'Zoom Level 9' finished (took 0:00:01.506507).
+    [2013-03-14 12:07:45,597] --------------------------------------------------
+    [2013-03-14 12:07:45,598] => Starting step 'Zoom Level 8'
+    [2013-03-14 12:07:45,605] --------------------------------------------------
+    [2013-03-14 12:07:45,605] => Starting step 'Applying RDP with eps=20.000000'
+    Applying rdp to segment 727 of 442 (estimated) (164.48%)
+    [2013-03-14 12:07:46,786] Reduced to 682 nodes from 744 nodes. Change: -62 (-8.333%)
+    [2013-03-14 12:07:46,786] <= Step 'Applying RDP with eps=20.000000' finished (took 0:00:01.180978).
+    [2013-03-14 12:07:46,786] <= Step 'Zoom Level 8' finished (took 0:00:01.188425).
+    [2013-03-14 12:07:46,787] <= Step 'Overall process' finished (took 0:00:44.296338).
+

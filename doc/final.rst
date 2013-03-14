@@ -87,9 +87,11 @@ using the ``-f`` option).
 
         al_tool prepare
 
-.. all images were produced using
+.. all images were produced using:
    al_visualize_rg -s doc/img/step-x.png -t "Zoom Level x" \
                    --dpi 75 -c railway_graph_x
+   or simply:
+   al_visualize_report `seq 8 16`
 
 Algorithm Combination Summary
 =============================
@@ -130,128 +132,19 @@ This section is devoted to the entire map of Germany.
 Log
 ^^^
 
-Feeding our software the complete data set yields the following result::
-
-    [2013-03-14 08:27:49,373] --------------------------------------------------
-    [2013-03-14 08:27:49,373] => Starting step 'Overall process'
-    [2013-03-14 08:27:49,609] --------------------------------------------------
-    [2013-03-14 08:27:49,609] => Starting step 'Zoom Level 16'
-    [2013-03-14 08:27:49,783] --------------------------------------------------
-    [2013-03-14 08:27:49,783] => Starting step 'Applying RDP with eps=1.600000'
-    Applying rdp to segment 146377 of 135154 (estimated) (108.30%)
-    [2013-03-14 08:54:07,269] Reduced to 530949 nodes from 870102 nodes. Change: -339153 (-38.979%)
-    [2013-03-14 08:54:07,269] <= Step 'Applying RDP with eps=1.600000' finished (took 0:26:17.486040).
-    [2013-03-14 08:54:07,269] <= Step 'Zoom Level 16' finished (took 0:26:17.660210).
-    [2013-03-14 08:54:07,270] --------------------------------------------------
-    [2013-03-14 08:54:07,270] => Starting step 'Zoom Level 15'
-    [2013-03-14 08:54:07,340] --------------------------------------------------
-    [2013-03-14 08:54:07,340] => Starting step 'Applying RDP with eps=3.200000'
-    Applying rdp to segment 146299 of 135089 (estimated) (108.30%)
-    [2013-03-14 09:18:24,391] Reduced to 415546 nodes from 530949 nodes. Change: -115403 (-21.735%)
-    [2013-03-14 09:18:24,391] <= Step 'Applying RDP with eps=3.200000' finished (took 0:24:17.050890).
-    [2013-03-14 09:18:24,391] <= Step 'Zoom Level 15' finished (took 0:24:17.121100).
-    [2013-03-14 09:18:24,391] --------------------------------------------------
-    [2013-03-14 09:18:24,391] => Starting step 'Zoom Level 14'
-    [2013-03-14 09:18:24,489] --------------------------------------------------
-    [2013-03-14 09:18:24,489] => Starting step 'Applying RDP with eps=4.800000'
-    Applying rdp to segment 145968 of 134745 (estimated) (108.33%)
-    [2013-03-14 09:41:36,956] Reduced to 353198 nodes from 415546 nodes. Change: -62348 (-15.004%)
-    [2013-03-14 09:41:36,956] <= Step 'Applying RDP with eps=4.800000' finished (took 0:23:12.466771).
-    [2013-03-14 09:41:36,956] <= Step 'Zoom Level 14' finished (took 0:23:12.564977).
-    [2013-03-14 09:41:36,956] --------------------------------------------------
-    [2013-03-14 09:41:36,956] => Starting step 'Zoom Level 13'
-    [2013-03-14 09:41:37,051] --------------------------------------------------
-    [2013-03-14 09:41:37,051] => Starting step 'Applying RDP with eps=6.400000'
-    Applying rdp to segment 145496 of 134256 (estimated) (108.37%)
-    [2013-03-14 10:04:17,655] Reduced to 314893 nodes from 353198 nodes. Change: -38305 (-10.845%)
-    [2013-03-14 10:04:17,655] <= Step 'Applying RDP with eps=6.400000' finished (took 0:22:40.604271).
-    [2013-03-14 10:04:17,655] <= Step 'Zoom Level 13' finished (took 0:22:40.699050).
-    [2013-03-14 10:04:17,655] --------------------------------------------------
-    [2013-03-14 10:04:17,655] => Starting step 'Zoom Level 12'
-    [2013-03-14 10:04:17,730] --------------------------------------------------
-    [2013-03-14 10:04:17,731] => Starting step 'Applying RDP with eps=8.000000'
-    Applying rdp to segment 144823 of 133656 (estimated) (108.36%)
-    [2013-03-14 10:26:27,475] Reduced to 288767 nodes from 314893 nodes. Change: -26126 (-8.297%)
-    [2013-03-14 10:26:27,475] <= Step 'Applying RDP with eps=8.000000' finished (took 0:22:09.744512).
-    [2013-03-14 10:26:27,475] <= Step 'Zoom Level 12' finished (took 0:22:09.819714).
-    [2013-03-14 10:26:27,475] --------------------------------------------------
-    [2013-03-14 10:26:27,475] => Starting step 'Zoom Level 11'
-    Clustering Station [2013-03-14 10:31:37,433] Railway graph does not contain ID 1663109383, will ignore it
-    Clustering Station 16836 of 16836 (100.00%)
-    [2013-03-14 10:33:13,896] Reduced to 148305 nodes from 288767 nodes. Change: -140462 (-48.642%)
-    [2013-03-14 10:33:13,896] --------------------------------------------------
-    [2013-03-14 10:33:13,896] => Starting step 'Applying RDP with eps=6.000000'
-    Applying rdp to segment 84934 of 69618 (estimated) (122.00%)
-    [2013-03-14 10:42:43,922] Reduced to 146189 nodes from 148305 nodes. Change: -2116 (-1.427%)
-    [2013-03-14 10:42:43,922] <= Step 'Applying RDP with eps=6.000000' finished (took 0:09:30.025777).
-    [2013-03-14 10:42:43,922] <= Step 'Zoom Level 11' finished (took 0:16:16.446759).
-    [2013-03-14 10:42:43,922] --------------------------------------------------
-    [2013-03-14 10:42:43,922] => Starting step 'Zoom Level 10'
-    [2013-03-14 10:42:44,046] --------------------------------------------------
-    [2013-03-14 10:42:44,047] => Starting step 'Applying Anglecombine with eps=10.000000'
-    Intersections left: 0()00
-    [2013-03-14 10:49:59,152] Reduced to 92029 nodes from 146189 nodes. Change: -54160 (-37.048%)
-    [2013-03-14 10:49:59,152] <= Step 'Applying Anglecombine with eps=10.000000' finished (took 0:07:15.105290).
-    [2013-03-14 10:49:59,152] --------------------------------------------------
-    [2013-03-14 10:49:59,152] => Starting step 'Applying RDP with eps=6.000000'
-    Applying rdp to segment 41023 of 29927 (estimated) (137.08%)
-    [2013-03-14 10:53:15,207] Reduced to 88478 nodes from 92029 nodes. Change: -3551 (-3.859%)
-    [2013-03-14 10:53:15,207] <= Step 'Applying RDP with eps=6.000000' finished (took 0:03:16.054443).
-    [2013-03-14 10:53:15,207] <= Step 'Zoom Level 10' finished (took 0:10:31.284804).
-    [2013-03-14 10:53:15,207] --------------------------------------------------
-    [2013-03-14 10:53:15,207] => Starting step 'Zoom Level 9'
-    [2013-03-14 10:53:15,258] --------------------------------------------------
-    [2013-03-14 10:53:15,259] => Starting step 'Applying RDP with eps=10.000000'
-    Applying rdp to segment 40979 of 29978 (estimated) (136.70%)
-    [2013-03-14 10:56:23,713] Reduced to 82628 nodes from 88478 nodes. Change: -5850 (-6.612%)
-    [2013-03-14 10:56:23,713] <= Step 'Applying RDP with eps=10.000000' finished (took 0:03:08.454232).
-    [2013-03-14 10:56:23,713] <= Step 'Zoom Level 9' finished (took 0:03:08.505563).
-    [2013-03-14 10:56:23,713] --------------------------------------------------
-    [2013-03-14 10:56:23,713] => Starting step 'Zoom Level 8'
-    [2013-03-14 10:56:23,747] --------------------------------------------------
-    [2013-03-14 10:56:23,747] => Starting step 'Applying RDP with eps=20.000000'
-    Applying rdp to segment 40896 of 29927 (estimated) (136.65%)
-    [2013-03-14 10:59:20,114] Reduced to 68220 nodes from 82628 nodes. Change: -14408 (-17.437%)
-    [2013-03-14 10:59:20,114] <= Step 'Applying RDP with eps=20.000000' finished (took 0:02:56.367118).
-    [2013-03-14 10:59:20,114] <= Step 'Zoom Level 8' finished (took 0:02:56.401245).
-    [2013-03-14 10:59:20,116] <= Step 'Overall process' finished (took 2:31:30.743248).
+.. include:: logs/germany.txt
 
 Summary
 ^^^^^^^
+  .. program-output:: al_log2tbl logs/germany.txt
 
-+------------+------------+----------------+
-| Zoom level | # of nodes | Time spent     |
-+============+============+================+
-|            |     870136 |                |
-+------------+------------+----------------+
-|         17 |     870102 | 0:26:17.660210 |
-+------------+------------+----------------+
-|         16 |     530949 | 0:24:17.050890 |
-+------------+------------+----------------+
-|         15 |     415546 | 0:23:12.564977 |
-+------------+------------+----------------+
-|         14 |     353198 | 0:23:12.564977 |
-+------------+------------+----------------+
-|         13 |     314893 | 0:22:40.699050 |
-+------------+------------+----------------+
-|         12 |     288767 | 0:22:09.819714 |
-+------------+------------+----------------+
-|         11 |     146189 | 0:16:16.446759 |
-+------------+------------+----------------+
-|         10 |      88478 | 0:10:31.284804 |
-+------------+------------+----------------+
-|          9 |      82628 | 0:03:08.505563 |
-+------------+------------+----------------+
-|          8 |      68220 | 0:02:56.401245 |
-+------------+------------+----------------+
-| Total      |            | 2:31:30.743248 |
-+------------+------------+----------------+
-
-Frankfurt Metropolitan Area
----------------------------
+Frankfurt
+---------
 
 Log
 ^^^
+
+.. include:: logs/frankfurt.txt
 
 Visualization
 ^^^^^^^^^^^^^
@@ -266,6 +159,31 @@ Visualization
 .. image:: img/ffm/rg-zl-10.png
 .. image:: img/ffm/rg-zl-9.png
 .. image:: img/ffm/rg-zl-8.png
+
+Summary
+^^^^^^^
+  .. program-output:: al_log2tbl logs/frankfurt.txt
+
+Berlin
+-------
+
+Log
+^^^
+
+Visualization
+^^^^^^^^^^^^^
+
+Summary
+^^^^^^^
+
+Grifte-Edermünde
+----------------
+
+Log
+^^^
+
+Visualization
+^^^^^^^^^^^^^
 
 Summary
 ^^^^^^^
