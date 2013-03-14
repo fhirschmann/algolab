@@ -34,6 +34,7 @@ the blue points are merged.
 
 Or without animation:
 
+.. image:: img/comb-0.png
 .. image:: img/comb-1.png
 .. image:: img/comb-2.png
 .. image:: img/comb-3.png
