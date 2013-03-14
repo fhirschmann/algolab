@@ -8,7 +8,7 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])), os.p
 import argparse
 from pylab import *
 
-from data import points
+from algolab.data import points
 
 
 def visualize(algo, epsilon_min, epsilon_max, epsilon_0):
