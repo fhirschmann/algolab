@@ -22,23 +22,20 @@ The angle-based combination algorithm works as follows::
 
 .. autofunction:: algolab.combine.anglecombine
 
-The following images illustrate the initial problem:
+Full Example
+^^^^^^^^^^^^
 
-.. plot::
+What follows is a step by step run of the anglecombine algorithm. In each
+step, the angle between the points marked in green and blue (vertices are green)
+is calculated and checked against epsilon. If it is smaller than epsilon, then
+the blue points are merged.
 
-    from algolab.plot import plot_rg
-    from algolab.test import rg_from_datasets
-    from algolab.combine import anglecombine
-    rg = rg_from_datasets([12, 13, 14, 15])
-    plot_rg(rg, "Initial Situation")
+.. image:: img/comb.gif
 
-Applying the algorithm with ε = 30 gives:
+Or without animation:
 
-.. plot::
-
-    from algolab.plot import plot_rg
-    from algolab.test import rg_from_datasets
-    from algolab.combine import anglecombine
-    rg = rg_from_datasets([12, 13, 14, 15])
-    anglecombine(rg, 30)
-    plot_rg(rg, "After anglecombine with epsilon=30")
+.. image:: img/comb-1.png
+.. image:: img/comb-2.png
+.. image:: img/comb-3.png
+.. image:: img/comb-4.png
+.. image:: img/comb-5.png
