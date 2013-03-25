@@ -393,10 +393,15 @@ def generate_railviz_station_file(station_usage_path, path):
         if connections['class1'] or connections['class2']:
             partition[9].add(eva)
         if connections['regional'] or connections['s_bahn']:
-            partition[11].add(eva)
+            partition[11].add((eva, value))
 
-        partition[12].add(eva)
-    partition[10] = set(sorted(partition[11], key=itemgetter(1))[:2000])
+        partition[12].add((eva, value))
+    size = int(len(partition[11]) * 0.3)
+    partition[10] = set(eva for eva, value
+                         in sorted(partition[11], key=itemgetter(1))[:size])
+    size = int(len(partition[12]) * 0.1)
+    partition[11].update(eva for eva, value
+                         in sorted(partition[12], key=itemgetter(1))[:size])
 
     # disjoin the zoom levels
     for level, evas in sorted(partition.iteritems()):
