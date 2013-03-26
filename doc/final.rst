@@ -181,6 +181,17 @@ Berlin
 Visualization
 ^^^^^^^^^^^^^
 
+.. image:: img/berlin/rg-zl-17.png
+.. image:: img/berlin/rg-zl-16.png
+.. image:: img/berlin/rg-zl-15.png
+.. image:: img/berlin/rg-zl-14.png
+.. image:: img/berlin/rg-zl-13.png
+.. image:: img/berlin/rg-zl-12.png
+.. image:: img/berlin/rg-zl-11.png
+.. image:: img/berlin/rg-zl-10.png
+.. image:: img/berlin/rg-zl-9.png
+.. image:: img/berlin/rg-zl-8.png
+
 Screenshots
 ^^^^^^^^^^^
 
@@ -197,6 +208,17 @@ Grifte-Edermünde
 
 Visualization
 ^^^^^^^^^^^^^
+
+.. image:: img/grifte/rg-zl-17.png
+.. image:: img/grifte/rg-zl-16.png
+.. image:: img/grifte/rg-zl-15.png
+.. image:: img/grifte/rg-zl-14.png
+.. image:: img/grifte/rg-zl-13.png
+.. image:: img/grifte/rg-zl-12.png
+.. image:: img/grifte/rg-zl-11.png
+.. image:: img/grifte/rg-zl-10.png
+.. image:: img/grifte/rg-zl-9.png
+.. image:: img/grifte/rg-zl-8.png
 
 Screenshots
 ^^^^^^^^^^^
