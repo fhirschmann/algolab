@@ -7,7 +7,7 @@ Algorithm Lab documentation
 ===========================
 
 During the algorithm lab project, we developed a framework for cleaning,
-combining, segmenting and simplyfing cartographic data, with an emphasis
+combining, segmenting and simplifying cartographic data, with an emphasis
 on train tracks. Below you'll find several algorithms for each of the
 mentioned sections as well as documentation on how to set up our project.
 
