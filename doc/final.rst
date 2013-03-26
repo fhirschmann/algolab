@@ -160,6 +160,17 @@ Visualization
 .. image:: img/ffm/rg-zl-9.png
 .. image:: img/ffm/rg-zl-8.png
 
+Screenshots
+^^^^^^^^^^^
+
+.. figure:: img/ffm/rv-zl12.png
+
+    Zoomlevel 12
+
+.. figure:: img/ffm/rv-zl15.png
+
+    Zoomlevel 15
+
 Summary
 ^^^^^^^
   .. program-output:: al_log2tbl logs/frankfurt.txt
@@ -167,23 +178,33 @@ Summary
 Berlin
 -------
 
-Log
-^^^
-
 Visualization
 ^^^^^^^^^^^^^
 
-Summary
-^^^^^^^
+Screenshots
+^^^^^^^^^^^
+
+.. figure:: img/berlin/rv-zl10.png
+
+    Zoomlevel 10
+
+.. figure:: img/berlin/rv-zl12.png
+
+    Zoomlevel 12
 
 Grifte-Edermünde
 ----------------
 
-Log
-^^^
-
 Visualization
 ^^^^^^^^^^^^^
 
-Summary
-^^^^^^^
+Screenshots
+^^^^^^^^^^^
+
+.. figure:: img/grifte/rv-zl10.png
+
+    Zoomlevel 10
+
+.. figure:: img/grifte/rv-zl12.png
+
+    Zoomlevel 12
