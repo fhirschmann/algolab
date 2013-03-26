@@ -141,11 +141,6 @@ Summary
 Frankfurt
 ---------
 
-Log
-^^^
-
-.. include:: logs/frankfurt.txt
-
 Visualization
 ^^^^^^^^^^^^^
 
@@ -170,10 +165,6 @@ Screenshots
 .. figure:: img/ffm/rv-zl15.png
 
     Zoomlevel 15
-
-Summary
-^^^^^^^
-  .. program-output:: al_log2tbl logs/frankfurt.txt
 
 Berlin
 -------
