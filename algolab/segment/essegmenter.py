@@ -52,7 +52,7 @@ class ESSegmenter(Segmenter):
 
         # endpoints and switches
         self.es = nodes_with_num_neighbors_ne(collection, 2)
-        self._estimated = int(self.es.count() * 1.3)
+        self._estimated = int(self.es.count() * 1.85)
 
         # All of the visited nodes
         self.visited = set()
