@@ -1,8 +1,8 @@
 .. _final_report:
 
-====================
-Final Report (Draft)
-====================
+============
+Final Report
+============
 
 This document describes how the complete graphs for all zoom levels
 were constructed and how well our algorithms did. It is assumed
