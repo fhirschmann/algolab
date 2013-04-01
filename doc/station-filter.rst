@@ -3,7 +3,7 @@ Station Filtering
 =================
 
 To reduce the number of displayed stations we filter them by their usage (based
-on on ``stationUsage.txt``).
+on ``stationUsage.txt``).
 In the zoomlevels 8 until 11 we display only a part of the stations, as follows:
 
 - zoomlevel 8: stations with class 0 connections
