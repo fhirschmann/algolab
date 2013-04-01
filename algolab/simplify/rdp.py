@@ -11,7 +11,8 @@ from algolab.util import pdist
 
 def rdp(points, epsilon=0):
     """
-    This is an implementation of the Ramer-Douglas-Peucker algorithm.
+    This is an implementation of the
+    `Ramer-Douglas-Peucker algorithm <http://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm>`_.
 
     :param points: a curve that is approximated by a series of points
     :type points: list of 3-tuples (x, y, id)
