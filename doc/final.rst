@@ -246,3 +246,22 @@ Screenshots
 .. figure:: img/grifte/rv-zl12.png
 
     Zoomlevel 12
+
+
+Strong and Weak Points of the Algorithms
+========================================
+
+In the following we describe where our algorithms are strong (i.e. simplifying
+the railway while staying true to general railway layout) and where their weak
+spots are, resulting in a bad generalization of the railways.
+
+Ramer-Douglas-Peucker (RDP)
+---------------------------
+
+RDP has no weak points as long as the used ε-parameter is chosen such that it is
+suitable for the zoom level, i.e. the ε is roughly equal to the perceivable
+deviations from the railroad tracks.
+
+.. figure:: img/rdp-good.png
+
+    Zoomlevel 12 around Cologne
