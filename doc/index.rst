@@ -22,7 +22,6 @@ mentioned sections as well as documentation on how to set up our project.
    simp
    cluster
    station-filter
-   discarded
    final
    api
    data
