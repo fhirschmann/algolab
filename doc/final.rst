@@ -301,6 +301,9 @@ deviations from the railroad tracks.
 
     Zoomlevel 12 around Cologne
 
+If ε is chosen inappropriate, applying RDP will converge to straight lines with
+a growing ε.
+
 Clustering
 ----------
 
