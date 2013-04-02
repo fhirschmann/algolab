@@ -269,3 +269,21 @@ deviations from the railroad tracks.
 .. figure:: img/rdp-good.png
 
     Zoomlevel 12 around Cologne
+
+Clustering
+----------
+
+Strong points for Clustering are regions with a high density of stations as this
+keeps the clustering radii small. Naturally, this limits the utility of this
+algorithm. Furthermore, small radii can be achieved by using appropriate
+parameters.
+
+.. figure:: img/rdp-good.png
+
+    Zoomlevel 11 around Frankfurt/Main
+
+This also means that weak points for Clustering are regions with a low density
+of stations and furthermore with a much less than linear routing. We can see
+such a weak point around Grifte-Edermünde in the visualization from zoom level
+11 downwards. Fortunately, this is not noticable in Motis (which unfortunately
+means that we can't provide a screenshot).
