@@ -254,7 +254,14 @@ Angle-Based-Reduction
 ---------------------
 
 The approach described in :ref:`simp_angle` was not used because the
-:ref:`simp_rdp` was superior under nearly all circumstances.
+:ref:`simp_rdp` algorithm is superior under nearly all circumstances.
+
+While they are somewhat similar, the ε-parameter of the RDP algorithm limits
+the maximum deviation from the original train tracks in meters. The ε-parameter
+of the angle-based algorithm on the other hand describes a threshold value
+for angles, which may or may not linearly correspond to the perceived deviance
+from the original image.
+
 
 However, the algorithm could have been improved by first computing and then
 sorting all angles in a segment instead of just checking if an angle
