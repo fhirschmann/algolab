@@ -304,6 +304,19 @@ deviations from the railroad tracks.
 If ε is chosen inappropriate, applying RDP will converge to straight lines with
 a growing ε.
 
+Angle-Combining (AC)
+--------------------
+
+AC has a limited application scenario: combine railroad sections that branch off
+from a single track. It shines when multiple, nearly parallel tracks branch off
+from a single track. This can be observed at larger stations.
+
+.. figure:: img/ac-good.png
+
+    Zoomlevel 10 around Frankfurt/Main
+
+AC produces weak results if ε is chosen too high. The simplified tracks will then lie besides the actual tracks, how far off they will be depends on the nature of the actual tracks.
+
 Clustering
 ----------
 
