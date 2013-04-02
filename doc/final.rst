@@ -255,6 +255,10 @@ In the following we describe where our algorithms are strong (i.e. simplifying
 the railway while staying true to general railway layout) and where their weak
 spots are, resulting in a bad generalization of the railways.
 
+As we combine all three algorithms and exploit their strengths weaknesses are
+hard to detect in practice using MOTIS while theoretically possible or actually
+present but not noticeable because they only affect minuscule details.
+
 Ramer-Douglas-Peucker (RDP)
 ---------------------------
 
