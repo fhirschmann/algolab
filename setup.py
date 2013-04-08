@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name="algolab",
-        version="0.1",
+        version="1.0",
         description="Algorithm Lab",
         packages=["algolab"],
         scripts=[
