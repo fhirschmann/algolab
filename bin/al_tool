@@ -160,8 +160,6 @@ def filter_rg(args):
 
 if __name__ == "__main__":
     dparser = defaultparser()
-    dparser.add_argument("--no-progress", action="store_true", dest="np",
-                         default=False, help="don't print the progress")
     parser = argparse.ArgumentParser(description="Algorithm Lab Tool",
                                      parents=[dparser])
     subs = parser.add_subparsers()
