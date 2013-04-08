@@ -37,6 +37,7 @@ If you need to recompile the documentation, you'll need
 You can then compile the documentation by executing::
 
     cd doc
+    export PYTHONPATH=$PYTHONPATH:/path/to/algolab
     make html
 
 And view it by pointing your browser to :file:`_build/html/index.html`.
