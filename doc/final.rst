@@ -327,8 +327,10 @@ is rather large. The following image demonstrates this problem:
 
     plot_datasets([12, 14, 15, 18], title=" ", legend=False).show()
 
-In this figure, the angle between 1 (vertex), 2, and 7 is quite large. This causes
-the AC algorithm to not combine these two train tracks.
+In this figure, the angle between 1 (vertex), 2, and 7 is quite large. This
+causes the AC algorithm to not combine these two train tracks. The consequences
+of a bad performance of AC is similar to RDP: Segments will not be merged which
+results in the original segments in the worst case.
 
 
 Clustering
