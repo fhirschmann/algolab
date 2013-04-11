@@ -344,5 +344,12 @@ parameters.
 This also means that weak points for Clustering are regions with a low density
 of stations and furthermore with a much less than linear routing. We can see
 such a weak point around Grifte-Edermünde in the visualization from zoom level
-11 downwards. Fortunately, this is not noticable in Motis (which unfortunately
-means that we can't provide a screenshot).
+11 downwards (zoom level 11 is where clustering will be applied in the delivered
+configuration). Here the clustering radii are comparatively big and many railway
+graph nodes will be mapped to a station which in turn means that previously
+distinct segments may coincide with each other after the clustering.
+Fortunately, this is not noticeable in Motis (which unfortunately means that we
+can't provide a screenshot).
+
+.. image:: img/grifte/rg-zl-12.png
+.. image:: img/grifte/rg-zl-11.png
