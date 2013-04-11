@@ -301,8 +301,10 @@ deviations from the railroad tracks.
 
     Zoomlevel 12 around Cologne
 
-If ε is chosen inappropriate, applying RDP will converge to straight lines with
-a growing ε.
+If ε is chosen inappropriately, applying RDP will converge to straight lines
+with a growing ε. This means in turn that as long as ε is apt, a bad performance
+of RDP can only result in a hardly simplified railway segment (i.e. a segment
+with a similar high node count).
 
 Angle-Combining (AC)
 --------------------
