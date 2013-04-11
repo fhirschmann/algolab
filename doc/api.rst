@@ -41,13 +41,6 @@ Combination
    :noindex:
    :members:
 
-Railway Graph Enrichment
-------------------------
-
-.. automodule:: algolab.enrichment
-   :noindex:
-   :members:
-
 Miscellaneous
 -------------
 
