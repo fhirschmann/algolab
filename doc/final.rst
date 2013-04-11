@@ -315,7 +315,19 @@ from a single track. This can be observed at larger stations.
 
     Zoomlevel 10 around Frankfurt/Main
 
-AC produces weak results if ε is chosen too high. The simplified tracks will then lie besides the actual tracks, how far off they will be depends on the nature of the actual tracks.
+AC produces weak results if the input data is suboptimal. Two train tracks can run
+in parallel even if the angle between the branch point and its two neighbors
+is rather large. The following image demonstrates this problem:
+
+.. plot::
+
+    from algolab.plot import plot_datasets
+
+    plot_datasets([12, 14, 15, 18], title=" ", legend=False).show()
+
+In this figure, the angle between 1 (vertex), 2, and 7 is quite large. This causes
+the AC algorithm to not combine these two train tracks.
+
 
 Clustering
 ----------
