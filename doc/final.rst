@@ -38,7 +38,7 @@ This is the step were our project kicks in. It works on the railway
 graph and produces a generalized railway graph for each zoom level.
 
 The main entry point for producing generalized railway graphs is
-``al_tool``:
+``al_tool``, located under the ``bin/`` directory:
 
   .. program-output:: al_tool --help
 
